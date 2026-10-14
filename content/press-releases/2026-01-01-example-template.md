@@ -6,6 +6,12 @@ area: Example
 contact: "Jane Doe, press@example.com (sample)"
 summary: "This is a sample release showing the format. Copy this file to publish your own."
 example: true
+image: /img/illustrations/cat-business.webp
+image_alt: "Illustration of storefronts on a small-town main street"
+image_credit: "Ground Level News illustration, generated with the open-source Z-Image-Turbo model"
+image_license: "Generated illustration; no real people depicted"
+image_source: "https://huggingface.co/Tongyi-MAI/Z-Image-Turbo"
+image_label: "Illustration"
 ---
 **THIS IS A SAMPLE / TEMPLATE, NOT A REAL ANNOUNCEMENT.**
 

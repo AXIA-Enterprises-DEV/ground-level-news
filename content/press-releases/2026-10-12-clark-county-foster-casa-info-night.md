@@ -7,6 +7,12 @@ contact: "clarkcountyfostercare.com"
 summary: "'Two Paths, One Purpose' runs 6-8 p.m. Oct. 14 at the CASA Connections Center in Las Vegas, with foster caregivers and CASA volunteers sharing their experience."
 source_name: "Clark County, Nevada"
 source_url: "https://www.clarkcountynv.gov/news/101226-foster-casa-info-night"
+image: /img/photos/clark-county-govt-center.webp
+image_alt: "Pyramid-shaped building at the Clark County Government Center in Las Vegas"
+image_credit: "Carol M. Highsmith / Wikimedia Commons"
+image_license: "Public domain"
+image_source: "https://commons.wikimedia.org/wiki/File:Clark_County_Government_Center.jpg"
+image_label: "File photo"
 ---
 **LAS VEGAS** — Clark County Family Services and CASA (Court Appointed Special Advocates) will host "Foster & CASA Info Night: Two Paths, One Purpose" on Wednesday, Oct. 14, from 6 to 8 p.m. at the CASA Connections Center, 212 S. Jones Blvd.
 

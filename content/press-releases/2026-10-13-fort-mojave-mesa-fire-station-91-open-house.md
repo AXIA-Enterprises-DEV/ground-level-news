@@ -7,6 +7,12 @@ contact: "Fort Mojave Mesa Fire Department"
 summary: "The Fort Mojave Mesa Fire Department is inviting residents to an open house at its rebuilt Station 91, 2230 Joy Lane, on Oct. 17."
 source_name: "Mohave Valley Daily News"
 source_url: "https://www.mohavedailynews.com/news/community-invited-to-fort-mojave-mesa-fire-department-91-open-house/article_fd419eb3-a162-48a9-8ca3-4a1478538bb3.html"
+image: /img/illustrations/fire-station.webp
+image_alt: "Illustration of a desert fire station with a red fire engine out front"
+image_credit: "Ground Level News illustration, generated with the open-source Z-Image-Turbo model"
+image_license: "Generated illustration; no real people depicted"
+image_source: "https://huggingface.co/Tongyi-MAI/Z-Image-Turbo"
+image_label: "Illustration"
 ---
 **FORT MOHAVE, Ariz.** — The Fort Mojave Mesa Fire Department is inviting the community to an open house at Station 91, the department's rebuilt fire station at 2230 Joy Lane, on Saturday, Oct. 17.
 

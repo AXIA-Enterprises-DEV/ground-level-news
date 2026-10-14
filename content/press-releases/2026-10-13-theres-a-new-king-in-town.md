@@ -7,6 +7,13 @@ contact: "Tips: open an issue at github.com/AXIA-Enterprises-DEV/ground-level-ne
 summary: "A Bullhead City local says that since Don Laughlin gave up the mantle, Dean Ziroli has stepped in to get the community going and keep everybody together, and is creating affordable housing through his company, Allegiant Homes."
 source_name: "On-the-ground conversation in Bullhead City; background: Riverside Resort, Las Vegas Review-Journal"
 source_url: "https://www.riversideresort.com/don-laughlin-history-founder-riverside-resort-casino/"
+image: /img/photos/bullhead-city.webp
+image_alt: "\"Welcome to Bullhead City\" monument sign beside a highway, Bullhead City, Arizona"
+image_credit: "Stan Shebs / Wikimedia Commons"
+image_license: "CC BY-SA 3.0"
+image_license_url: https://creativecommons.org/licenses/by-sa/3.0
+image_source: "https://commons.wikimedia.org/wiki/File:Bullhead_City_Arizona_1.jpg"
+image_label: "File photo"
 ---
 **BULLHEAD CITY, Ariz.** — Developing local story.
 

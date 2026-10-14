@@ -7,6 +7,13 @@ contact: "Boulder City Chamber of Commerce"
 summary: "A public ribbon cutting is set for 5:30 p.m. Friday, Oct. 16, at 102 Nevada Way, next to the Chamber of Commerce."
 source_name: "BoulderCity.com"
 source_url: "https://www.bouldercity.com/ribbon-cutting-for-travel-nevada-adventure-center-in-boulder-city/"
+image: /img/photos/boulder-city.webp
+image_alt: "American flag outside the historic Boulder Dam Hotel in Boulder City, Nevada"
+image_credit: "Noah Wulf / Wikimedia Commons"
+image_license: "CC BY-SA 4.0"
+image_license_url: https://creativecommons.org/licenses/by-sa/4.0
+image_source: "https://commons.wikimedia.org/wiki/File:Boulder_Dam_Hotel_American_Flag.jpg"
+image_label: "File photo"
 ---
 **BOULDER CITY, Nev.** — The new Travel Nevada Adventure Center, powered by Outdoor, opened to the public last week. A public ribbon cutting is scheduled for Friday, Oct. 16, at 5:30 p.m. at 102 Nevada Way, next door to the Boulder City Chamber of Commerce.
 

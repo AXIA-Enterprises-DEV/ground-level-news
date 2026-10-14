@@ -1,0 +1,124 @@
+images:
+  bullhead-city:
+    src: /img/photos/bullhead-city.webp
+    alt: '"Welcome to Bullhead City" monument sign beside a highway, Bullhead City, Arizona'
+    credit: Stan Shebs / Wikimedia Commons
+    license: CC BY-SA 3.0
+    license_url: https://creativecommons.org/licenses/by-sa/3.0
+    source: https://commons.wikimedia.org/wiki/File:Bullhead_City_Arizona_1.jpg
+    label: File photo
+  laughlin-riverfront:
+    src: /img/photos/laughlin-riverfront.webp
+    alt: Riverwalk and resort towers along the Colorado River in Laughlin, Nevada
+    credit: Ken Lund from Reno, Nevada, USA / Wikimedia Commons
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0
+    source: https://commons.wikimedia.org/wiki/File:Resorts_of_Laughlin,_Nevada_Along_Colorado_River_(10086859356).jpg
+    label: File photo
+  boulder-city:
+    src: /img/photos/boulder-city.webp
+    alt: American flag outside the historic Boulder Dam Hotel in Boulder City, Nevada
+    credit: Noah Wulf / Wikimedia Commons
+    license: CC BY-SA 4.0
+    license_url: https://creativecommons.org/licenses/by-sa/4.0
+    source: https://commons.wikimedia.org/wiki/File:Boulder_Dam_Hotel_American_Flag.jpg
+    label: File photo
+  mesquite:
+    src: /img/photos/mesquite.webp
+    alt: Street near city hall in Mesquite, Nevada, with snow-capped mountains in the distance
+    credit: Stan Shebs / Wikimedia Commons
+    license: CC BY-SA 3.0
+    license_url: https://creativecommons.org/licenses/by-sa/3.0
+    source: https://commons.wikimedia.org/wiki/File:Mesquite_Nevada_2.jpg
+    label: File photo
+  clark-county-govt-center:
+    src: /img/photos/clark-county-govt-center.webp
+    alt: Pyramid-shaped building at the Clark County Government Center in Las Vegas
+    credit: Carol M. Highsmith / Wikimedia Commons
+    license: Public domain
+    license_url: null
+    source: https://commons.wikimedia.org/wiki/File:Clark_County_Government_Center.jpg
+    label: File photo
+  cat-us:
+    src: /img/photos/cat-us.webp
+    alt: NASA satellite image of U.S. city lights at night
+    credit: NASA Earth Observatory / Wikimedia Commons
+    license: Public domain
+    license_url: null
+    source: https://commons.wikimedia.org/wiki/File:City_Lights_of_the_United_States_2012.jpg
+    label: File photo
+  cat-world:
+    src: /img/photos/cat-world.webp
+    alt: NASA "Black Marble" view of Earth at night
+    credit: NASA Goddard Space Flight Center from Greenbelt, MD, USA / Wikimedia Commons
+    license: Public domain
+    license_url: null
+    source: https://commons.wikimedia.org/wiki/File:Black_Marble_-_City_Lights_2012_(8246892319).jpg
+    label: File photo
+  cat-tech:
+    src: /img/photos/cat-tech.webp
+    alt: Close-up of a green printed circuit board
+    credit: Peter Shanks from Hobart, Australia / Wikimedia Commons
+    license: CC BY 2.0
+    license_url: https://creativecommons.org/licenses/by/2.0
+    source: https://commons.wikimedia.org/wiki/File:Green_circuit_board_II_(2389301870).jpg
+    label: File photo
+  cat-science:
+    src: /img/photos/cat-science.webp
+    alt: Hubble Space Telescope image of the Pillars of Creation
+    credit: NASA, ESA, and the Hubble Heritage Team (STScI/AURA) / Wikimedia Commons
+    license: Public domain
+    license_url: null
+    source: https://commons.wikimedia.org/wiki/File:Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg
+    label: File photo
+  cat-sports:
+    src: /img/photos/cat-sports.webp
+    alt: Empty soccer stadium under floodlights
+    credit: DAI-nk / Wikimedia Commons
+    license: CC BY-SA 3.0
+    license_url: https://creativecommons.org/licenses/by-sa/3.0
+    source: https://commons.wikimedia.org/wiki/File:Inside_of_Niigata_stadium-1.jpg
+    label: File photo
+  fire-station:
+    src: /img/illustrations/fire-station.webp
+    alt: Illustration of a desert fire station with a red fire engine out front
+    credit: Ground Level News illustration, generated with the open-source Z-Image-Turbo model
+    license: Generated illustration; no real people depicted
+    license_url: null
+    source: https://huggingface.co/Tongyi-MAI/Z-Image-Turbo
+    label: Illustration
+  cat-markets:
+    src: /img/illustrations/cat-markets.webp
+    alt: Illustration of stock market candlestick charts
+    credit: Ground Level News illustration, generated with the open-source Z-Image-Turbo model
+    license: Generated illustration; no real people depicted
+    license_url: null
+    source: https://huggingface.co/Tongyi-MAI/Z-Image-Turbo
+    label: Illustration
+  cat-government:
+    src: /img/illustrations/cat-government.webp
+    alt: Illustration of a domed government capitol building at sunset
+    credit: Ground Level News illustration, generated with the open-source Z-Image-Turbo model
+    license: Generated illustration; no real people depicted
+    license_url: null
+    source: https://huggingface.co/Tongyi-MAI/Z-Image-Turbo
+    label: Illustration
+  cat-business:
+    src: /img/illustrations/cat-business.webp
+    alt: Illustration of storefronts on a small-town main street
+    credit: Ground Level News illustration, generated with the open-source Z-Image-Turbo model
+    license: Generated illustration; no real people depicted
+    license_url: null
+    source: https://huggingface.co/Tongyi-MAI/Z-Image-Turbo
+    label: Illustration
+category_images:
+  us: cat-us
+  world: cat-world
+  politics: cat-government
+  business: cat-business
+  markets: cat-markets
+  tech: cat-tech
+  science: cat-science
+  sports: cat-sports
+  local: laughlin-riverfront
+  pr: cat-business
