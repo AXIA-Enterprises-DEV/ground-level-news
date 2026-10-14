@@ -8,6 +8,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "_site"
 SRC = os.environ.get("TRACKER_BASE", "https://axia-enterprises-dev.github.io/news-tracker")
 SITE = os.environ.get("SITE_URL", "https://groundlevelnews.com").rstrip("/")
+from urllib.parse import urlparse
+BASE = urlparse(SITE).path.rstrip("/")
 NAME = "Ground Level News"
 TAG = "News from the ground up."
 NOW = dt.datetime.now(dt.timezone.utc)
@@ -90,6 +92,7 @@ def iso(ts): return dt.datetime.fromtimestamp(ts or NOW.timestamp(), dt.timezone
 def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_head=""):
     full = f"{esc(title)} | {NAME}" if title != NAME else f"{NAME} | {TAG}"
     url = SITE + path
+    canon = SITE + path
     nav = "".join(f'<a href="/category/{k}/">{v}</a>' for k, v in CATS) + '<a href="/press-releases/" class="pr">Press Releases</a>'
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -125,6 +128,7 @@ def card(it, cls="card"):
 def write(path, content):
     f = OUT / path.lstrip("/")
     if path.endswith("/"): f = f / "index.html"
+    if BASE: content = re.sub(r'(href|src)="/(?!/)', lambda m: f'{m.group(1)}="{BASE}/', content)
     f.parent.mkdir(parents=True, exist_ok=True); f.write_text(content, encoding="utf-8")
 
 def main():
