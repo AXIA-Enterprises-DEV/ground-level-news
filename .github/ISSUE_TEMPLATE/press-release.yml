@@ -1,0 +1,13 @@
+name: Submit a press release
+description: Submit a release; a workflow turns it into a pull request for review.
+title: "[Press Release] "
+labels: [press-release]
+body:
+  - {type: input, id: title, attributes: {label: Title}, validations: {required: true}}
+  - {type: input, id: date, attributes: {label: Date, description: "YYYY-MM-DD"}, validations: {required: true}}
+  - {type: input, id: company, attributes: {label: Company}, validations: {required: true}}
+  - {type: input, id: contact, attributes: {label: Contact}, validations: {required: true}}
+  - {type: input, id: area, attributes: {label: Area, description: "e.g. Bullhead City"}}
+  - {type: textarea, id: summary, attributes: {label: Summary}, validations: {required: true}}
+  - {type: input, id: source, attributes: {label: Source URL}}
+  - {type: textarea, id: body, attributes: {label: Body, description: Markdown}, validations: {required: true}}

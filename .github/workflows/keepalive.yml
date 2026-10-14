@@ -1,0 +1,18 @@
+name: Rebuild fallback
+# GitHub's cron can skip runs. Every ~30 min, if no Build & Deploy succeeded recently, dispatch one.
+on:
+  schedule: [{cron: "7,37 * * * *"}]
+  workflow_run: {workflows: ["Build & Deploy"], types: [completed]}
+  workflow_dispatch:
+permissions: {actions: write}
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - env: {GH_TOKEN: "${{ github.token }}", REPO: "${{ github.repository }}"}
+        run: |
+          sleep 60
+          last=$(gh run list -R $REPO -w "Build & Deploy" -L 1 --json createdAt -q '.[0].createdAt' || echo "")
+          age=999999; [ -n "$last" ] && age=$(( $(date +%s) - $(date -d "$last" +%s) ))
+          echo "last build age: ${age}s"
+          if [ "$age" -gt 1500 ]; then gh workflow run build.yml -R $REPO; fi

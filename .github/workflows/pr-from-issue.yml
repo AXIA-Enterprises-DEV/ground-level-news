@@ -1,0 +1,33 @@
+name: Press release from issue
+on:
+  issues: {types: [opened, labeled]}
+permissions: {contents: write, pull-requests: write, issues: write}
+jobs:
+  convert:
+    if: contains(github.event.issue.labels.*.name, 'press-release')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          BODY: ${{ github.event.issue.body }}
+          N: ${{ github.event.issue.number }}
+        run: |
+          python3 - <<'PY'
+          import os,re,json
+          b=os.environ["BODY"]
+          f={}
+          for m in re.finditer(r"### (.+?)\n\n(.*?)(?=\n### |\Z)", b, re.S): f[m.group(1).strip().lower()]=m.group(2).strip()
+          g=lambda k:f.get(k,"").replace("_No response_","").strip()
+          date=g("date"); title=g("title")
+          slug=re.sub(r"[^a-z0-9]+","-",title.lower()).strip("-")[:60]
+          q=lambda s: json.dumps(s)
+          fm=f"---\ntitle: {q(title)}\ndate: {date}\ncompany: {q(g('company'))}\ncontact: {q(g('contact'))}\nsummary: {q(g('summary'))}\narea: {q(g('area'))}\nsource_url: {q(g('source url'))}\n---\n{g('body')}\n"
+          p=f"content/press-releases/{date}-{slug}.md"
+          open(p,"w").write(fm); open(os.environ["GITHUB_ENV"],"a").write(f"PRFILE={p}\n")
+          PY
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b press-release/issue-$N
+          git add "$PRFILE" && git commit -m "Press release from issue #$N"
+          git push -u origin press-release/issue-$N
+          gh pr create --title "Press release: issue #$N" --body "Closes #$N. Review, then merge to publish." --base main
