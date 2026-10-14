@@ -16,6 +16,8 @@ from urllib.parse import urlparse
 BASE = urlparse(SITE).path.rstrip("/")
 NAME = "Ground Level News"
 TAG = "News from the ground up."
+INDEXNOW_KEY = "5a8308b39ca87422bfd5d4eb53c1c5bb"
+REPO = "https://github.com/AXIA-Enterprises-DEV/ground-level-news"
 NOW = dt.datetime.now(dt.timezone.utc)
 
 CATS = [("us","U.S."),("world","World"),("politics","Politics"),("business","Business"),
@@ -77,6 +79,7 @@ def load_prs():
         if not m: print(f"WARN bad frontmatter {p.name}", file=sys.stderr); continue
         fm = yaml.safe_load(m.group(1)) or {}
         fm["body"] = markdown.markdown(m.group(2), extensions=["extra"])
+        fm["md"] = m.group(2).strip()
         fm["slug"] = p.stem
         fm["date"] = str(fm.get("date", p.stem[:10]))
         prs.append(fm)
@@ -134,7 +137,7 @@ def ago(ts):
 
 def iso(ts): return dt.datetime.fromtimestamp(ts or NOW.timestamp(), dt.timezone.utc).isoformat()
 
-def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_head="", og_img=None):
+def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_head="", og_img=None, md=None):
     full = f"{esc(title)} | {NAME}" if title != NAME else f"{NAME} | {TAG}"
     url = SITE + path
     canon = SITE + path
@@ -148,7 +151,9 @@ def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_he
 <meta property="og:image" content="{og_img or SITE + "/og.png"}"><meta property="og:image:alt" content="{NAME}"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0b1020">
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"><link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><meta name="twitter:image" content="{og_img or SITE + "/og.png"}">
-<link rel="alternate" type="application/rss+xml" title="{NAME}" href="/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="{NAME} RSS" href="/rss.xml"><link rel="alternate" type="application/atom+xml" title="{NAME} Atom" href="/feed.xml">{f'<link rel="alternate" type="text/markdown" href="{md}">' if md else ''}<link rel="help" type="text/plain" href="/llms.txt" title="llms.txt">
+<meta name="twitter:title" content="{esc(title)}"><meta name="twitter:description" content="{esc(desc)}"><meta name="robots" content="index,follow,max-image-preview:large">
+<script type="application/ld+json">{SITE_LD}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">{extra_head}</head><body>
@@ -158,10 +163,17 @@ def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_he
 <main class="wrap">{body}</main>
 <footer class="foot"><div class="wrap"><a class="logo sm" href="/"><img src="/img/logo.webp" alt="Ground Level News" width="297" height="180" loading="lazy"></a>
 <p>{TAG} Headlines are aggregated from public RSS feeds. Each story summarizes and links to the original publisher, who owns the content.</p>
-<p><a href="/press-releases/">Press Releases</a> · <a href="/rss.xml">RSS</a> · <a href="/sitemap.xml">Sitemap</a> · <a href="/about/">About</a></p>
+<p><a href="/press-releases/">Press Releases</a> · <a href="/rss.xml">RSS</a> · <a href="/feed.xml">Atom</a> · <a href="/sitemap.xml">Sitemap</a> · <a href="/llms.txt">llms.txt</a> · <a href="/about/">About</a></p>
 <p class="muted">© {NOW.year} {NAME}. Updated {NOW.strftime('%b %d, %Y %H:%M UTC')}.</p></div></footer>
 <script>document.querySelectorAll('[data-ts]').forEach(e=>{{const s=Math.floor(Date.now()/1000)-+e.dataset.ts;e.textContent=s<3600?Math.max(1,s/60|0)+'m ago':s<86400?(s/3600|0)+'h ago':new Date(e.dataset.ts*1000).toLocaleDateString(undefined,{{month:'short',day:'numeric'}})}})</script>
 </body></html>"""
+
+ORG = {"@type":"NewsMediaOrganization","@id":SITE+"/#org","name":NAME,"url":SITE+"/","logo":{"@type":"ImageObject","url":SITE+"/img/logo.png","width":297,"height":180},
+       "sameAs":[REPO],"publishingPrinciples":SITE+"/about/"}
+SITE_LD = json.dumps({"@context":"https://schema.org","@graph":[ORG,{"@type":"WebSite","@id":SITE+"/#website","url":SITE+"/","name":NAME,"description":TAG,"publisher":{"@id":SITE+"/#org"},"inLanguage":"en-US"}]}).replace("</","<\\/")
+def ldj(o): return f'<script type="application/ld+json">{json.dumps(o).replace("</","<\\/")}</script>'
+def crumbs(*pairs): return {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":n+1,"name":a,"item":SITE+b} for n,(a,b) in enumerate(pairs)]}
+def absimg(im): return (SITE + im["src"]) if im and im["src"].startswith("/") else (im or {}).get("src")
 
 def card(it, cls="card"):
     cat = "local" if it.get("local") else it["cat"]
@@ -222,8 +234,12 @@ def main():
     for i in items:
         cat = "local" if i.get("local") else i["cat"]
         rel = [r for r in by[i["cat"]] if r is not i][:4]
-        ld = {"@context":"https://schema.org","@type":"NewsArticle","headline":i["title"][:110],"datePublished":iso(i["ts"]),
-              "isBasedOn":i["link"],"publisher":{"@type":"Organization","name":NAME},"description":i["summary"][:300]}
+        ld = {"@context":"https://schema.org","@type":"NewsArticle","headline":i["title"][:110],"datePublished":iso(i["ts"]),"dateModified":iso(i["ts"]),
+              "mainEntityOfPage":f"{SITE}/story/{i['slug']}/","url":f"{SITE}/story/{i['slug']}/","image":[absimg(cat_img(cat))],"articleSection":CAT_NAME[cat],
+              "author":{"@type":"Organization","name":i.get("source") or NAME},"publisher":{"@id":SITE+"/#org","@type":"NewsMediaOrganization","name":NAME,"logo":ORG["logo"]},
+              "isBasedOn":i["link"],"description":i["summary"][:300]}
+        (OUT/"story").mkdir(parents=True, exist_ok=True)
+        (OUT/f"story/{i['slug']}.md").write_text(f"# {i['title']}\n\n- Source: {i.get('source')}\n- Published: {iso(i['ts'])}\n- Category: {CAT_NAME[cat]}\n- Original: {i['link']}\n- Canonical: {SITE}/story/{i['slug']}/\n\n{i['summary'] or 'Read the full report from the original publisher.'}\n\n_Ground Level News shows a short summary only; the full article and all rights belong to {i.get('source') or 'the original publisher'}._\n", encoding="utf-8")
         b = f"""<article class="story"><a class="crumb" href="/category/{cat}/">{esc(CAT_NAME[cat])}</a>
 <h1>{esc(i['title'])}</h1><div class="byline">Source: <b>{esc(i.get('source'))}</b> · <time datetime="{iso(i['ts'])}">{dt.datetime.fromtimestamp(i['ts'] or NOW.timestamp(), dt.timezone.utc).strftime('%b %d, %Y %H:%M UTC')}</time></div>
 {figure(cat_img(cat), False, "Category image, not from this story. ")}<div class="summary"><h2>The Quick Take</h2><p>{esc(i['summary']) or 'Read the full report from the original publisher.'}</p></div>
@@ -231,7 +247,7 @@ def main():
 <p class="attr">Ground Level News aggregates headlines from public feeds. This page shows a short summary only; the full article and all rights belong to {esc(i.get('source') or 'the original publisher')}.</p>
 {f'<h2 class="rel">Related</h2><div class="grid">{"".join(card(r) for r in rel)}</div>' if rel else ''}</article>"""
         write(f"/story/{i['slug']}/", page(i["title"], b, i["summary"] or i["title"], f"/story/{i['slug']}/", ticker, "article",
-              f'<script type="application/ld+json">{json.dumps(ld)}</script>'))
+              ldj(ld) + ldj(crumbs(("Home","/"),(CAT_NAME[cat],f"/category/{cat}/"),(i["title"][:110],f"/story/{i['slug']}/"))), md=f"/story/{i['slug']}.md"))
 
     # press releases
     lst = "".join(f'<a class="card pr-card" href="/press-releases/{p["slug"]}/"><span class="thumb">{img_tag(pr_img(p), sizes="(max-width:620px) 100vw, 400px")}</span><span class="tag t-pr">{esc(p.get("area") or "Release")}{" · EXAMPLE" if p.get("example") else ""}</span><h3>{esc(p["title"])}</h3><p>{esc(p.get("summary"))}</p><span class="meta">{esc(p.get("company"))} · {esc(p["date"])}</span></a>' for p in prs)
@@ -242,7 +258,16 @@ def main():
 <div class="byline"><b>{esc(p.get('company'))}</b> · {esc(p['date'])}{' · ' + esc(p.get('area')) if p.get('area') else ''}</div>
 {figure(pr_img(p), False)}<div class="summary"><p>{esc(p.get('summary'))}</p></div><div class="prose">{p['body']}</div>{src}
 <p class="attr">Media contact: {esc(p.get('contact'))}</p></article>"""
-        write(f"/press-releases/{p['slug']}/", page(p["title"], b, p.get("summary") or p["title"], f"/press-releases/{p['slug']}/", ticker, "article", og_img=(SITE + pr_img(p)["src"]) if pr_img(p) and pr_img(p)["src"].startswith("/") else None))
+        u = f"{SITE}/press-releases/{p['slug']}/"
+        ld = {"@context":"https://schema.org","@type":"NewsArticle","headline":p["title"][:110],"datePublished":p["date"],"dateModified":p.get("updated") and str(p["updated"]) or p["date"],
+              "mainEntityOfPage":u,"url":u,"image":[absimg(pr_img(p))],"articleSection":"Press Releases","description":p.get("summary") or "",
+              "author":{"@type":"Organization","name":p.get("company") or NAME},"publisher":{"@id":SITE+"/#org","@type":"NewsMediaOrganization","name":NAME,"logo":ORG["logo"]}}
+        if p.get("area"): ld["contentLocation"] = {"@type":"Place","name":p["area"]}
+        if p.get("source_url"): ld["isBasedOn"] = p["source_url"]
+        im = pr_img(p) or {}
+        p["md_full"] = f"# {p['title']}\n\n- Date: {p['date']}\n- From: {p.get('company')}\n- Area: {p.get('area') or ''}\n- Canonical: {u}\n" + (f"- Source: {p['source_url']}\n" if p.get("source_url") else "") + (f"- Image: {absimg(im)} ({im.get('label')}; {im.get('credit')}; {im.get('license')}; {im.get('source')})\n" if im else "") + f"\n> {p.get('summary') or ''}\n\n{p['md']}\n\nMedia contact: {p.get('contact') or ''}\n"
+        (OUT/f"press-releases/{p['slug']}.md").write_text(p["md_full"], encoding="utf-8")
+        write(f"/press-releases/{p['slug']}/", page(p["title"], b, p.get("summary") or p["title"], f"/press-releases/{p['slug']}/", ticker, "article", ldj(ld) + ldj(crumbs(("Home","/"),("Press Releases","/press-releases/"),(p["title"][:110],f"/press-releases/{p['slug']}/"))), og_img=absimg(pr_img(p)), md=f"/press-releases/{p['slug']}.md"))
 
     write("/about/", page("About", f'<article class="story"><h1>About {NAME}</h1><div class="prose"><p>{NAME} is a fast, free news front page built from hundreds of public RSS feeds and refreshed every 15 minutes. Every story links to its original publisher. Raw SEC filing noise is filtered out.</p><p>Local press releases are published from Markdown files in our <a href="https://github.com/AXIA-Enterprises-DEV/ground-level-news">GitHub repository</a>.</p></div></article>', path="/about/", ticker=ticker))
     write("/404.html", page("Not found", '<article class="story"><h1>Page not found</h1><p>This story may have rolled off the wire. <a href="/">Back to the homepage →</a></p></article>', ticker=ticker))
@@ -260,7 +285,56 @@ def main():
 
     urls = ["/", "/press-releases/", "/about/"] + [f"/category/{k}/" for k, _ in CATS] + [f"/press-releases/{p['slug']}/" for p in prs] + [f"/story/{i['slug']}/" for i in items]
     (OUT/"sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(f"<url><loc>{SITE}{u}</loc></url>" for u in urls) + "</urlset>", encoding="utf-8")
-    (OUT/"robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n")
+    bots = ["GPTBot","OAI-SearchBot","ChatGPT-User","ClaudeBot","Claude-User","Claude-SearchBot","PerplexityBot","Perplexity-User","Google-Extended","Applebot-Extended","Applebot","CCBot","Bingbot","Googlebot"]
+    (OUT/"robots.txt").write_text("# Ground Level News welcomes search engines and AI agents. See /llms.txt and /agents.md\n" + "".join(f"User-agent: {b}\nAllow: /\n\n" for b in bots) + f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\nSitemap: {SITE}/news-sitemap.xml\n", encoding="utf-8")
+    def prts(p):
+        try: return int(dt.datetime.fromisoformat(p["date"]).replace(tzinfo=dt.timezone.utc).timestamp())
+        except Exception: return int(NOW.timestamp())
+    cut = NOW.timestamp() - 48*3600
+    news = [(f"/press-releases/{p['slug']}/", p["title"], prts(p)) for p in prs if not p.get("example") and prts(p) >= cut - 86400] + [(f"/story/{i['slug']}/", i["title"], i["ts"]) for i in items if i["ts"] >= cut]
+    news = news[:1000]
+    (OUT/"news-sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">' + "".join(f"<url><loc>{SITE}{u}</loc><news:news><news:publication><news:name>{NAME}</news:name><news:language>en</news:language></news:publication><news:publication_date>{iso(ts)}</news:publication_date><news:title>{esc(t)}</news:title></news:news></url>" for u, t, ts in news) + "</urlset>", encoding="utf-8")
+    # Atom feed
+    aent = [(f"{SITE}/press-releases/{p['slug']}/", p["title"], p.get("summary") or "", prts(p), p.get("company") or NAME) for p in prs if not p.get("example")] + [(f"{SITE}/story/{i['slug']}/", i["title"], i["summary"], i["ts"] or int(NOW.timestamp()), i.get("source") or NAME) for i in items[:100]]
+    aent.sort(key=lambda x: -x[3])
+    (OUT/"feed.xml").write_text(f'<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title>{NAME}</title><subtitle>{TAG}</subtitle><link href="{SITE}/feed.xml" rel="self"/><link href="{SITE}/"/><id>{SITE}/</id><updated>{NOW.isoformat()}</updated><icon>{SITE}/favicon-32.png</icon><logo>{SITE}/og.png</logo>' + "".join(f'<entry><title>{esc(t)}</title><link href="{l}"/><id>{l}</id><updated>{iso(ts)}</updated><author><name>{esc(a)}</name></author><summary>{esc(d)}</summary></entry>' for l, t, d, ts, a in aent) + "</feed>", encoding="utf-8")
+    # llms.txt / llms-full.txt
+    real = [p for p in prs if not p.get("example")]
+    llms = f"""# {NAME}
+
+> {NAME} ({SITE}) is a free, fast U.S. and local news front page for the Colorado River region (Bullhead City, Laughlin, Mohave Valley, Clark County, Mesquite, Boulder City). It aggregates headlines from public RSS feeds every ~15 minutes, summarizing and linking each story to its original publisher, and publishes local press releases written in Markdown.
+
+Every HTML article has a Markdown twin: append `.md` to the path without the trailing slash (e.g. `/press-releases/<slug>.md`, `/story/<slug>.md`). Aggregated story pages contain short summaries only; rights belong to the original publishers. Images carry credit and license lines; "File photo" and "Illustration" images do not depict the actual event.
+
+## Key pages
+- [Homepage]({SITE}/): top story, latest headlines and sections
+- [Press releases]({SITE}/press-releases/): local announcements
+- [About]({SITE}/about/): what the site is and how it works
+- [Agent guide]({SITE}/agents.md): site structure and how to submit a press release
+- [Full press release text]({SITE}/llms-full.txt)
+
+## Press releases
+""" + "".join(f"- [{p['title']}]({SITE}/press-releases/{p['slug']}.md): {clean(p.get('summary'), 200)}\n" for p in real) + "\n## Sections\n" + "".join(f"- [{v}]({SITE}/category/{k}/)\n" for k, v in CATS) + f"""
+## Feeds and data
+- [RSS]({SITE}/rss.xml)
+- [Atom]({SITE}/feed.xml)
+- [Sitemap]({SITE}/sitemap.xml)
+- [Google News sitemap]({SITE}/news-sitemap.xml)
+
+## Optional
+- [Source repository]({REPO})
+- [Example press release template]({SITE}/press-releases/2026-01-01-example-template.md)
+"""
+    (OUT/"llms.txt").write_text(llms, encoding="utf-8")
+    (OUT/"llms-full.txt").write_text(f"# {NAME}: full text of press releases\n\n> Generated {NOW.strftime('%Y-%m-%d %H:%M UTC')} from {SITE}. Each release below is separated by a horizontal rule.\n\n" + "\n\n---\n\n".join(p["md_full"] for p in real), encoding="utf-8")
+    agents = (ROOT/"AGENTS.md").read_text(encoding="utf-8") if (ROOT/"AGENTS.md").exists() else ""
+    (OUT/"agents.md").write_text(agents, encoding="utf-8")
+    (OUT/".well-known").mkdir(exist_ok=True)
+    exp = (NOW + dt.timedelta(days=330)).strftime("%Y-%m-%dT00:00:00Z")
+    (OUT/".well-known/security.txt").write_text(f"Contact: {REPO}/security/advisories/new\nContact: {REPO}/issues\nExpires: {exp}\nPreferred-Languages: en\nCanonical: {SITE}/.well-known/security.txt\n", encoding="utf-8")
+    (OUT/"humans.txt").write_text(f"/* TEAM */\nPublisher: {NAME}\nSite: {SITE}\nSource: {REPO}\n\n/* SITE */\nLast update: {NOW.strftime('%Y/%m/%d')}\nStandards: HTML5, CSS3, schema.org, llms.txt\nSoftware: Python static site builder, GitHub Pages\n", encoding="utf-8")
+    (OUT/f"{INDEXNOW_KEY}.txt").write_text(INDEXNOW_KEY, encoding="utf-8")
+    (OUT/"indexnow-urls.txt").write_text("\n".join([SITE + "/", SITE + "/press-releases/"] + [SITE + u for u, _, _ in news]) + "\n", encoding="utf-8")
     print("built", len(urls), "pages")
 
 if __name__ == "__main__": main()

@@ -24,3 +24,25 @@ jobs:
     steps:
       - id: d
         uses: actions/deploy-pages@v4
+  indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Ping IndexNow (Bing and partners; free)
+        run: |
+          sleep 30
+          python3 - <<'PY'
+          import json, urllib.request
+          host = "groundlevelnews.com"; key = "5a8308b39ca87422bfd5d4eb53c1c5bb"
+          try:
+              urls = urllib.request.urlopen(f"http://{host}/indexnow-urls.txt", timeout=30).read().decode().split()
+          except Exception as e:
+              print("could not fetch url list:", e); urls = [f"https://{host}/"]
+          body = json.dumps({"host": host, "key": key, "keyLocation": f"https://{host}/{key}.txt", "urlList": urls[:10000]}).encode()
+          req = urllib.request.Request("https://api.indexnow.org/indexnow", data=body, headers={"Content-Type": "application/json; charset=utf-8"})
+          try:
+              r = urllib.request.urlopen(req, timeout=30); print("IndexNow", r.status, len(urls), "urls")
+          except Exception as e:
+              print("IndexNow error:", e)
+          PY
