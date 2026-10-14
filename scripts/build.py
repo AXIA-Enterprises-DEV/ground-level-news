@@ -158,7 +158,7 @@ def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_he
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">{extra_head}</head><body>
 <div class="ticker"><span class="live">LIVE</span><div class="tk-wrap"><div class="tk">{ticker}{ticker}</div></div></div>
-<header class="top"><div class="wrap hdr"><a class="logo" href="/" aria-label="Ground Level News home"><img src="/img/logo-knockout.webp" alt="Ground Level News" width="206" height="112" fetchpriority="high"></a>
+<header class="top"><div class="wrap hdr"><a class="logo" href="/" aria-label="Ground Level News home"><img src="/img/logo-header.webp" alt="Ground Level News" width="191" height="104" fetchpriority="high"></a>
 <nav class="nav" aria-label="Sections">{nav}</nav></div></header>
 <main class="wrap">{body}</main>
 <footer class="foot"><div class="wrap"><a class="logo sm" href="/"><img src="/img/logo.webp" alt="Ground Level News" width="297" height="180" loading="lazy"></a>

@@ -82,3 +82,13 @@ img{max-width:100%;height:auto}
 .story{padding:clamp(16px,3vw,32px);border-radius:16px}.byline{margin-bottom:12px}.summary{padding:12px 16px;font-size:16.5px}.cta{margin:14px 0}.prose{font-size:17px;line-height:1.6}
 .foot{padding:20px 0}
 .hero{align-items:stretch}.leadwrap .lead{flex:1}@media(max-width:620px){.lead{min-height:260px;padding:18px}.lead p{font-size:15px}}
+/* header v3: white bar, full-color logo */
+.top{background:#fff;border-bottom:1px solid #E8E2D4}
+.hdr{height:72px;gap:28px}
+.logo img{height:52px;width:auto}
+.top .nav{gap:24px;background:none;padding:0}
+.top .nav a{color:#0B1A33;font:600 15px var(--h);padding:6px 0;border-radius:0;background:none;border-bottom:2px solid transparent;line-height:1.2}
+.top .nav a:hover,.top .nav a[aria-current]{color:#0B1A33;background:none;border-bottom-color:#D7141A}
+.top .nav a.pr{margin-left:auto;background:#D7141A;color:#fff;border:0;border-radius:999px;padding:7px 16px;flex:none}
+.top .nav a.pr:hover{background:#b01016;color:#fff}
+@media(max-width:900px){.hdr{height:60px;gap:16px}.logo img{height:44px}.top .nav{gap:16px}.top .nav a{font-size:14px}.top .nav a.pr{margin-left:4px;padding:6px 12px}}
