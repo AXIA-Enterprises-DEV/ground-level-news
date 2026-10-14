@@ -148,7 +148,8 @@ def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_he
     full = f"{esc(title)} | {NAME}" if title != NAME else f"{NAME} | {TAG}"
     url = SITE + path
     canon = SITE + path
-    nav = "".join(f'<a href="/category/{k}/">{v}</a>' for k, v in CATS) + '<a href="/press-releases/" class="pr">Press Releases</a>'
+    cur = lambda pre: ' aria-current="page"' if path.startswith(pre) else ""
+    nav = "".join(f'<a href="/category/{k}/"{cur(f"/category/{k}/")}>{v}</a>' for k, v in CATS) + f'<a href="/press-releases/" class="pr"{cur("/press-releases/")}>Press Releases</a>'
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{full}</title><meta name="description" content="{esc(desc)}">
@@ -156,23 +157,32 @@ def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_he
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{url}"><meta property="og:type" content="{og_type}">
 <meta property="og:image" content="{og_img or SITE + "/og.png"}"><meta property="og:image:alt" content="{NAME}"><meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0b1020">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"><link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><meta name="twitter:image" content="{og_img or SITE + "/og.png"}">
 <link rel="alternate" type="application/rss+xml" title="{NAME} RSS" href="/rss.xml"><link rel="alternate" type="application/atom+xml" title="{NAME} Atom" href="/feed.xml">{f'<link rel="alternate" type="text/markdown" href="{md}">' if md else ''}<link rel="help" type="text/plain" href="/llms.txt" title="llms.txt">
 <meta name="twitter:title" content="{esc(title)}"><meta name="twitter:description" content="{esc(desc)}"><meta name="robots" content="index,follow,max-image-preview:large">
 <script type="application/ld+json">{SITE_LD}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/jakarta.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="manifest" href="/site.webmanifest"><meta name="color-scheme" content="light"><meta name="format-detection" content="telephone=no">
 <link rel="stylesheet" href="/style.css">{extra_head}</head><body>
 <div class="ticker"><span class="live">LIVE</span><div class="tk-wrap"><div class="tk">{ticker}{ticker}</div></div></div>
-<header class="top"><div class="wrap hdr"><a class="logo" href="/" aria-label="Ground Level News home"><img src="/img/logo-header.webp" alt="Ground Level News" width="191" height="104" fetchpriority="high"></a>
-<nav class="nav" aria-label="Sections">{nav}</nav></div></header>
-<main class="wrap">{body}</main>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top" id="top"><div class="wrap hdr"><a class="logo" href="/" aria-label="Ground Level News home"><img src="/img/logo-header.webp" alt="Ground Level News" width="191" height="104"></a>
+<button class="menu" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu"><span></span><span></span><span></span></button>
+<nav class="nav" id="site-nav" aria-label="Sections">{nav}</nav></div></header>
+<main class="wrap" id="main">{body}</main>
 <footer class="foot"><div class="wrap"><a class="logo sm" href="/"><img src="/img/logo.webp" alt="Ground Level News" width="297" height="180" loading="lazy"></a>
 <p>{TAG} Headlines are aggregated from public RSS feeds. Each story summarizes and links to the original publisher, who owns the content.</p>
 <p><a href="/press-releases/">Press Releases</a> · <a href="/rss.xml">RSS</a> · <a href="/feed.xml">Atom</a> · <a href="/sitemap.xml">Sitemap</a> · <a href="/llms.txt">llms.txt</a> · <a href="/about/">About</a></p>
 <p class="muted">© {NOW.year} {NAME}. Updated {NOW.strftime('%b %d, %Y %H:%M UTC')}.</p></div></footer>
 <script>document.querySelectorAll('[data-ts]').forEach(e=>{{const s=Math.floor(Date.now()/1000)-+e.dataset.ts;e.textContent=s<3600?Math.max(1,s/60|0)+'m ago':s<86400?(s/3600|0)+'h ago':new Date(e.dataset.ts*1000).toLocaleDateString(undefined,{{month:'short',day:'numeric'}})}})</script>
+<script>(function(){{var b=document.querySelector('.menu'),n=document.getElementById('site-nav'),t=document.getElementById('top');
+function set(o){{document.body.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.setAttribute('aria-label',o?'Close menu':'Open menu');}}
+b.addEventListener('click',function(){{var o=b.getAttribute('aria-expanded')!=='true';set(o);if(o){{var a=n.querySelector('a');a&&a.focus();}}}});
+document.addEventListener('keydown',function(e){{if(e.key==='Escape'&&b.getAttribute('aria-expanded')==='true'){{set(false);b.focus();}}}});
+n.addEventListener('click',function(e){{if(e.target.closest('a'))set(false);}});
+matchMedia('(min-width:901px)').addEventListener('change',function(m){{if(m.matches)set(false);}});
+var s=false;addEventListener('scroll',function(){{var c=scrollY>60;if(c!==s){{s=c;t.classList.toggle('compact',c);}}}},{{passive:true}});}})();</script>
 </body></html>"""
 
 ORG = {"@type":"NewsMediaOrganization","@id":SITE+"/#org","name":NAME,"url":SITE+"/","logo":{"@type":"ImageObject","url":SITE+"/img/logo.png","width":297,"height":180},
@@ -233,7 +243,7 @@ def main():
     body = ""
     if lead:
         lim = cat_img("local" if lead.get("local") else lead["cat"])
-        body += f"""<section class="hero"><div class="leadwrap"><a class="lead" href="/story/{lead['slug']}/">{img_tag(lim, "lead-bg", False, "(max-width:980px) 100vw, 800px")}<span class="tag t-{lead['cat']}">Top Story</span>
+        body += f"""<section class="hero"><div class="leadwrap"><a class="lead{' brandlead' if (lim or {}).get('brand') else ''}" href="/story/{lead['slug']}/">{'' if (lim or {}).get('brand') else img_tag(lim, "lead-bg", False, "(max-width:980px) 100vw, 800px")}<span class="tag t-{lead['cat']}">Top Story</span>
 <h1>{esc(lead['title'])}</h1><p>{esc(lead['summary'])}</p><span class="meta">{esc(lead.get('source'))} · <time data-ts="{lead['ts']}">{ago(lead['ts'])}</time></span>
 </a>{f'<p class="lead-cap">{credit(lim)}</p>' if credit(lim) else ''}</div>
 <aside class="latest"><h2><span class="pulse"></span>Latest</h2>{"".join(card(i,'mini') for i in rest[:6])}<details class="more"><summary>View more</summary>{"".join(card(i,'mini') for i in rest[6:16])}</details></aside></section>"""
