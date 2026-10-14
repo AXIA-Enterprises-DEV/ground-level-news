@@ -153,9 +153,8 @@ def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_he
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">{extra_head}</head><body>
 <div class="ticker"><span class="live">LIVE</span><div class="tk-wrap"><div class="tk">{ticker}{ticker}</div></div></div>
-<header class="top"><div class="wrap hdr"><a class="logo" href="/" aria-label="Ground Level News home"><img src="/img/logo.webp" alt="Ground Level News" width="297" height="180" fetchpriority="high"></a>
-<button class="menu" onclick="document.body.classList.toggle('open')" aria-label="Menu">☰</button></div>
-<nav class="nav"><div class="wrap">{nav}</div></nav></header>
+<header class="top"><div class="wrap hdr"><a class="logo" href="/" aria-label="Ground Level News home"><img src="/img/logo-knockout.webp" alt="Ground Level News" width="206" height="112" fetchpriority="high"></a>
+<nav class="nav" aria-label="Sections">{nav}</nav></div></header>
 <main class="wrap">{body}</main>
 <footer class="foot"><div class="wrap"><a class="logo sm" href="/"><img src="/img/logo.webp" alt="Ground Level News" width="297" height="180" loading="lazy"></a>
 <p>{TAG} Headlines are aggregated from public RSS feeds. Each story summarizes and links to the original publisher, who owns the content.</p>
@@ -206,11 +205,11 @@ def main():
     body = ""
     if lead:
         lim = cat_img("local" if lead.get("local") else lead["cat"])
-        body += f"""<section class="hero"><a class="lead" href="/story/{lead['slug']}/">{img_tag(lim, "lead-bg", False, "(max-width:980px) 100vw, 800px")}<span class="tag t-{lead['cat']}">Top Story</span>
+        body += f"""<section class="hero"><div class="leadwrap"><a class="lead" href="/story/{lead['slug']}/">{img_tag(lim, "lead-bg", False, "(max-width:980px) 100vw, 800px")}<span class="tag t-{lead['cat']}">Top Story</span>
 <h1>{esc(lead['title'])}</h1><p>{esc(lead['summary'])}</p><span class="meta">{esc(lead.get('source'))} · <time data-ts="{lead['ts']}">{ago(lead['ts'])}</time></span>
-<span class="lead-cr">{esc((lim or {}).get("label",""))}: {esc((lim or {}).get("credit",""))}</span></a>
-<aside class="latest"><h2><span class="pulse"></span>Latest</h2>{"".join(card(i,'mini') for i in rest[:8])}</aside></section>"""
-    body += f'<section class="sec"><div class="sh"><h2><span class="bar t-local"></span>Top Headlines</h2></div><div class="grid g4">{"".join(card(i) for i in rest[8:16])}</div></section>'
+</a><p class="lead-cap">{credit(lim)}</p></div>
+<aside class="latest"><h2><span class="pulse"></span>Latest</h2>{"".join(card(i,'mini') for i in rest[:6])}<details class="more"><summary>View more</summary>{"".join(card(i,'mini') for i in rest[6:16])}</details></aside></section>"""
+    body += f'<section class="sec"><div class="sh"><h2><span class="bar t-local"></span>Top Headlines</h2></div><div class="grid g4">{"".join(card(i) for i in rest[16:24])}</div></section>'
     body += f'<div class="two"><div>{secs}</div><aside class="side"><div class="box"><h2>Press Releases</h2>{prbox}<a class="btn" href="/press-releases/">All releases →</a></div></aside></div>'
     write("/", page(NAME, body, ticker=ticker))
 
