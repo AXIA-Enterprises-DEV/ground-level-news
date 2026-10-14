@@ -39,65 +39,9 @@ images:
     license_url: null
     source: https://commons.wikimedia.org/wiki/File:Clark_County_Government_Center.jpg
     label: File photo
-  cat-us:
-    src: /img/photos/cat-us.webp
-    alt: NASA satellite image of U.S. city lights at night
-    credit: NASA Earth Observatory / Wikimedia Commons
-    license: Public domain
-    license_url: null
-    source: https://commons.wikimedia.org/wiki/File:City_Lights_of_the_United_States_2012.jpg
-    label: File photo
-  cat-world:
-    src: /img/photos/cat-world.webp
-    alt: NASA "Black Marble" view of Earth at night
-    credit: NASA Goddard Space Flight Center from Greenbelt, MD, USA / Wikimedia Commons
-    license: Public domain
-    license_url: null
-    source: https://commons.wikimedia.org/wiki/File:Black_Marble_-_City_Lights_2012_(8246892319).jpg
-    label: File photo
-  cat-tech:
-    src: /img/photos/cat-tech.webp
-    alt: Close-up of a green printed circuit board
-    credit: Peter Shanks from Hobart, Australia / Wikimedia Commons
-    license: CC BY 2.0
-    license_url: https://creativecommons.org/licenses/by/2.0
-    source: https://commons.wikimedia.org/wiki/File:Green_circuit_board_II_(2389301870).jpg
-    label: File photo
-  cat-science:
-    src: /img/photos/cat-science.webp
-    alt: Hubble Space Telescope image of the Pillars of Creation
-    credit: NASA, ESA, and the Hubble Heritage Team (STScI/AURA) / Wikimedia Commons
-    license: Public domain
-    license_url: null
-    source: https://commons.wikimedia.org/wiki/File:Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg
-    label: File photo
-  cat-sports:
-    src: /img/photos/cat-sports.webp
-    alt: Empty soccer stadium under floodlights
-    credit: DAI-nk / Wikimedia Commons
-    license: CC BY-SA 3.0
-    license_url: https://creativecommons.org/licenses/by-sa/3.0
-    source: https://commons.wikimedia.org/wiki/File:Inside_of_Niigata_stadium-1.jpg
-    label: File photo
   fire-station:
     src: /img/illustrations/fire-station.webp
     alt: Illustration of a desert fire station with a red fire engine out front
-    credit: Ground Level News illustration, generated with the open-source Z-Image-Turbo model
-    license: Generated illustration; no real people depicted
-    license_url: null
-    source: https://huggingface.co/Tongyi-MAI/Z-Image-Turbo
-    label: Illustration
-  cat-markets:
-    src: /img/illustrations/cat-markets.webp
-    alt: Illustration of stock market candlestick charts
-    credit: Ground Level News illustration, generated with the open-source Z-Image-Turbo model
-    license: Generated illustration; no real people depicted
-    license_url: null
-    source: https://huggingface.co/Tongyi-MAI/Z-Image-Turbo
-    label: Illustration
-  cat-government:
-    src: /img/illustrations/cat-government.webp
-    alt: Illustration of a domed government capitol building at sunset
     credit: Ground Level News illustration, generated with the open-source Z-Image-Turbo model
     license: Generated illustration; no real people depicted
     license_url: null
@@ -111,14 +55,74 @@ images:
     license_url: null
     source: https://huggingface.co/Tongyi-MAI/Z-Image-Turbo
     label: Illustration
+  brand-us:
+    src: /img/brand/cat-us.webp
+    sm: /img/brand/cat-us-sm.webp
+    alt: Ground Level News U.S. placeholder
+    credit: Ground Level News
+    brand: true
+  brand-world:
+    src: /img/brand/cat-world.webp
+    sm: /img/brand/cat-world-sm.webp
+    alt: Ground Level News World placeholder
+    credit: Ground Level News
+    brand: true
+  brand-politics:
+    src: /img/brand/cat-politics.webp
+    sm: /img/brand/cat-politics-sm.webp
+    alt: Ground Level News Politics placeholder
+    credit: Ground Level News
+    brand: true
+  brand-business:
+    src: /img/brand/cat-business.webp
+    sm: /img/brand/cat-business-sm.webp
+    alt: Ground Level News Business placeholder
+    credit: Ground Level News
+    brand: true
+  brand-markets:
+    src: /img/brand/cat-markets.webp
+    sm: /img/brand/cat-markets-sm.webp
+    alt: Ground Level News Markets placeholder
+    credit: Ground Level News
+    brand: true
+  brand-tech:
+    src: /img/brand/cat-tech.webp
+    sm: /img/brand/cat-tech-sm.webp
+    alt: Ground Level News Tech placeholder
+    credit: Ground Level News
+    brand: true
+  brand-science:
+    src: /img/brand/cat-science.webp
+    sm: /img/brand/cat-science-sm.webp
+    alt: Ground Level News Science placeholder
+    credit: Ground Level News
+    brand: true
+  brand-sports:
+    src: /img/brand/cat-sports.webp
+    sm: /img/brand/cat-sports-sm.webp
+    alt: Ground Level News Sports placeholder
+    credit: Ground Level News
+    brand: true
+  brand-local:
+    src: /img/brand/cat-local.webp
+    sm: /img/brand/cat-local-sm.webp
+    alt: Ground Level News Local placeholder
+    credit: Ground Level News
+    brand: true
+  brand-pr:
+    src: /img/brand/cat-pr.webp
+    sm: /img/brand/cat-pr-sm.webp
+    alt: Ground Level News Press Release placeholder
+    credit: Ground Level News
+    brand: true
 category_images:
-  us: cat-us
-  world: cat-world
-  politics: cat-government
-  business: cat-business
-  markets: cat-markets
-  tech: cat-tech
-  science: cat-science
-  sports: cat-sports
-  local: laughlin-riverfront
-  pr: cat-business
+  us: brand-us
+  world: brand-world
+  politics: brand-politics
+  business: brand-business
+  markets: brand-markets
+  tech: brand-tech
+  science: brand-science
+  sports: brand-sports
+  local: brand-local
+  pr: brand-pr
