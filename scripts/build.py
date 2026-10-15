@@ -158,16 +158,20 @@ def pick_img(text, cat, seed):
     t = (text or "").lower()
     score = {}
     for rx, w, key in _kw_index():
-        if rx.search(t): score[key] = score.get(key, 0) + w + (6 if cat in (imgs[key].get("buckets") or []) else 0)
+        bk = imgs[key].get("buckets") or []
+        if rx.search(t): score[key] = score.get(key, 0) + w + (6 if cat in bk or (cat == "pr" and "local" in bk) else 0)
     h = int(hashlib.sha1(str(seed).encode()).hexdigest(), 16)
     if score:
-        best = max(score.values()); top = sorted(k for k, v in score.items() if v >= best - 2)
+        best = max(score.values()); top = sorted(k for k, v in score.items() if v == best)
         return imgs[top[h % len(top)]]
     pool = sorted(_bucket(cat))
     return imgs[pool[h % len(pool)]] if pool else cat_img(cat)
+LOCAL_RX = re.compile(r"\b(nevada|las vegas|henderson|laughlin|bullhead|mohave|kingman|havasu|arizona|clark county|mesquite|boulder city|lake mead|hoover dam|colorado river|reno)\b", re.I)
 def story_img(it):
-    cat = "local" if it.get("local") else it["cat"]
-    return pick_img(it["title"] + " " + it.get("summary", "")[:160], cat, it["id"])
+    text = it["title"] + " " + it.get("summary", "")[:160]
+    # The feed tags some non-local stories "local"; only use the local photo pool when the story names the region.
+    cat = "local" if it.get("local") and LOCAL_RX.search(text) else it["cat"]
+    return pick_img(text, cat, it["id"])
 def pr_img(p):
     """Front-matter image for a press release, else a photo matched on area/topic/title."""
     if p.get("image"):

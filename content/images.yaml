@@ -7,8 +7,17 @@ images:
     license_url: https://creativecommons.org/licenses/by-sa/3.0
     source: https://commons.wikimedia.org/wiki/File:Bullhead_City_Arizona_1.jpg
     label: File photo
-    buckets: [local, pr]
-    keywords: [bullhead city, bullhead, mohave valley, fort mohave, mohave county, arizona]
+    buckets:
+    - local
+    - pr
+    keywords:
+    - bullhead city
+    - bullhead
+    - mohave valley
+    - fort mohave
+    - mohave county
+    - arizona
+    sm: /img/photos/bullhead-city-sm.webp
   laughlin-riverfront:
     src: /img/photos/laughlin-riverfront.webp
     alt: Riverwalk and resort towers along the Colorado River in Laughlin, Nevada
@@ -17,8 +26,18 @@ images:
     license_url: https://creativecommons.org/licenses/by-sa/2.0
     source: https://commons.wikimedia.org/wiki/File:Resorts_of_Laughlin,_Nevada_Along_Colorado_River_(10086859356).jpg
     label: File photo
-    buckets: [local, pr]
-    keywords: [laughlin, riverside, casino, colorado river, riverwalk, tourism, resort]
+    buckets:
+    - local
+    - pr
+    keywords:
+    - laughlin
+    - riverside
+    - casino
+    - colorado river
+    - riverwalk
+    - tourism
+    - resort
+    sm: /img/photos/laughlin-riverfront-sm.webp
   boulder-city:
     src: /img/photos/boulder-city.webp
     alt: American flag outside the historic Boulder Dam Hotel in Boulder City, Nevada
@@ -27,8 +46,15 @@ images:
     license_url: https://creativecommons.org/licenses/by-sa/4.0
     source: https://commons.wikimedia.org/wiki/File:Boulder_Dam_Hotel_American_Flag.jpg
     label: File photo
-    buckets: [local, pr, us]
-    keywords: [boulder city, veterans, flag]
+    buckets:
+    - local
+    - pr
+    - us
+    keywords:
+    - boulder city
+    - veterans
+    - flag
+    sm: /img/photos/boulder-city-sm.webp
   mesquite:
     src: /img/photos/mesquite.webp
     alt: Street near city hall in Mesquite, Nevada, with snow-capped mountains in the distance
@@ -37,8 +63,13 @@ images:
     license_url: https://creativecommons.org/licenses/by-sa/3.0
     source: https://commons.wikimedia.org/wiki/File:Mesquite_Nevada_2.jpg
     label: File photo
-    buckets: [local, pr]
-    keywords: [mesquite, virgin valley]
+    buckets:
+    - local
+    - pr
+    keywords:
+    - mesquite
+    - virgin valley
+    sm: /img/photos/mesquite-sm.webp
   clark-county-govt-center:
     src: /img/photos/clark-county-govt-center.webp
     alt: Pyramid-shaped building at the Clark County Government Center in Las Vegas
@@ -47,8 +78,15 @@ images:
     license_url: null
     source: https://commons.wikimedia.org/wiki/File:Clark_County_Government_Center.jpg
     label: File photo
-    buckets: [local, pr]
-    keywords: [clark county, county commission, las vegas, commissioners]
+    buckets:
+    - local
+    - pr
+    keywords:
+    - clark county
+    - county commission
+    - las vegas
+    - commissioners
+    sm: /img/photos/clark-county-govt-center-sm.webp
   fire-station:
     src: /img/illustrations/fire-station.webp
     alt: Illustration of a desert fire station with a red fire engine out front
@@ -57,8 +95,14 @@ images:
     license_url: null
     source: https://huggingface.co/Tongyi-MAI/Z-Image-Turbo
     label: Illustration
-    buckets: [pr]
-    keywords: [fire department, fire station, firefighters, firefighter, fire district]
+    buckets:
+    - pr
+    keywords:
+    - fire department
+    - fire station
+    - firefighters
+    - firefighter
+    - fire district
   cat-business:
     src: /img/illustrations/cat-business.webp
     alt: Illustration of storefronts on a small-town main street
@@ -127,6 +171,1775 @@ images:
     alt: Ground Level News Press Release placeholder
     credit: Ground Level News
     brand: true
+  hoover-dam-aerial:
+    src: /img/photos/hoover-dam-aerial.webp
+    sm: /img/photos/hoover-dam-aerial-sm.webp
+    alt: Aerial view of Hoover Dam and the Colorado River canyon between Nevada and Arizona
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011636070/
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - hoover dam
+    - dam
+    - colorado river
+    - boulder city
+    - bureau of reclamation
+    - hydropower
+    - water
+  hoover-dam:
+    src: /img/photos/hoover-dam.webp
+    sm: /img/photos/hoover-dam-sm.webp
+    alt: Hoover Dam seen from above, with Lake Mead behind it and the Colorado River canyon below
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011630337/
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - hoover dam
+    - dam
+    - lake mead
+    - boulder city
+    - hydropower
+    - water
+  lake-mead:
+    src: /img/photos/lake-mead.webp
+    sm: /img/photos/lake-mead-sm.webp
+    alt: Aerial view of Lake Mead with exposed shoreline and desert mountains
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011630280/
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - lake mead
+    - drought
+    - water
+    - reservoir
+    - colorado river
+    - shortage
+  lake-mead-2:
+    src: /img/photos/lake-mead-2.webp
+    sm: /img/photos/lake-mead-2-sm.webp
+    alt: Lake Mead National Recreation Area, a blue reservoir surrounded by desert mountains
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011631872/
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - lake mead
+    - recreation
+    - water
+    - reservoir
+    - boating
+  lake-mead-boulder:
+    src: /img/photos/lake-mead-boulder.webp
+    sm: /img/photos/lake-mead-boulder-sm.webp
+    alt: Red desert rock overlooking Lake Mead east of Boulder City
+    credit: 5of7 / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/53936799@N05/6911562560
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - lake mead
+    - boulder city
+    - desert
+    - recreation
+  lake-mohave:
+    src: /img/photos/lake-mohave.webp
+    sm: /img/photos/lake-mohave-sm.webp
+    alt: Lake Mohave and the shoreline near Davis Dam under a cloudy sky
+    credit: Ken Lund / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/75683070@N00/16650658873
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - lake mohave
+    - davis dam
+    - bullhead city
+    - laughlin
+    - water
+  lake-mohave-2:
+    src: /img/photos/lake-mohave-2.webp
+    sm: /img/photos/lake-mohave-2-sm.webp
+    alt: Lake Mohave road sign beside a highway above the lake near Bullhead City
+    credit: Ken Lund / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/75683070@N00/17063461647
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - lake mohave
+    - bullhead city
+    - katherine landing
+    - boating
+    - water
+  davis-dam:
+    src: /img/photos/davis-dam.webp
+    sm: /img/photos/davis-dam-sm.webp
+    alt: Davis Dam on the Colorado River, with its spillway and power plant
+    credit: Bureau of Reclamation / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/47026734@N08/8432695585
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - davis dam
+    - dam
+    - bullhead city
+    - laughlin
+    - hydropower
+    - bureau of reclamation
+    - colorado river
+  davis-dam-2:
+    src: /img/photos/davis-dam-2.webp
+    sm: /img/photos/davis-dam-2-sm.webp
+    alt: Lake Mohave behind Davis Dam, a blue lake among desert hills
+    credit: TerryDOtt / Flickr
+    license: CC BY 2.0
+    license_url: https://creativecommons.org/licenses/by/2.0/
+    source: https://www.flickr.com/photos/146878425@N05/32387582317
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - davis dam
+    - lake mohave
+    - bullhead city
+    - water
+  davis-dam-3:
+    src: /img/photos/davis-dam-3.webp
+    sm: /img/photos/davis-dam-3-sm.webp
+    alt: Blue water of the Colorado River near Davis Dam with desert shrubs on the bank
+    credit: deborah.soltesz / Flickr
+    license: CC0
+    license_url: https://creativecommons.org/publicdomain/zero/1.0/
+    source: https://www.flickr.com/photos/10836653@N05/5380269596
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - davis dam
+    - colorado river
+    - water
+    - fishing
+  laughlin-colorado-river:
+    src: /img/photos/laughlin-colorado-river.webp
+    sm: /img/photos/laughlin-colorado-river-sm.webp
+    alt: The Colorado River at Laughlin, Nevada, with a bridge and desert hills in the distance
+    credit: Ken Lund / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/75683070@N00/2640122420
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - laughlin
+    - colorado river
+    - river
+    - bullhead city
+    - bridge
+  laughlin-resorts-2:
+    src: /img/photos/laughlin-resorts-2.webp
+    sm: /img/photos/laughlin-resorts-2-sm.webp
+    alt: Laughlin, Nevada resort towers lit at dusk along the Colorado River
+    credit: Ken Lund / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/75683070@N00/10086873026
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - laughlin
+    - casino
+    - resort
+    - tourism
+    - riverfront
+    - gaming
+  laughlin-bridge:
+    src: /img/photos/laughlin-bridge.webp
+    sm: /img/photos/laughlin-bridge-sm.webp
+    alt: Laughlin, Nevada hotel towers seen across the Colorado River
+    credit: Ken Lund / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/75683070@N00/2640230878
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - laughlin
+    - colorado river
+    - casino
+    - resort
+    - bridge
+  laughlin-sr163:
+    src: /img/photos/laughlin-sr163.webp
+    sm: /img/photos/laughlin-sr163-sm.webp
+    alt: Laughlin, Nevada seen from State Route 163 across desert scrub, with mountains behind
+    credit: Ken Lund / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/75683070@N00/10086713265
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - laughlin
+    - highway
+    - sr 163
+    - desert
+    - traffic
+  bullhead-colorado-river:
+    src: /img/photos/bullhead-colorado-river.webp
+    sm: /img/photos/bullhead-colorado-river-sm.webp
+    alt: The Colorado River at Bullhead City at dusk, with lights along the bank and mountains behind
+    credit: Ken Lund / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/75683070@N00/10086799144
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - bullhead city
+    - colorado river
+    - river
+  bullhead-laughlin:
+    src: /img/photos/bullhead-laughlin.webp
+    sm: /img/photos/bullhead-laughlin-sm.webp
+    alt: Panoramic view of Bullhead City, Arizona and Laughlin, Nevada in the Colorado River valley
+    credit: TerryDOtt / Flickr
+    license: CC BY 2.0
+    license_url: https://creativecommons.org/licenses/by/2.0/
+    source: https://www.flickr.com/photos/146878425@N05/46416831205
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - bullhead city
+    - laughlin
+    - mohave valley
+    - fort mohave
+    - housing
+  mesquite-golf:
+    src: /img/photos/mesquite-golf.webp
+    sm: /img/photos/mesquite-golf-sm.webp
+    alt: Green fairway and red rock hills at a golf course in Mesquite, Nevada
+    credit: danperry.com / Flickr
+    license: CC BY 2.0
+    license_url: https://creativecommons.org/licenses/by/2.0/
+    source: https://www.flickr.com/photos/71018547@N00/22115951979
+    label: File photo
+    buckets:
+    - local
+    - sports
+    keywords:
+    - mesquite
+    - golf
+    - tournament
+  mesquite-i15:
+    src: /img/photos/mesquite-i15.webp
+    sm: /img/photos/mesquite-i15-sm.webp
+    alt: Interstate 15 approaching Mesquite, Nevada, with an exit sign and desert mountains
+    credit: Ken Lund / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/75683070@N00/2157379986
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - mesquite
+    - interstate 15
+    - i-15
+    - highway
+    - traffic
+  virgin-river-gorge:
+    src: /img/photos/virgin-river-gorge.webp
+    sm: /img/photos/virgin-river-gorge-sm.webp
+    alt: Interstate 15 through golden desert mountains between Mesquite and St. George
+    credit: Ken Lund / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/75683070@N00/2157425292
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - i-15
+    - interstate 15
+    - virgin river
+    - mesquite
+    - highway
+  bighorn-sheep:
+    src: /img/photos/bighorn-sheep.webp
+    sm: /img/photos/bighorn-sheep-sm.webp
+    alt: Two desert bighorn rams resting on grass in Boulder City, Nevada
+    credit: Ken Lund / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/75683070@N00/7186553930
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - bighorn
+    - wildlife
+    - boulder city
+    - sheep
+    - animals
+  las-vegas-strip:
+    src: /img/photos/las-vegas-strip.webp
+    sm: /img/photos/las-vegas-strip-sm.webp
+    alt: The Las Vegas Strip at dusk, seen from above with hotel towers lit up
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011636110/
+    label: File photo
+    buckets:
+    - local
+    - business
+    keywords:
+    - las vegas
+    - casino
+    - tourism
+    - gaming
+    - clark county
+  las-vegas-aerial:
+    src: /img/photos/las-vegas-aerial.webp
+    sm: /img/photos/las-vegas-aerial-sm.webp
+    alt: Daytime aerial view of hotel towers along the Las Vegas Strip
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2010630596/
+    label: File photo
+    buckets:
+    - local
+    - business
+    keywords:
+    - las vegas
+    - casino
+    - hotel
+    - clark county
+    - convention
+  mojave-desert:
+    src: /img/photos/mojave-desert.webp
+    sm: /img/photos/mojave-desert-sm.webp
+    alt: Wind-rippled sand and desert shrubs in the Mojave Desert, California
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011630364/
+    label: File photo
+    buckets:
+    - local
+    - science
+    keywords:
+    - mojave
+    - desert
+    - drought
+  joshua-trees:
+    src: /img/photos/joshua-trees.webp
+    sm: /img/photos/joshua-trees-sm.webp
+    alt: Joshua trees in the Mojave National Preserve under a blue sky
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2013631109/
+    label: File photo
+    buckets:
+    - local
+    - science
+    keywords:
+    - joshua tree
+    - mojave
+    - desert
+    - environment
+  desert-highway:
+    src: /img/photos/desert-highway.webp
+    sm: /img/photos/desert-highway-sm.webp
+    alt: Empty two-lane highway running straight into the Mojave Desert
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2013630402/
+    label: File photo
+    buckets:
+    - local
+    - us
+    keywords:
+    - highway
+    - desert
+    - traffic
+    - transportation
+    - mojave
+  desert-thunderstorm:
+    src: /img/photos/desert-thunderstorm.webp
+    sm: /img/photos/desert-thunderstorm-sm.webp
+    alt: A thunderstorm drenching the high desert near Truxton in Mohave County, Arizona
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2018663330/
+    label: File photo
+    buckets:
+    - local
+    - us
+    keywords:
+    - storm
+    - thunderstorm
+    - monsoon
+    - weather
+    - rain
+    - flood
+    - flash flood
+  kingman-downtown:
+    src: /img/photos/kingman-downtown.webp
+    sm: /img/photos/kingman-downtown-sm.webp
+    alt: Historic buildings including the 1909 Brunswick Hotel in downtown Kingman, Arizona
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2018703144/
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - kingman
+    - mohave county
+    - route 66
+    - downtown
+  lake-havasu:
+    src: /img/photos/lake-havasu.webp
+    sm: /img/photos/lake-havasu-sm.webp
+    alt: Boat docks below the London Bridge in Lake Havasu City, Arizona
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2018703204/
+    label: File photo
+    buckets:
+    - local
+    keywords:
+    - lake havasu
+    - london bridge
+    - boating
+    - tourism
+  us-capitol:
+    src: /img/photos/us-capitol.webp
+    sm: /img/photos/us-capitol-sm.webp
+    alt: The U.S. Capitol dome framed by trees on a summer day
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2010642046/
+    label: File photo
+    buckets:
+    - us
+    - politics
+    keywords:
+    - capitol
+    - congress
+    - senate
+    - lawmakers
+    - legislation
+  us-capitol-aerial:
+    src: /img/photos/us-capitol-aerial.webp
+    sm: /img/photos/us-capitol-aerial-sm.webp
+    alt: Aerial view of the U.S. Capitol and Capitol Hill in Washington, D.C.
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2010630477/
+    label: File photo
+    buckets:
+    - us
+    - politics
+    keywords:
+    - capitol
+    - congress
+    - washington
+    - shutdown
+    - budget
+    - senate
+  white-house:
+    src: /img/photos/white-house.webp
+    sm: /img/photos/white-house-sm.webp
+    alt: North facade of the White House with its fountain and flowerbeds
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011632870/
+    label: File photo
+    buckets:
+    - politics
+    - us
+    keywords:
+    - white house
+    - president
+    - administration
+    - executive order
+    - trump
+  white-house-dusk:
+    src: /img/photos/white-house-dusk.webp
+    sm: /img/photos/white-house-dusk-sm.webp
+    alt: The White House lit at dusk behind its iron fence
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011632156/
+    label: File photo
+    buckets:
+    - politics
+    - us
+    keywords:
+    - white house
+    - president
+    - administration
+    - biden
+    - oval office
+  supreme-court:
+    src: /img/photos/supreme-court.webp
+    sm: /img/photos/supreme-court-sm.webp
+    alt: U.S. Supreme Court Building in Washington, D.C., in black and white
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011636057/
+    label: File photo
+    buckets:
+    - politics
+    - us
+    keywords:
+    - supreme court
+    - justices
+    - ruling
+    - court
+    - scotus
+  supreme-court-2:
+    src: /img/photos/supreme-court-2.webp
+    sm: /img/photos/supreme-court-2-sm.webp
+    alt: Columns and steps of the U.S. Supreme Court Building against a deep blue sky
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011631106/
+    label: File photo
+    buckets:
+    - politics
+    - us
+    keywords:
+    - supreme court
+    - justices
+    - ruling
+    - constitution
+    - appeal
+  state-capitol:
+    src: /img/photos/state-capitol.webp
+    sm: /img/photos/state-capitol-sm.webp
+    alt: The Colorado State Capitol with its gold dome in Denver
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2015633084/
+    label: File photo
+    buckets:
+    - politics
+    keywords:
+    - state capitol
+    - legislature
+    - governor
+    - statehouse
+    - lawmakers
+  state-capitol-dome:
+    src: /img/photos/state-capitol-dome.webp
+    sm: /img/photos/state-capitol-dome-sm.webp
+    alt: Looking up into the ornate central dome of the Mississippi State Capitol
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2017883777/
+    label: File photo
+    buckets:
+    - politics
+    keywords:
+    - capitol
+    - legislature
+    - statehouse
+  courthouse:
+    src: /img/photos/courthouse.webp
+    sm: /img/photos/courthouse-sm.webp
+    alt: Historic federal courthouse building in Wheeling, West Virginia
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2010718822/
+    label: File photo
+    buckets:
+    - politics
+    - pr
+    - us
+    keywords:
+    - court
+    - courthouse
+    - judge
+    - trial
+    - lawsuit
+    - federal court
+    - indictment
+  pentagon:
+    src: /img/photos/pentagon.webp
+    sm: /img/photos/pentagon-sm.webp
+    alt: Aerial view of the Pentagon in Arlington, Virginia
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011632609/
+    label: File photo
+    buckets:
+    - us
+    - politics
+    - world
+    keywords:
+    - pentagon
+    - military
+    - defense
+    - army
+    - troops
+    - war
+    - department of defense
+  interstate-highway:
+    src: /img/photos/interstate-highway.webp
+    sm: /img/photos/interstate-highway-sm.webp
+    alt: Interstate 69 running through suburban Fishers, Indiana, from the air
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2016631681/
+    label: File photo
+    buckets:
+    - us
+    - business
+    keywords:
+    - highway
+    - interstate
+    - traffic
+    - infrastructure
+    - transportation
+    - commute
+  small-town-main-street:
+    src: /img/photos/small-town-main-street.webp
+    sm: /img/photos/small-town-main-street-sm.webp
+    alt: Main Street storefronts in the small town of Fowler, Colorado
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2015632778/
+    label: File photo
+    buckets:
+    - us
+    - pr
+    - business
+    keywords:
+    - main street
+    - small town
+    - small business
+    - downtown
+    - rural
+  american-flag:
+    src: /img/photos/american-flag.webp
+    sm: /img/photos/american-flag-sm.webp
+    alt: A barn painted as an American flag in a grassy field in Madera, California
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2013634987/
+    label: File photo
+    buckets:
+    - us
+    keywords:
+    - patriotic
+    - rural
+    - farm
+  american-flag-sky:
+    src: /img/photos/american-flag-sky.webp
+    sm: /img/photos/american-flag-sky-sm.webp
+    alt: Row of American flags flying on flagpoles against a blue sky
+    credit: rawpixel
+    license: CC0
+    license_url: https://creativecommons.org/publicdomain/zero/1.0/
+    source: https://www.rawpixel.com/image/6037863/photo-image-public-domain-banner-red
+    label: File photo
+    buckets:
+    - us
+    - politics
+    keywords:
+    - flag
+    - veterans
+    - patriotic
+  suburban-homes:
+    src: /img/photos/suburban-homes.webp
+    sm: /img/photos/suburban-homes-sm.webp
+    alt: Aerial view of suburban homes and tree-lined streets near Pittsburgh
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2019690957/
+    label: File photo
+    buckets:
+    - us
+    - business
+    keywords:
+    - housing
+    - real estate
+    - homes
+    - mortgage
+    - home prices
+    - suburbs
+    - rent
+  ballot-box:
+    src: /img/photos/ballot-box.webp
+    sm: /img/photos/ballot-box-sm.webp
+    alt: Close-up of a metal county ballot box
+    credit: joebeone / Flickr
+    license: CC BY 2.0
+    license_url: https://creativecommons.org/licenses/by/2.0/
+    source: https://www.flickr.com/photos/71753172@N00/2239581293
+    label: File photo
+    buckets:
+    - politics
+    keywords:
+    - ballot
+    - election
+    - vote
+    - voting
+    - voters
+    - polls
+  vote-here:
+    src: /img/photos/vote-here.webp
+    sm: /img/photos/vote-here-sm.webp
+    alt: A bilingual Vote Here / Vote Aqui sign on a sidewalk outside a polling place
+    credit: Jay Phagan / Flickr
+    license: CC BY 2.0
+    license_url: https://creativecommons.org/licenses/by/2.0/
+    source: https://www.flickr.com/photos/70671301@N03/30575594395
+    label: File photo
+    buckets:
+    - politics
+    keywords:
+    - vote
+    - election
+    - polling
+    - voters
+    - early voting
+    - election day
+  city-skyline-atlanta:
+    src: /img/photos/city-skyline-atlanta.webp
+    sm: /img/photos/city-skyline-atlanta-sm.webp
+    alt: Downtown Atlanta office towers and skyline seen from above
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2017883460/
+    label: File photo
+    buckets:
+    - business
+    keywords:
+    - skyline
+    - corporate
+    - downtown
+    - commercial real estate
+  shipping-containers:
+    src: /img/photos/shipping-containers.webp
+    sm: /img/photos/shipping-containers-sm.webp
+    alt: Aerial view of a shipping-container yard at the port in Charleston, South Carolina
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2017879833/
+    label: File photo
+    buckets:
+    - business
+    - world
+    keywords:
+    - containers
+    - port
+    - shipping
+    - trade
+    - tariffs
+    - imports
+    - exports
+    - supply chain
+  container-ship:
+    src: /img/photos/container-ship.webp
+    sm: /img/photos/container-ship-sm.webp
+    alt: A fully loaded container ship at sea
+    credit: NOAA's National Ocean Service / Flickr
+    license: CC BY 2.0
+    license_url: https://creativecommons.org/licenses/by/2.0/
+    source: https://www.flickr.com/photos/40322276@N04/5369581593
+    label: File photo
+    buckets:
+    - business
+    - world
+    keywords:
+    - shipping
+    - cargo
+    - container ship
+    - trade
+    - tariffs
+    - freight
+    - imports
+  rail-freight-yard:
+    src: /img/photos/rail-freight-yard.webp
+    sm: /img/photos/rail-freight-yard-sm.webp
+    alt: Aerial view of a rail freight yard in Cincinnati with rows of freight cars
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2016632870/
+    label: File photo
+    buckets:
+    - business
+    keywords:
+    - railroad
+    - freight
+    - rail
+    - logistics
+    - trains
+    - shipping
+  warehouse:
+    src: /img/photos/warehouse.webp
+    sm: /img/photos/warehouse-sm.webp
+    alt: Old brick industrial warehouse with fire escapes in warm light
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2012631287/
+    label: File photo
+    buckets:
+    - business
+    keywords:
+    - warehouse
+    - manufacturing
+    - factory
+    - jobs
+  factory:
+    src: /img/photos/factory.webp
+    sm: /img/photos/factory-sm.webp
+    alt: Brick factory building and tall smokestack under a blue sky
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2017685196/
+    label: File photo
+    buckets:
+    - business
+    keywords:
+    - factory
+    - manufacturing
+    - jobs
+    - layoffs
+  oil-refinery:
+    src: /img/photos/oil-refinery.webp
+    sm: /img/photos/oil-refinery-sm.webp
+    alt: Oil refinery towers and pipes with a city skyline in the distance
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011630489/
+    label: File photo
+    buckets:
+    - business
+    - markets
+    keywords:
+    - oil
+    - refinery
+    - gasoline
+    - gas prices
+    - energy
+    - crude
+    - fuel
+  oil-storage-tanks:
+    src: /img/photos/oil-storage-tanks.webp
+    sm: /img/photos/oil-storage-tanks-sm.webp
+    alt: Aerial view of refinery storage tanks near Houston on the Gulf coast
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011633531/
+    label: File photo
+    buckets:
+    - business
+    - markets
+    keywords:
+    - oil
+    - crude
+    - energy
+    - petroleum
+    - opec
+  oil-tanker-2:
+    src: /img/photos/oil-tanker-2.webp
+    sm: /img/photos/oil-tanker-2-sm.webp
+    alt: An oil tanker ship in the Houston Ship Channel
+    credit: roger4336 / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/24736216@N07/4777160412
+    label: File photo
+    buckets:
+    - business
+    - world
+    - markets
+    keywords:
+    - oil
+    - tanker
+    - crude
+    - energy
+    - opec
+    - sanctions
+  storefronts:
+    src: /img/photos/storefronts.webp
+    sm: /img/photos/storefronts-sm.webp
+    alt: A row of small storefronts on a city street in Los Angeles
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2013631520/
+    label: File photo
+    buckets:
+    - business
+    - pr
+    keywords:
+    - retail
+    - small business
+    - stores
+    - shopping
+  nyse-trading-floor:
+    src: /img/photos/nyse-trading-floor.webp
+    sm: /img/photos/nyse-trading-floor-sm.webp
+    alt: Trading floor of the New York Stock Exchange with banks of monitors
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011634218/
+    label: File photo
+    buckets:
+    - markets
+    - business
+    keywords:
+    - stock
+    - stocks
+    - nyse
+    - wall street
+    - dow
+    - s&p
+    - nasdaq
+    - trading
+    - shares
+  wall-street:
+    src: /img/photos/wall-street.webp
+    sm: /img/photos/wall-street-sm.webp
+    alt: Wall Street in New York's Financial District with flags hanging from buildings
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011630646/
+    label: File photo
+    buckets:
+    - markets
+    - business
+    keywords:
+    - wall street
+    - stocks
+    - finance
+    - banks
+    - investors
+  federal-reserve-cleveland:
+    src: /img/photos/federal-reserve-cleveland.webp
+    sm: /img/photos/federal-reserve-cleveland-sm.webp
+    alt: Entrance of the Federal Reserve Bank of Cleveland with its arched windows and statues
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2010630382/
+    label: File photo
+    buckets:
+    - markets
+    - business
+    keywords:
+    - federal reserve
+    - fed
+    - interest rates
+    - inflation
+    - powell
+    - central bank
+  federal-reserve-dallas:
+    src: /img/photos/federal-reserve-dallas.webp
+    sm: /img/photos/federal-reserve-dallas-sm.webp
+    alt: Carved stone eagles and seal above the entrance of the Federal Reserve Bank of Dallas
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2014632598/
+    label: File photo
+    buckets:
+    - markets
+    keywords:
+    - federal reserve
+    - fed
+    - rates
+    - inflation
+    - monetary policy
+  coins:
+    src: /img/photos/coins.webp
+    sm: /img/photos/coins-sm.webp
+    alt: Rolls of U.S. dimes and nickels in paper coin wrappers
+    credit: dmuth / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/30647744@N00/3245821105
+    label: File photo
+    buckets:
+    - markets
+    - business
+    keywords:
+    - coins
+    - savings
+    - banking
+    - economy
+  dollar-bills:
+    src: /img/photos/dollar-bills.webp
+    sm: /img/photos/dollar-bills-sm.webp
+    alt: Torn U.S. one-dollar bill on a white background
+    credit: Images_of_Money / Flickr
+    license: CC BY 2.0
+    license_url: https://creativecommons.org/licenses/by/2.0/
+    source: https://www.flickr.com/photos/59937401@N07/5929486139
+    label: File photo
+    buckets:
+    - markets
+    - business
+    keywords:
+    - dollar
+    - inflation
+    - debt
+    - currency
+    - budget
+    - taxes
+  stock-graph:
+    src: /img/photos/stock-graph.webp
+    sm: /img/photos/stock-graph-sm.webp
+    alt: Red line chart of stock prices on a screen
+    credit: rawpixel
+    license: CC0
+    license_url: https://creativecommons.org/publicdomain/zero/1.0/
+    source: https://www.rawpixel.com/image/5926718/stock-graph-free-public-domain-cc0-image
+    label: File photo
+    buckets:
+    - markets
+    keywords:
+    - stocks
+    - chart
+    - sell-off
+    - rally
+    - earnings
+  bitcoin:
+    src: /img/photos/bitcoin.webp
+    sm: /img/photos/bitcoin-sm.webp
+    alt: Pile of physical souvenir Bitcoin coins
+    credit: antanacoins / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/105644709@N08/10307542203
+    label: File photo
+    buckets:
+    - markets
+    - tech
+    keywords:
+    - bitcoin
+    - crypto
+    - cryptocurrency
+    - ethereum
+    - blockchain
+    - coinbase
+  earth-blue-marble:
+    src: /img/photos/earth-blue-marble.webp
+    sm: /img/photos/earth-blue-marble-sm.webp
+    alt: Full disk of Earth from space showing North America
+    credit: NASA
+    license: Public domain
+    license_url: https://www.nasa.gov/nasa-brand-center/images-and-media/
+    source: https://images.nasa.gov/details/GSFC_20171208_Archive_e001386
+    label: File photo
+    buckets:
+    - world
+    - science
+    keywords:
+    - earth
+    - climate
+    - planet
+  earth-apollo-17:
+    src: /img/photos/earth-apollo-17.webp
+    sm: /img/photos/earth-apollo-17-sm.webp
+    alt: Earth seen from Apollo 17, showing Africa and Antarctica
+    credit: NASA
+    license: Public domain
+    license_url: https://www.nasa.gov/nasa-brand-center/images-and-media/
+    source: https://images.nasa.gov/details/as17-148-22727
+    label: File photo
+    buckets:
+    - world
+    - science
+    keywords:
+    - earth
+    - africa
+    - planet
+  earth-night-lights:
+    src: /img/photos/earth-night-lights.webp
+    sm: /img/photos/earth-night-lights-sm.webp
+    alt: City lights along the Mediterranean Sea at night, seen from the International Space Station
+    credit: NASA
+    license: Public domain
+    license_url: https://www.nasa.gov/nasa-brand-center/images-and-media/
+    source: https://images.nasa.gov/details/iss072e000922
+    label: File photo
+    buckets:
+    - world
+    - science
+    keywords:
+    - europe
+    - middle east
+    - mediterranean
+  united-nations-aerial:
+    src: /img/photos/united-nations-aerial.webp
+    sm: /img/photos/united-nations-aerial-sm.webp
+    alt: Aerial view of Manhattan's East Side including United Nations headquarters by the East River
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011632592/
+    label: File photo
+    buckets:
+    - world
+    keywords:
+    - united nations
+    - new york
+    - diplomacy
+    - general assembly
+    - security council
+  world-flags-2:
+    src: /img/photos/world-flags-2.webp
+    sm: /img/photos/world-flags-2-sm.webp
+    alt: Row of international flags on flagpoles in Vancouver
+    credit: Stpe1981 / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/98438467@N00/4257593015
+    label: File photo
+    buckets:
+    - world
+    keywords:
+    - summit
+    - diplomacy
+    - g7
+    - g20
+    - treaty
+  airport:
+    src: /img/photos/airport.webp
+    sm: /img/photos/airport-sm.webp
+    alt: San Francisco International Airport terminal and elevated roadways
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2013632177/
+    label: File photo
+    buckets:
+    - world
+    - business
+    - us
+    keywords:
+    - airport
+    - flights
+    - airline
+    - travel
+    - faa
+    - aviation
+    - tsa
+  rocket-launch:
+    src: /img/photos/rocket-launch.webp
+    sm: /img/photos/rocket-launch-sm.webp
+    alt: A rocket lifting off from a launch pad at Kennedy Space Center
+    credit: NASA/Tony Gray and Sandra Joseph
+    license: Public domain
+    license_url: https://www.nasa.gov/nasa-brand-center/images-and-media/
+    source: https://images.nasa.gov/details/KSC-20170814-PH_AWG06_0005
+    label: File photo
+    buckets:
+    - science
+    - tech
+    keywords:
+    - launch
+    - rocket
+    - spacex
+    - nasa
+    - falcon
+  carina-nebula:
+    src: /img/photos/carina-nebula.webp
+    sm: /img/photos/carina-nebula-sm.webp
+    alt: James Webb Space Telescope image of the Cosmic Cliffs in the Carina Nebula
+    credit: NASA, ESA, CSA, STScI
+    license: Public domain
+    license_url: https://www.nasa.gov/nasa-brand-center/images-and-media/
+    source: https://images.nasa.gov/details/carina_nebula
+    label: File photo
+    buckets:
+    - science
+    keywords:
+    - webb
+    - jwst
+    - telescope
+    - astronomy
+    - nebula
+    - galaxy
+  hubble-deep-field:
+    src: /img/photos/hubble-deep-field.webp
+    sm: /img/photos/hubble-deep-field-sm.webp
+    alt: Hubble Deep Field, showing hundreds of distant galaxies
+    credit: NASA/JPL/STScI Hubble Deep Field Team
+    license: Public domain
+    license_url: https://www.nasa.gov/nasa-brand-center/images-and-media/
+    source: https://images.nasa.gov/details/PIA12110
+    label: File photo
+    buckets:
+    - science
+    keywords:
+    - hubble
+    - galaxies
+    - universe
+    - astronomy
+    - telescope
+    - cosmology
+  observatory:
+    src: /img/photos/observatory.webp
+    sm: /img/photos/observatory-sm.webp
+    alt: White telescope dome of the Otto Struve Telescope at McDonald Observatory in Texas
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2014631158/
+    label: File photo
+    buckets:
+    - science
+    keywords:
+    - observatory
+    - telescope
+    - astronomy
+    - stars
+    - research
+  radio-telescope:
+    src: /img/photos/radio-telescope.webp
+    sm: /img/photos/radio-telescope-sm.webp
+    alt: Green Bank radio telescope dish in a West Virginia valley
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2015634500/
+    label: File photo
+    buckets:
+    - science
+    - tech
+    keywords:
+    - radio telescope
+    - astronomy
+    - research
+    - seti
+  chemistry-lab:
+    src: /img/photos/chemistry-lab.webp
+    sm: /img/photos/chemistry-lab-sm.webp
+    alt: Black-and-white close-up of chemistry lab glassware by a window
+    credit: euthman / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/78147607@N00/2097750586
+    label: File photo
+    buckets:
+    - science
+    keywords:
+    - laboratory
+    - chemistry
+    - research
+    - scientists
+  hurricane-from-space:
+    src: /img/photos/hurricane-from-space.webp
+    sm: /img/photos/hurricane-from-space-sm.webp
+    alt: Hurricane Helene seen from the International Space Station
+    credit: NASA
+    license: Public domain
+    license_url: https://www.nasa.gov/nasa-brand-center/images-and-media/
+    source: https://images.nasa.gov/details/iss072e001649
+    label: File photo
+    buckets:
+    - science
+    - us
+    - world
+    keywords:
+    - hurricane
+    - storm
+    - tropical storm
+    - weather
+    - cyclone
+    - typhoon
+  hurricane-matthew:
+    src: /img/photos/hurricane-matthew.webp
+    sm: /img/photos/hurricane-matthew-sm.webp
+    alt: Satellite view of Hurricane Matthew over the Caribbean on a full-disk Earth image
+    credit: NASA
+    license: Public domain
+    license_url: https://www.nasa.gov/nasa-brand-center/images-and-media/
+    source: https://images.nasa.gov/details/GSFC_20171208_Archive_e000204
+    label: File photo
+    buckets:
+    - science
+    - world
+    keywords:
+    - hurricane
+    - storm
+    - caribbean
+    - weather
+  wildfire-aftermath:
+    src: /img/photos/wildfire-aftermath.webp
+    sm: /img/photos/wildfire-aftermath-sm.webp
+    alt: Burned, bare trees left by a wildfire in Mesa Verde National Park, Colorado
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2017687410/
+    label: File photo
+    buckets:
+    - science
+    - us
+    - local
+    keywords:
+    - wildfire
+    - fire
+    - blaze
+    - forest fire
+    - firefighters
+  satellite-orbit:
+    src: /img/photos/satellite-orbit.webp
+    sm: /img/photos/satellite-orbit-sm.webp
+    alt: Illustration of the Sentinel-6 Michael Freilich satellite orbiting above Earth
+    credit: NASA
+    license: Public domain
+    license_url: https://www.nasa.gov/nasa-brand-center/images-and-media/
+    source: https://images.nasa.gov/details/PIA24105
+    label: Illustration
+    buckets:
+    - tech
+    - science
+    keywords:
+    - satellite
+    - climate
+    - sea level
+    - starlink
+  supercomputer:
+    src: /img/photos/supercomputer.webp
+    sm: /img/photos/supercomputer-sm.webp
+    alt: Rows of NASA Pleiades supercomputer racks at Ames Research Center
+    credit: NASA / Dominic Hart
+    license: Public domain
+    license_url: https://www.nasa.gov/nasa-brand-center/images-and-media/
+    source: https://images.nasa.gov/details/ARC-2008-ACD08-0272-005
+    label: File photo
+    buckets:
+    - tech
+    - science
+    keywords:
+    - supercomputer
+    - data center
+    - computing
+    - ai
+    - artificial intelligence
+    - servers
+  supercomputer-2:
+    src: /img/photos/supercomputer-2.webp
+    sm: /img/photos/supercomputer-2-sm.webp
+    alt: Close-up of supercomputer cabinet panels in a NASA data center
+    credit: NASA / Dominic Hart
+    license: Public domain
+    license_url: https://www.nasa.gov/nasa-brand-center/images-and-media/
+    source: https://images.nasa.gov/details/ARC-2008-ACD08-0272-001
+    label: File photo
+    buckets:
+    - tech
+    keywords:
+    - data center
+    - servers
+    - computing
+    - ai
+    - chips
+    - nvidia
+  data-storage:
+    src: /img/photos/data-storage.webp
+    sm: /img/photos/data-storage-sm.webp
+    alt: Racks of computer data storage tapes in a server room aisle
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011635986/
+    label: File photo
+    buckets:
+    - tech
+    - business
+    keywords:
+    - servers
+    - cybersecurity
+    - data breach
+  silicon-wafer:
+    src: /img/photos/silicon-wafer.webp
+    sm: /img/photos/silicon-wafer-sm.webp
+    alt: Close-up of a silicon wafer with rainbow reflections from its etched chips
+    credit: naotakem / Flickr
+    license: CC BY 2.0
+    license_url: https://creativecommons.org/licenses/by/2.0/
+    source: https://www.flickr.com/photos/12832970@N00/148029403
+    label: File photo
+    buckets:
+    - tech
+    - business
+    keywords:
+    - chips
+    - semiconductor
+    - chipmaker
+    - intel
+    - tsmc
+    - nvidia
+    - wafer
+  circuit-board:
+    src: /img/photos/circuit-board.webp
+    sm: /img/photos/circuit-board-sm.webp
+    alt: Technicians in clean-room suits working on circuit boards inside a Mars rover
+    credit: NASA/JPL/KSC
+    license: Public domain
+    license_url: https://www.nasa.gov/nasa-brand-center/images-and-media/
+    source: https://images.nasa.gov/details/PIA04850
+    label: File photo
+    buckets:
+    - tech
+    - science
+    keywords:
+    - engineering
+    - electronics
+    - circuit
+    - hardware
+    - manufacturing
+  computer-lab:
+    src: /img/photos/computer-lab.webp
+    sm: /img/photos/computer-lab-sm.webp
+    alt: A computer lab with rows of desktop computers
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011636104/
+    label: File photo
+    buckets:
+    - tech
+    - pr
+    keywords:
+    - computers
+    - school
+    - technology
+    - education
+    - software
+  baseball-stadium:
+    src: /img/photos/baseball-stadium.webp
+    sm: /img/photos/baseball-stadium-sm.webp
+    alt: Aerial view of Nationals Park baseball stadium in Washington, D.C.
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2010630934/
+    label: File photo
+    buckets:
+    - sports
+    keywords:
+    - baseball
+    - mlb
+    - stadium
+    - ballpark
+    - world series
+    - playoffs
+  football-stadium:
+    src: /img/photos/football-stadium.webp
+    sm: /img/photos/football-stadium-sm.webp
+    alt: Aerial night view of a packed college football stadium in Tuscaloosa, Alabama
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011646779/
+    label: File photo
+    buckets:
+    - sports
+    keywords:
+    - football
+    - college football
+    - nfl
+    - stadium
+    - touchdown
+  golf-course:
+    src: /img/photos/golf-course.webp
+    sm: /img/photos/golf-course-sm.webp
+    alt: Tree-lined fairway and cart path at a golf course in Mobile, Alabama
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2010638035/
+    label: File photo
+    buckets:
+    - sports
+    keywords:
+    - golf
+    - pga
+    - tournament
+    - masters
+  city-hall:
+    src: /img/photos/city-hall.webp
+    sm: /img/photos/city-hall-sm.webp
+    alt: Historic City Hall in Pueblo, Colorado, with its clock cupola
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2015632476/
+    label: File photo
+    buckets:
+    - pr
+    - politics
+    keywords:
+    - city hall
+    - city council
+    - mayor
+    - municipal
+    - ordinance
+  city-hall-2:
+    src: /img/photos/city-hall-2.webp
+    sm: /img/photos/city-hall-2-sm.webp
+    alt: Modern city hall building in Laredo, Texas with palm trees
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2014630542/
+    label: File photo
+    buckets:
+    - pr
+    keywords:
+    - city hall
+    - city council
+    - council
+    - municipal
+  fire-station-photo:
+    src: /img/photos/fire-station.webp
+    sm: /img/photos/fire-station-sm.webp
+    alt: Fire Station 4 in Columbus, Indiana, with its tower and apparatus bay
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2013650708/
+    label: File photo
+    buckets:
+    - pr
+    - local
+    keywords:
+    - fire
+    - fire department
+    - firefighters
+    - emergency
+  fire-truck:
+    src: /img/photos/fire-truck.webp
+    sm: /img/photos/fire-truck-sm.webp
+    alt: A lime-green fire engine on a palm-lined street
+    credit: Phillip Pessar / Flickr
+    license: CC BY 2.0
+    license_url: https://creativecommons.org/licenses/by/2.0/
+    source: https://www.flickr.com/photos/25955895@N03/8508563604
+    label: File photo
+    buckets:
+    - pr
+    keywords:
+    - fire
+    - fire truck
+    - firefighters
+    - emergency
+    - rescue
+  police-car:
+    src: /img/photos/police-car.webp
+    sm: /img/photos/police-car-sm.webp
+    alt: A blue state police patrol car parked beside a brick building
+    credit: Lee Cannon / Flickr
+    license: CC BY-SA 2.0
+    license_url: https://creativecommons.org/licenses/by-sa/2.0/
+    source: https://www.flickr.com/photos/9763931@N04/4807507056
+    label: File photo
+    buckets:
+    - pr
+    - us
+    keywords:
+    - police
+    - sheriff
+    - crime
+    - arrest
+    - officers
+    - patrol
+    - law enforcement
+  public-library:
+    src: /img/photos/public-library.webp
+    sm: /img/photos/public-library-sm.webp
+    alt: Historic brick public library in Vinton, Iowa
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2016630517/
+    label: File photo
+    buckets:
+    - pr
+    keywords:
+    - library
+    - books
+    - reading
+    - literacy
+  school-building:
+    src: /img/photos/school-building.webp
+    sm: /img/photos/school-building-sm.webp
+    alt: Historic two-story brick public school building in Guttenberg, Iowa
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2016630424/
+    label: File photo
+    buckets:
+    - pr
+    - us
+    keywords:
+    - school
+    - students
+    - education
+    - teachers
+    - school board
+  community-center:
+    src: /img/photos/community-center.webp
+    sm: /img/photos/community-center-sm.webp
+    alt: Mammoth Lakes community center and library surrounded by snow and pine trees
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2013633677/
+    label: File photo
+    buckets:
+    - pr
+    keywords:
+    - community center
+    - recreation
+    - seniors
+    - winter
+  playground:
+    src: /img/photos/playground.webp
+    sm: /img/photos/playground-sm.webp
+    alt: Children's playground with slides at Southside Park in Sacramento
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2013633920/
+    label: File photo
+    buckets:
+    - pr
+    keywords:
+    - playground
+    - parks
+    - recreation
+  hospital:
+    src: /img/photos/hospital.webp
+    sm: /img/photos/hospital-sm.webp
+    alt: Emergency center entrance of a hospital in Saratoga Springs, New York
+    credit: P_R_F / Flickr
+    license: CC BY 2.0
+    license_url: https://creativecommons.org/licenses/by/2.0/
+    source: https://www.flickr.com/photos/80340800@N05/9682236546
+    label: File photo
+    buckets:
+    - pr
+    - science
+    keywords:
+    - hospital
+    - emergency
+    - health
+    - medical
+    - patients
+    - healthcare
+  medical-equipment:
+    src: /img/photos/medical-equipment.webp
+    sm: /img/photos/medical-equipment-sm.webp
+    alt: Hospital imaging equipment in an empty procedure room
+    credit: Carol M. Highsmith / Library of Congress
+    license: Public domain
+    license_url: https://www.loc.gov/rr/print/res/482_high.html
+    source: https://www.loc.gov/item/2011633842/
+    label: File photo
+    buckets:
+    - science
+    - pr
+    keywords:
+    - medical
+    - health
+    - hospital
+    - medicare
+    - medicaid
+    - doctors
+  gavel:
+    src: /img/photos/gavel.webp
+    sm: /img/photos/gavel-sm.webp
+    alt: Brass gavel on a white background
+    credit: walknboston / Flickr
+    license: CC BY 2.0
+    license_url: https://creativecommons.org/licenses/by/2.0/
+    source: https://www.flickr.com/photos/60309882@N00/3314689121
+    label: File photo
+    buckets:
+    - politics
+    - pr
+    keywords:
+    - court
+    - judge
+    - lawsuit
+    - verdict
+    - trial
+    - legal
+    - sentencing
 category_images:
   us: brand-us
   world: brand-world
