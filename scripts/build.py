@@ -22,7 +22,9 @@ BASE = urlparse(SITE).path.rstrip("/")
 NAME = "Ground Level News"
 TAG = "News from the ground up."
 INDEXNOW_KEY = "5a8308b39ca87422bfd5d4eb53c1c5bb"
-REPO = "https://github.com/AXIA-Enterprises-DEV/ground-level-news"
+CONTACT = os.environ.get("CONTACT_EMAIL", "news@groundlevelnews.com")
+# Names that must never appear anywhere on the published site.
+BLOCK = re.compile(r"\b(axia|clem)\b", re.I)
 NOW = dt.datetime.now(dt.timezone.utc)
 
 CATS = [("us","U.S."),("world","World"),("politics","Politics"),("business","Business"),
@@ -38,6 +40,27 @@ def clean(s, n=None):
     if n and len(s) > n: s = s[:n].rsplit(" ", 1)[0] + "…"
     return s
 def slugify(s): return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")[:70] or "story"
+
+# Feed source names are often feed titles; show the publisher instead.
+SOURCE_NAMES = {
+    "World News, Today World News, Latest International News, World Breaking News, Trending News of World - Times of India": "Times of India",
+    "Phys.org - latest science and technology news stories": "Phys.org", "www.theregister.com - Articles": "The Register",
+    "Engadget - Technology News & Expert Reviews": "Engadget", "Fortune | FORTUNE": "Fortune", "Forbes - Business": "Forbes",
+    "News - Cryptonews": "Cryptonews", "Cointelegraph.com News": "Cointelegraph", "NYT > Technology": "NYT Technology",
+    "Money Saving Mom®": "Money Saving Mom", "FT Home": "Financial Times", "Seeking Alpha Market Currents": "Seeking Alpha",
+    "MarketWatch Top Stories": "MarketWatch", "CNBC Top News": "CNBC", "Investing.com Stock Market": "Investing.com",
+    "Investing.com Economic Indicators": "Investing.com", "START (UMD) Terrorism Research": "START (UMD)",
+    "NY Fed Liberty Street Economics": "New York Fed", "All News": "Investing.com",
+}
+def tidy_source(it):
+    """Clean up the source name; Google News items carry the publisher at the end of the title."""
+    src = (it.get("source") or "").strip()
+    if src.startswith(("Google News", "Top stories - Google News")):
+        m = re.match(r"^(.*\S)\s+[-–]\s+([^-–]{2,60})$", it["title"])
+        if m: it["title"], src = m.group(1), m.group(2).strip()
+        else: src = "Google News"
+    elif src.startswith("PR Newswire"): src = "PR Newswire"
+    it["source"] = SOURCE_NAMES.get(src, src) or "Wire report"
 
 def get_json(path):
     try:
@@ -62,6 +85,9 @@ def load_items():
         it["ts"] = int(it.get("ts") or 0)
         it["title"] = clean(it["title"], 200)
         it["summary"] = clean(it.get("summary"), 420)
+        tidy_source(it)
+        if BLOCK.search(" ".join([it["title"], it["summary"], it["source"], it["link"]])): continue
+        if len(re.findall(r"[\u0400-\u04ff\u0600-\u06ff\u3040-\u30ff\u4e00-\u9fff]", it["title"])) > len(it["title"]) * .2: continue  # non-English
         cat = it.get("category") or "us"
         if LOCAL_PROJECTS & set(it.get("projects") or []): it["local"] = True
         it["cat"] = cat if cat in CAT_NAME else "us"
@@ -112,13 +138,43 @@ def cat_img(cat):
     imgs = IMG_CFG.get("images") or {}
     key = (IMG_CFG.get("category_images") or {}).get(cat) or (IMG_CFG.get("category_images") or {}).get("us")
     return imgs.get(key)
+_KW = None
+def _kw_index():
+    """[(compiled keyword regex, weight, image key)] from the registry, built once."""
+    global _KW
+    if _KW is None:
+        _KW = []
+        for key, im in (IMG_CFG.get("images") or {}).items():
+            for kw in im.get("keywords") or []:
+                _KW.append((re.compile(r"\b" + re.escape(str(kw).lower()) + r"s?\b"), len(str(kw)), key))
+    return _KW
+def _bucket(cat):
+    imgs = IMG_CFG.get("images") or {}
+    return [k for k, im in imgs.items() if cat in (im.get("buckets") or [])]
+def pick_img(text, cat, seed):
+    """Best real photo for a story: a keyword match in the text, else a stable pick from the
+    category's photo pool, else the branded category card."""
+    imgs = IMG_CFG.get("images") or {}
+    t = (text or "").lower()
+    score = {}
+    for rx, w, key in _kw_index():
+        if rx.search(t): score[key] = score.get(key, 0) + w + (6 if cat in (imgs[key].get("buckets") or []) else 0)
+    h = int(hashlib.sha1(str(seed).encode()).hexdigest(), 16)
+    if score:
+        best = max(score.values()); top = sorted(k for k, v in score.items() if v >= best - 2)
+        return imgs[top[h % len(top)]]
+    pool = sorted(_bucket(cat))
+    return imgs[pool[h % len(pool)]] if pool else cat_img(cat)
+def story_img(it):
+    cat = "local" if it.get("local") else it["cat"]
+    return pick_img(it["title"] + " " + it.get("summary", "")[:160], cat, it["id"])
 def pr_img(p):
-    """Front-matter image for a press release, falling back to the category image."""
+    """Front-matter image for a press release, else a photo matched on area/topic/title."""
     if p.get("image"):
-        return {"src": p["image"], "alt": p.get("image_alt") or p.get("title"), "credit": p.get("image_credit"),
+        return {"src": p["image"], "sm": p.get("image_sm"), "alt": p.get("image_alt") or p.get("title"), "credit": p.get("image_credit"),
                 "license": p.get("image_license"), "license_url": p.get("image_license_url"),
                 "source": p.get("image_source"), "label": p.get("image_label") or "File photo"}
-    return cat_img(p.get("category") or "pr")
+    return pick_img(" ".join(str(p.get(k) or "") for k in ("area", "topic", "title", "summary")), "pr", p["slug"])
 def img_tag(im, cls="", lazy=True, sizes="100vw", small=False):
     if not im: return ""
     if small and im.get("sm"): im = {**im, "src": im["sm"]}
@@ -171,10 +227,13 @@ def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_he
 <button class="menu" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu"><span></span><span></span><span></span></button>
 <nav class="nav" id="site-nav" aria-label="Sections">{nav}</nav></div></header>
 <main class="wrap" id="main">{body}</main>
-<footer class="foot"><div class="wrap"><a class="logo sm" href="/"><img src="/img/logo.webp" alt="Ground Level News" width="297" height="180" loading="lazy"></a>
-<p>{TAG} Headlines are aggregated from public RSS feeds. Each story summarizes and links to the original publisher, who owns the content.</p>
-<p><a href="/press-releases/">Press Releases</a> · <a href="/rss.xml">RSS</a> · <a href="/feed.xml">Atom</a> · <a href="/sitemap.xml">Sitemap</a> · <a href="/llms.txt">llms.txt</a> · <a href="/about/">About</a></p>
-<p class="muted">© {NOW.year} {NAME}. Updated {NOW.strftime('%b %d, %Y %H:%M UTC')}.</p></div></footer>
+<footer class="foot"><div class="wrap">
+<div class="fgrid"><div class="fbrand"><a class="flogo" href="/"><img src="/img/logo.webp" alt="Ground Level News" width="297" height="180" loading="lazy"></a>
+<p>{TAG} Headlines are gathered from public news feeds; each story summarizes and links to the original publisher, who owns the content.</p></div>
+<div><h2>Sections</h2><ul>{"".join(f'<li><a href="/category/{k}/">{v}</a></li>' for k, v in CATS)}</ul></div>
+<div><h2>Ground Level</h2><ul><li><a href="/press-releases/">Press Releases</a></li><li><a href="/submit/">Submit a Release</a></li><li><a href="/about/">About &amp; Sources</a></li></ul></div>
+<div><h2>Follow</h2><ul><li><a href="/rss.xml">RSS</a></li><li><a href="/feed.xml">Atom</a></li><li><a href="/sitemap.xml">Sitemap</a></li><li><a href="/llms.txt">llms.txt</a></li></ul></div></div>
+<p class="fine">© {NOW.year} {NAME} · Updated {NOW.strftime('%b %d, %Y %H:%M UTC')}</p></div></footer>
 <script>document.querySelectorAll('[data-ts]').forEach(e=>{{const s=Math.floor(Date.now()/1000)-+e.dataset.ts;e.textContent=s<3600?Math.max(1,s/60|0)+'m ago':s<86400?(s/3600|0)+'h ago':new Date(e.dataset.ts*1000).toLocaleDateString(undefined,{{month:'short',day:'numeric'}})}})</script>
 <script>(function(){{var b=document.querySelector('.menu'),n=document.getElementById('site-nav'),t=document.getElementById('top');
 function set(o){{document.body.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.setAttribute('aria-label',o?'Close menu':'Open menu');}}
@@ -186,15 +245,19 @@ var s=false;addEventListener('scroll',function(){{var c=scrollY>60;if(c!==s){{s=
 </body></html>"""
 
 ORG = {"@type":"NewsMediaOrganization","@id":SITE+"/#org","name":NAME,"url":SITE+"/","logo":{"@type":"ImageObject","url":SITE+"/img/logo.png","width":297,"height":180},
-       "sameAs":[REPO],"publishingPrinciples":SITE+"/about/"}
+       "publishingPrinciples":SITE+"/about/"}
 SITE_LD = json.dumps({"@context":"https://schema.org","@graph":[ORG,{"@type":"WebSite","@id":SITE+"/#website","url":SITE+"/","name":NAME,"description":TAG,"publisher":{"@id":SITE+"/#org"},"inLanguage":"en-US"}]}).replace("</","<\\/")
 OG_CACHE = ROOT/".ogcache"
 OG_STORIES = int(os.environ.get("OG_STORIES", "300"))
-def og_for(slug, title, cat):
-    """Branded 1200x630 share card, cached by content hash; returns absolute URL or None."""
+def og_for(slug, title, cat, im=None):
+    """Branded 1200x630 share card (over the story photo when there is one), cached by content hash."""
     if not brand: return None
+    photo = None
+    if im and not im.get("brand") and im["src"].startswith("/"):
+        f = ROOT/"static"/im["src"].lstrip("/")
+        photo = f if f.exists() else None
     try:
-        brand.og_cached(title, cat, OUT/f"og/{slug}.jpg", OG_CACHE); return f"{SITE}/og/{slug}.jpg"
+        brand.og_cached(title, cat, OUT/f"og/{slug}.jpg", OG_CACHE, photo, (im or {}).get("credit") if photo else None); return f"{SITE}/og/{slug}.jpg"
     except Exception as e:
         print(f"WARN og {slug}: {e}", file=sys.stderr); return None
 def ldj(o): return f'<script type="application/ld+json">{json.dumps(o).replace("</","<\\/")}</script>'
@@ -203,10 +266,12 @@ def absimg(im): return (SITE + im["src"]) if im and im["src"].startswith("/") el
 
 def card(it, cls="card"):
     cat = "local" if it.get("local") else it["cat"]
-    th = f'<span class="thumb">{img_tag(cat_img(cat), sizes="(max-width:620px) 100vw, 400px", small=True)}</span>' if cls != "mini" else ""
-    return f"""<a class="{cls}" href="/story/{it['slug']}/">{th}<span class="tag t-{cat}">{esc(CAT_NAME.get(cat))}</span>
-<h3>{esc(it['title'])}</h3>{f'<p>{esc(clean(it["summary"],160))}</p>' if cls!='mini' and it['summary'] else ''}
-<span class="meta">{esc(it.get('source'))} · <time data-ts="{it['ts']}">{ago(it['ts'])}</time></span></a>"""
+    meta = f'<span class="meta">{esc(it.get("source"))} · <time data-ts="{it["ts"]}">{ago(it["ts"])}</time></span>'
+    if cls == "mini":
+        return f'<a class="mini" href="/story/{it["slug"]}/"><span class="tag t-{cat}">{esc(CAT_NAME.get(cat))}</span><h3>{esc(it["title"])}</h3>{meta}</a>'
+    im = story_img(it)
+    return f"""<a class="{cls}" href="/story/{it['slug']}/"><span class="thumb">{img_tag(im, sizes="(max-width:640px) 100vw, (max-width:1000px) 50vw, 400px", small=True)}</span>
+<span class="cb"><span class="tag t-{cat}">{esc(CAT_NAME.get(cat))}</span><h3>{esc(it['title'])}</h3>{f'<p>{esc(clean(it["summary"],170))}</p>' if it['summary'] else ''}{meta}</span></a>"""
 
 def write(path, content):
     f = OUT / path.lstrip("/")
@@ -234,69 +299,109 @@ def main():
     pool = [i for i in items if i["summary"]] or items
     lead = pool[0] if pool else None
     rest = [i for i in items if i is not lead]
+    used = set()
+    def take(lst, n):
+        out = [i for i in lst if i["id"] not in used][:n]; used.update(i["id"] for i in out); return out
+    if lead: used.add(lead["id"])
+    latest = take(rest, 16)
+    top = take(rest, 8)
     secs = ""
     for k, v in CATS:
-        lst = [i for i in by[k] if i is not lead][:6]
+        lst = take(by[k], 6)
         if not lst: continue
-        secs += f'<section class="sec"><div class="sh"><h2><span class="bar t-{k}"></span>{v}</h2><a href="/category/{k}/">More {v} →</a></div><div class="grid">{"".join(card(i) for i in lst)}</div></section>'
-    prbox = "".join(f'<a class="mini prm" href="/press-releases/{p["slug"]}/">{img_tag(pr_img(p), "pthumb", sizes="80px")}<span class="tag t-pr">{esc(p.get("area") or "Release")}</span><h3>{esc(p["title"])}</h3><span class="meta">{esc(p.get("company"))} · {esc(p["date"])}</span></a>' for p in prs[:5])
+        secs += f'<section class="sec"><div class="sh"><h2><span class="bar t-{k}"></span>{v}</h2><a href="/category/{k}/">More {v} <span aria-hidden="true">→</span></a></div><div class="grid">{"".join(card(i) for i in lst)}</div></section>'
+    def pr_card(p, cls="card pr-card"):
+        return f'<a class="{cls}" href="/press-releases/{p["slug"]}/"><span class="thumb">{img_tag(pr_img(p), sizes="(max-width:640px) 100vw, (max-width:1000px) 50vw, 400px", small=True)}</span><span class="cb"><span class="tag t-pr">{esc(p.get("area") or "Release")}{" · Example" if p.get("example") else ""}</span><h3>{esc(p["title"])}</h3><p>{esc(clean(p.get("summary"), 170))}</p><span class="meta">{esc(p.get("company"))} · {esc(p["date"])}</span></span></a>'
+    real_prs = [p for p in prs if not p.get("example")]
+    prbox = "".join(f'<a class="prm" href="/press-releases/{p["slug"]}/">{img_tag(pr_img(p), "pthumb", sizes="72px", small=True)}<span><span class="area">{esc(p.get("area") or "Release")}</span><h3>{esc(p["title"])}</h3><span class="meta">{esc(p["date"])}</span></span></a>' for p in real_prs[:6])
     body = ""
     if lead:
-        lim = cat_img("local" if lead.get("local") else lead["cat"])
-        body += f"""<section class="hero"><div class="leadwrap"><a class="lead{' brandlead' if (lim or {}).get('brand') else ''}" href="/story/{lead['slug']}/">{'' if (lim or {}).get('brand') else img_tag(lim, "lead-bg", False, "(max-width:980px) 100vw, 800px")}<span class="tag t-{lead['cat']}">Top Story</span>
-<h1>{esc(lead['title'])}</h1><p>{esc(lead['summary'])}</p><span class="meta">{esc(lead.get('source'))} · <time data-ts="{lead['ts']}">{ago(lead['ts'])}</time></span>
-</a>{f'<p class="lead-cap">{credit(lim)}</p>' if credit(lim) else ''}</div>
-<aside class="latest"><h2><span class="pulse"></span>Latest</h2>{"".join(card(i,'mini') for i in rest[:6])}<details class="more"><summary>View more</summary>{"".join(card(i,'mini') for i in rest[6:16])}</details></aside></section>"""
-    body += f'<section class="sec"><div class="sh"><h2><span class="bar t-local"></span>Top Headlines</h2></div><div class="grid g4">{"".join(card(i) for i in rest[16:24])}</div></section>'
-    body += f'<div class="two"><div>{secs}</div><aside class="side"><div class="box"><h2>Press Releases</h2>{prbox}<a class="btn" href="/press-releases/">All releases →</a></div></aside></div>'
+        lim = story_img(lead)
+        cap = credit(lim)
+        body += f"""<section class="hero"><div class="leadwrap"><a class="lead{' brandlead' if (lim or {}).get('brand') else ''}" href="/story/{lead['slug']}/">{'' if (lim or {}).get('brand') else img_tag(lim, "lead-bg", False, "(max-width:1000px) 100vw, 820px")}<span class="tag t-{lead['cat']}">Top Story</span>
+<h1>{esc(lead['title'])}</h1><p>{esc(clean(lead['summary'], 240))}</p><span class="meta">{esc(lead.get('source'))} · <time data-ts="{lead['ts']}">{ago(lead['ts'])}</time></span>
+</a>{f'<p class="lead-cap">{cap}</p>' if cap else ''}</div>
+<aside class="latest" aria-labelledby="latest-h"><h2 id="latest-h"><span class="pulse"></span>Latest</h2>{"".join(card(i,'mini') for i in latest[:6])}<details class="more"><summary>View more</summary>{"".join(card(i,'mini') for i in latest[6:])}</details></aside></section>"""
+    if real_prs:
+        body += f'<section class="sec local-strip"><div class="sh"><h2><span class="bar t-pr"></span>Around the Colorado River</h2><a href="/press-releases/">All local news <span aria-hidden="true">→</span></a></div><div class="grid g4">{"".join(pr_card(p) for p in real_prs[:4])}</div></section>'
+    body += f'<section class="sec"><div class="sh"><h2><span class="bar t-us"></span>Top Headlines</h2></div><div class="grid g4">{"".join(card(i) for i in top)}</div></section>'
+    body += f'<div class="two"><div>{secs}</div><aside class="side"><div class="box"><h2>Press Releases</h2>{prbox}<a class="btn" href="/press-releases/">All releases <span aria-hidden="true">→</span></a></div><div class="box submit-box"><h2>Have news to share?</h2><p>Local businesses, agencies and nonprofits can send us press releases for free.</p><a class="btn ghost" href="/submit/">Submit a release</a></div></aside></div>'
     write("/", page(NAME, body, ticker=ticker))
 
     # categories
     for k, v in CATS:
         lst = by[k][:120]
-        write(f"/category/{k}/", page(f"{v} News", f'<h1 class="ph"><span class="bar t-{k}"></span>{v}</h1>{figure(cat_img(k), False).replace("class=\"fig\"", "class=\"fig banner\"")}<div class="grid g3">{"".join(card(i) for i in lst) or "<p>No stories right now.</p>"}</div>', f"Latest {v} headlines from {NAME}.", f"/category/{k}/", ticker))
+        ban = pick_img(v, k, "banner-" + k)
+        write(f"/category/{k}/", page(f"{v} News", f'<header class="phead"><h1 class="ph"><span class="bar t-{k}"></span>{v}</h1><p class="lede">The latest {v} headlines, updated every 15 minutes.</p></header>{figure(ban, False).replace("class=\"fig\"", "class=\"fig banner\"")}<div class="grid g3">{"".join(card(i) for i in lst) or "<p>No stories right now.</p>"}</div>', f"Latest {v} headlines from {NAME}.", f"/category/{k}/", ticker))
 
     # stories
     for n_i, i in enumerate(items):
         cat = "local" if i.get("local") else i["cat"]
-        rel = [r for r in by[i["cat"]] if r is not i][:4]
+        rel = [r for r in by[i["cat"]] if r is not i][:3]
+        sim = story_img(i)
         ld = {"@context":"https://schema.org","@type":"NewsArticle","headline":i["title"][:110],"datePublished":iso(i["ts"]),"dateModified":iso(i["ts"]),
-              "mainEntityOfPage":f"{SITE}/story/{i['slug']}/","url":f"{SITE}/story/{i['slug']}/","image":[absimg(cat_img(cat))],"articleSection":CAT_NAME[cat],
+              "mainEntityOfPage":f"{SITE}/story/{i['slug']}/","url":f"{SITE}/story/{i['slug']}/","image":[absimg(sim)],"articleSection":CAT_NAME[cat],
               "author":{"@type":"Organization","name":i.get("source") or NAME},"publisher":{"@id":SITE+"/#org","@type":"NewsMediaOrganization","name":NAME,"logo":ORG["logo"]},
               "isBasedOn":i["link"],"description":i["summary"][:300]}
         (OUT/"story").mkdir(parents=True, exist_ok=True)
         (OUT/f"story/{i['slug']}.md").write_text(f"# {i['title']}\n\n- Source: {i.get('source')}\n- Published: {iso(i['ts'])}\n- Category: {CAT_NAME[cat]}\n- Original: {i['link']}\n- Canonical: {SITE}/story/{i['slug']}/\n\n{i['summary'] or 'Read the full report from the original publisher.'}\n\n_Ground Level News shows a short summary only; the full article and all rights belong to {i.get('source') or 'the original publisher'}._\n", encoding="utf-8")
         b = f"""<article class="story"><a class="crumb" href="/category/{cat}/">{esc(CAT_NAME[cat])}</a>
 <h1>{esc(i['title'])}</h1><div class="byline">Source: <b>{esc(i.get('source'))}</b> · <time datetime="{iso(i['ts'])}">{dt.datetime.fromtimestamp(i['ts'] or NOW.timestamp(), dt.timezone.utc).strftime('%b %d, %Y %H:%M UTC')}</time></div>
-{figure(cat_img(cat), False)}<div class="summary"><h2>The Quick Take</h2><p>{esc(i['summary']) or 'Read the full report from the original publisher.'}</p></div>
-<a class="cta" href="{esc(i['link'])}" rel="noopener nofollow" target="_blank">Read the full story at {esc(i.get('source') or 'the source')} →</a>
-<p class="attr">Ground Level News aggregates headlines from public feeds. This page shows a short summary only; the full article and all rights belong to {esc(i.get('source') or 'the original publisher')}.</p>
-{f'<h2 class="rel">Related</h2><div class="grid">{"".join(card(r) for r in rel)}</div>' if rel else ''}</article>"""
+{figure(sim, False)}<div class="summary"><h2>The Quick Take</h2><p>{esc(i['summary']) or 'Read the full report from the original publisher.'}</p></div>
+<a class="cta" href="{esc(i['link'])}" rel="noopener nofollow" target="_blank">Read the full story at {esc(i.get('source') or 'the source')} <span aria-hidden="true">→</span></a>
+<p class="attr">Ground Level News gathers headlines from public news feeds. This page shows a short summary only; the full article and all rights belong to {esc(i.get('source') or 'the original publisher')}.</p></article>
+{f'<section class="sec related"><div class="sh"><h2><span class="bar t-{i["cat"]}"></span>More {esc(CAT_NAME[i["cat"]])}</h2><a href="/category/{i["cat"]}/">See all <span aria-hidden="true">→</span></a></div><div class="grid">{"".join(card(r) for r in rel)}</div></section>' if rel else ''}"""
         write(f"/story/{i['slug']}/", page(i["title"], b, i["summary"] or i["title"], f"/story/{i['slug']}/", ticker, "article",
               ldj(ld) + ldj(crumbs(("Home","/"),(CAT_NAME[cat],f"/category/{cat}/"),(i["title"][:110],f"/story/{i['slug']}/"))), md=f"/story/{i['slug']}.md",
-              og_img=og_for(i["slug"], i["title"], cat) if n_i < OG_STORIES else None))
+              og_img=og_for(i["slug"], i["title"], cat, sim) if n_i < OG_STORIES else None))
 
     # press releases
-    lst = "".join(f'<a class="card pr-card" href="/press-releases/{p["slug"]}/"><span class="thumb">{img_tag(pr_img(p), sizes="(max-width:620px) 100vw, 400px")}</span><span class="tag t-pr">{esc(p.get("area") or "Release")}{" · EXAMPLE" if p.get("example") else ""}</span><h3>{esc(p["title"])}</h3><p>{esc(p.get("summary"))}</p><span class="meta">{esc(p.get("company"))} · {esc(p["date"])}</span></a>' for p in prs)
-    write("/press-releases/", page("Press Releases", f'<h1 class="ph"><span class="bar t-pr"></span>Press Releases</h1><p class="lede">Local announcements from across Mohave Valley, Bullhead City, Laughlin, Clark County, Mesquite, Boulder City and beyond. <a href="https://github.com/AXIA-Enterprises-DEV/ground-level-news#publishing-press-releases">Submit a release →</a></p><div class="grid g3">{lst}</div>', "Press releases and local announcements on Ground Level News.", "/press-releases/", ticker))
+    lst = "".join(pr_card(p) for p in prs)
+    write("/press-releases/", page("Press Releases", f'<header class="phead"><h1 class="ph"><span class="bar t-pr"></span>Press Releases</h1><p class="lede">Local announcements from across Bullhead City, Laughlin, Mohave Valley, Clark County, Mesquite, Boulder City and beyond. <a href="/submit/">Submit a release <span aria-hidden="true">→</span></a></p></header><div class="grid g3">{lst}</div>', "Press releases and local announcements on Ground Level News.", "/press-releases/", ticker))
     for p in prs:
         src = f'<p class="attr">Source: <a href="{esc(p["source_url"])}" rel="noopener" target="_blank">{esc(p.get("source_name") or p["source_url"])}</a></p>' if p.get("source_url") else ""
-        b = f"""<article class="story"><a class="crumb" href="/press-releases/">Press Release{' · EXAMPLE' if p.get('example') else ''}</a><h1>{esc(p['title'])}</h1>
+        pim = pr_img(p)
+        more = [q for q in real_prs if q is not p][:3]
+        b = f"""<article class="story"><a class="crumb" href="/press-releases/">Press Release{' · Example' if p.get('example') else ''}</a><h1>{esc(p['title'])}</h1>
 <div class="byline"><b>{esc(p.get('company'))}</b> · {esc(p['date'])}{' · ' + esc(p.get('area')) if p.get('area') else ''}</div>
-{figure(pr_img(p), False)}<div class="summary"><p>{esc(p.get('summary'))}</p></div><div class="prose">{p['body']}</div>{src}
-<p class="attr">Media contact: {esc(p.get('contact'))}</p></article>"""
+{figure(pim, False)}<div class="summary"><p>{esc(p.get('summary'))}</p></div><div class="prose">{p['body']}</div>{src}
+<p class="attr">Media contact: {esc(p.get('contact'))}</p></article>
+{f'<section class="sec related"><div class="sh"><h2><span class="bar t-pr"></span>More Local News</h2><a href="/press-releases/">See all <span aria-hidden="true">→</span></a></div><div class="grid">{"".join(pr_card(q) for q in more)}</div></section>' if more else ''}"""
         u = f"{SITE}/press-releases/{p['slug']}/"
         ld = {"@context":"https://schema.org","@type":"NewsArticle","headline":p["title"][:110],"datePublished":p["date"],"dateModified":p.get("updated") and str(p["updated"]) or p["date"],
-              "mainEntityOfPage":u,"url":u,"image":[absimg(pr_img(p))],"articleSection":"Press Releases","description":p.get("summary") or "",
+              "mainEntityOfPage":u,"url":u,"image":[absimg(pim)],"articleSection":"Press Releases","description":p.get("summary") or "",
               "author":{"@type":"Organization","name":p.get("company") or NAME},"publisher":{"@id":SITE+"/#org","@type":"NewsMediaOrganization","name":NAME,"logo":ORG["logo"]}}
         if p.get("area"): ld["contentLocation"] = {"@type":"Place","name":p["area"]}
         if p.get("source_url"): ld["isBasedOn"] = p["source_url"]
-        im = pr_img(p) or {}
-        p["md_full"] = f"# {p['title']}\n\n- Date: {p['date']}\n- From: {p.get('company')}\n- Area: {p.get('area') or ''}\n- Canonical: {u}\n" + (f"- Source: {p['source_url']}\n" if p.get("source_url") else "") + (f"- Image: {absimg(im)} ({im.get('label')}; {im.get('credit')}; {im.get('license')}; {im.get('source')})\n" if im else "") + f"\n> {p.get('summary') or ''}\n\n{p['md']}\n\nMedia contact: {p.get('contact') or ''}\n"
+        im = pim or {}
+        p["md_full"] = f"# {p['title']}\n\n- Date: {p['date']}\n- From: {p.get('company')}\n- Area: {p.get('area') or ''}\n- Canonical: {u}\n" + (f"- Source: {p['source_url']}\n" if p.get("source_url") else "") + (f"- Image: {absimg(im)} ({im.get('label')}; {im.get('credit')}; {im.get('license')}; {im.get('source')})\n" if im and not im.get("brand") else "") + f"\n> {p.get('summary') or ''}\n\n{p['md']}\n\nMedia contact: {p.get('contact') or ''}\n"
         (OUT/f"press-releases/{p['slug']}.md").write_text(p["md_full"], encoding="utf-8")
-        write(f"/press-releases/{p['slug']}/", page(p["title"], b, p.get("summary") or p["title"], f"/press-releases/{p['slug']}/", ticker, "article", ldj(ld) + ldj(crumbs(("Home","/"),("Press Releases","/press-releases/"),(p["title"][:110],f"/press-releases/{p['slug']}/"))), og_img=og_for("pr-" + p["slug"], p["title"], "pr") or absimg(pr_img(p)), md=f"/press-releases/{p['slug']}.md"))
+        write(f"/press-releases/{p['slug']}/", page(p["title"], b, p.get("summary") or p["title"], f"/press-releases/{p['slug']}/", ticker, "article", ldj(ld) + ldj(crumbs(("Home","/"),("Press Releases","/press-releases/"),(p["title"][:110],f"/press-releases/{p['slug']}/"))), og_img=og_for("pr-" + p["slug"], p["title"], "pr", pim) or absimg(pim), md=f"/press-releases/{p['slug']}.md"))
 
-    write("/about/", page("About", f'<article class="story"><h1>About {NAME}</h1><div class="prose"><p>{NAME} is a fast, free news front page built from hundreds of public RSS feeds and refreshed every 15 minutes. Every story links to its original publisher. Raw SEC filing noise is filtered out.</p><p>Local press releases are published from Markdown files in our <a href="https://github.com/AXIA-Enterprises-DEV/ground-level-news">GitHub repository</a>.</p></div></article>', path="/about/", ticker=ticker))
+    # about: where the news comes from
+    srcs = {}
+    for i in items: srcs[i["source"]] = srcs.get(i["source"], 0) + 1
+    top_srcs = sorted(srcs.items(), key=lambda x: -x[1])[:40]
+    write("/about/", page("About & Sources", f"""<article class="story"><h1>About {NAME}</h1><div class="prose">
+<p>{NAME} is a free news front page for the Colorado River region and the rest of the country. Headlines are gathered from hundreds of public RSS and news feeds and refreshed about every 15 minutes. Raw SEC filings and other wire noise are filtered out.</p>
+<h2>Where the news comes from</h2>
+<p>National and world stories come from publishers' public feeds: wire services, national newspapers and broadcasters, trade and technology outlets, and Nevada and Las Vegas newsrooms. Each story page shows a short summary only and links straight to the original article; the reporting and all rights belong to that publisher.</p>
+<p>Local news and press releases come from city and county governments, fire and police departments, chambers of commerce and other organizations in Bullhead City, Laughlin, Mohave Valley, Clark County, Mesquite and Boulder City. Each release lists its original source.</p>
+<h2>Sources in today's edition</h2>
+<ul class="srcs">{"".join(f"<li>{esc(n)} <span>{c}</span></li>" for n, c in top_srcs)}</ul>
+<h2>Photos</h2>
+<p>Photos are openly licensed or public domain (mostly U.S. government agencies, the Library of Congress and Creative Commons photographers) and are credited under each image. Images labelled "File photo" or "Illustration" do not show the actual event.</p>
+<h2>Contact</h2>
+<p>News tips, corrections and press releases: <a href="mailto:{CONTACT}">{CONTACT}</a> or the <a href="/submit/">submission page</a>.</p>
+</div></article>""", f"How {NAME} works and where its news comes from.", "/about/", ticker))
+    sub_body = "Title:%0D%0ADate (YYYY-MM-DD):%0D%0AOrganization:%0D%0AArea (city):%0D%0AContact:%0D%0ASummary (1-2 sentences):%0D%0ASource URL (optional):%0D%0A%0D%0ABody:%0D%0A"
+    write("/submit/", page("Submit a Press Release", f"""<article class="story"><h1>Submit a Press Release</h1><div class="prose">
+<p>Ground Level News publishes local announcements from Bullhead City, Laughlin, Mohave Valley, Clark County, Mesquite, Boulder City and the surrounding area, free of charge. An editor reviews every release before it goes live.</p>
+<h2>What to send</h2>
+<ul><li><b>Title</b>: a short, factual headline</li><li><b>Date</b> of the release</li><li><b>Organization</b> issuing it</li><li><b>Area</b>: the city or community it affects</li><li><b>Contact</b>: a public name, email or phone for follow-up</li><li><b>Summary</b>: one or two sentences</li><li><b>Body</b>: the full release</li><li><b>Photo</b> (optional): only images you own or that are openly licensed, with credit. No photos of private individuals without consent.</li></ul>
+<p><a class="cta" href="mailto:{CONTACT}?subject=Press%20release%20submission&amp;body={sub_body}">Email your release <span aria-hidden="true">→</span></a></p>
+<p class="attr">Prefer to write it yourself? Releases use simple Markdown with a short header block; see the <a href="/press-releases/2026-01-01-example-template.md">example template</a>.</p>
+</div></article>""", "Send a local press release to Ground Level News.", "/submit/", ticker))
     write("/404.html", page("Not found", '<article class="story"><h1>Page not found</h1><p>This story may have rolled off the wire. <a href="/">Back to the homepage →</a></p></article>', ticker=ticker))
 
     # rss
@@ -310,7 +415,7 @@ def main():
         entries.append(rss_item(p["title"], f"{SITE}/press-releases/{p['slug']}/", p.get("summary"), ts, "pr-" + p["slug"]))
     (OUT/"rss.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>{NAME}</title><link>{SITE}/</link><description>{TAG}</description>{"".join(entries)}</channel></rss>', encoding="utf-8")
 
-    urls = ["/", "/press-releases/", "/about/"] + [f"/category/{k}/" for k, _ in CATS] + [f"/press-releases/{p['slug']}/" for p in prs] + [f"/story/{i['slug']}/" for i in items]
+    urls = ["/", "/press-releases/", "/about/", "/submit/"] + [f"/category/{k}/" for k, _ in CATS] + [f"/press-releases/{p['slug']}/" for p in prs] + [f"/story/{i['slug']}/" for i in items]
     (OUT/"sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(f"<url><loc>{SITE}{u}</loc></url>" for u in urls) + "</urlset>", encoding="utf-8")
     bots = ["GPTBot","OAI-SearchBot","ChatGPT-User","ClaudeBot","Claude-User","Claude-SearchBot","PerplexityBot","Perplexity-User","Google-Extended","Applebot-Extended","Applebot","CCBot","Bingbot","Googlebot"]
     (OUT/"robots.txt").write_text("# Ground Level News welcomes search engines and AI agents. See /llms.txt and /agents.md\n" + "".join(f"User-agent: {b}\nAllow: /\n\n" for b in bots) + f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\nSitemap: {SITE}/news-sitemap.xml\n", encoding="utf-8")
@@ -349,7 +454,7 @@ Every HTML article has a Markdown twin: append `.md` to the path without the tra
 - [Google News sitemap]({SITE}/news-sitemap.xml)
 
 ## Optional
-- [Source repository]({REPO})
+- [Submit a press release]({SITE}/submit/)
 - [Example press release template]({SITE}/press-releases/2026-01-01-example-template.md)
 """
     (OUT/"llms.txt").write_text(llms, encoding="utf-8")
@@ -358,10 +463,13 @@ Every HTML article has a Markdown twin: append `.md` to the path without the tra
     (OUT/"agents.md").write_text(agents, encoding="utf-8")
     (OUT/".well-known").mkdir(exist_ok=True)
     exp = (NOW + dt.timedelta(days=330)).strftime("%Y-%m-%dT00:00:00Z")
-    (OUT/".well-known/security.txt").write_text(f"Contact: {REPO}/security/advisories/new\nContact: {REPO}/issues\nExpires: {exp}\nPreferred-Languages: en\nCanonical: {SITE}/.well-known/security.txt\n", encoding="utf-8")
-    (OUT/"humans.txt").write_text(f"/* TEAM */\nPublisher: {NAME}\nSite: {SITE}\nSource: {REPO}\n\n/* SITE */\nLast update: {NOW.strftime('%Y/%m/%d')}\nStandards: HTML5, CSS3, schema.org, llms.txt\nSoftware: Python static site builder, GitHub Pages\n", encoding="utf-8")
+    (OUT/".well-known/security.txt").write_text(f"Contact: mailto:{CONTACT}\nExpires: {exp}\nPreferred-Languages: en\nCanonical: {SITE}/.well-known/security.txt\n", encoding="utf-8")
+    (OUT/"humans.txt").write_text(f"/* TEAM */\nPublisher: {NAME}\nSite: {SITE}\nContact: {CONTACT}\n\n/* SITE */\nLast update: {NOW.strftime('%Y/%m/%d')}\nStandards: HTML5, CSS3, schema.org, llms.txt\nSoftware: Python static site builder, GitHub Pages\n", encoding="utf-8")
     (OUT/f"{INDEXNOW_KEY}.txt").write_text(INDEXNOW_KEY, encoding="utf-8")
     (OUT/"indexnow-urls.txt").write_text("\n".join([SITE + "/", SITE + "/press-releases/"] + [SITE + u for u, _, _ in news]) + "\n", encoding="utf-8")
+    hits = [str(f.relative_to(OUT)) for f in OUT.rglob("*") if f.is_file() and f.suffix in {".html", ".md", ".txt", ".xml", ".json", ".webmanifest"}
+            and BLOCK.search(f.read_text(encoding="utf-8", errors="ignore"))]
+    if hits: sys.exit(f"ERROR: blocked name found in {len(hits)} file(s): {hits[:10]}")
     print("built", len(urls), "pages")
 
 if __name__ == "__main__": main()

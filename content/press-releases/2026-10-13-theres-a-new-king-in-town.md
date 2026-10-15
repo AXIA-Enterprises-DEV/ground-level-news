@@ -3,7 +3,7 @@ title: "There's a New King in Town"
 date: 2026-10-13
 company: Ground Level News
 area: Bullhead City
-contact: "Tips: open an issue at github.com/AXIA-Enterprises-DEV/ground-level-news"
+contact: "Tips: news@groundlevelnews.com"
 summary: "A Bullhead City local says that since Don Laughlin gave up the mantle, Dean Ziroli has stepped in to get the community going and keep everybody together, and is creating affordable housing through his company, Allegiant Homes."
 source_name: "On-the-ground conversation in Bullhead City; background: Riverside Resort, Las Vegas Review-Journal"
 source_url: "https://www.riversideresort.com/don-laughlin-history-founder-riverside-resort-casino/"

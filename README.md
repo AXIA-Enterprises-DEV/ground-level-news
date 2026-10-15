@@ -1,8 +1,8 @@
 # Ground Level News
 
-Live: https://groundlevelnews.com (fallback: https://axia-enterprises-dev.github.io/ground-level-news/)
+Live: https://groundlevelnews.com
 
-This is a free static news site built with GitHub Actions and GitHub Pages. `scripts/build.py` pulls headlines from the public [news-tracker](https://github.com/AXIA-Enterprises-DEV/news-tracker) data (`data/latest.json`, `data/manifest.json`, `data/days/*.json`), filters out SEC filings, and renders the homepage, category pages, story pages (a summary plus a link to the original source), press releases, RSS (`/rss.xml`), and a sitemap.
+This is a free static news site built with GitHub Actions and GitHub Pages. `scripts/build.py` pulls headlines from the news-tracker data feed (`TRACKER_BASE`; `data/latest.json`, `data/manifest.json`, `data/days/*.json`), filters out SEC filings, and renders the homepage, category pages, story pages (a summary plus a link to the original source), press releases, RSS (`/rss.xml`), and a sitemap.
 
 The site rebuilds every 15 minutes (`build.yml`). `keepalive.yml` dispatches a rebuild if the cron skips.
 
@@ -28,6 +28,16 @@ Body in Markdown.
 
 Commit it to `main`, or open a PR. The site updates within a few minutes of the merge.
 
-**Option B: GitHub issue.** Go to Issues → New → "Submit a press release" and fill in the form. A workflow opens a PR with the file. Review it and merge to publish.
+**Option B: email.** Send the release to news@groundlevelnews.com (see `/submit/` on the site); an editor adds it.
+
+**Option C: GitHub issue.** Go to Issues → New → "Submit a press release" and fill in the form. A workflow opens a PR with the file. Review it and merge to publish.
 
 `2026-01-01-example-template.md` is a labeled example. Set `example: true` to mark a release as a sample.
+
+## Images
+
+`content/images.yaml` is the photo registry. Each photo has `buckets` (sections it suits) and `keywords`; `build.py` gives every story the photo whose keywords best match its headline, otherwise a stable pick from its section's pool, otherwise the branded category card (`python scripts/brand.py` regenerates those and `static/og.png`). Only public-domain or openly licensed photos, with credit, license and source filled in.
+
+## Contact
+
+`CONTACT_EMAIL` (default `news@groundlevelnews.com`) is shown on `/about/`, `/submit/` and in `security.txt`.

@@ -7,6 +7,8 @@ images:
     license_url: https://creativecommons.org/licenses/by-sa/3.0
     source: https://commons.wikimedia.org/wiki/File:Bullhead_City_Arizona_1.jpg
     label: File photo
+    buckets: [local, pr]
+    keywords: [bullhead city, bullhead, mohave valley, fort mohave, mohave county, arizona]
   laughlin-riverfront:
     src: /img/photos/laughlin-riverfront.webp
     alt: Riverwalk and resort towers along the Colorado River in Laughlin, Nevada
@@ -15,6 +17,8 @@ images:
     license_url: https://creativecommons.org/licenses/by-sa/2.0
     source: https://commons.wikimedia.org/wiki/File:Resorts_of_Laughlin,_Nevada_Along_Colorado_River_(10086859356).jpg
     label: File photo
+    buckets: [local, pr]
+    keywords: [laughlin, riverside, casino, colorado river, riverwalk, tourism, resort]
   boulder-city:
     src: /img/photos/boulder-city.webp
     alt: American flag outside the historic Boulder Dam Hotel in Boulder City, Nevada
@@ -23,6 +27,8 @@ images:
     license_url: https://creativecommons.org/licenses/by-sa/4.0
     source: https://commons.wikimedia.org/wiki/File:Boulder_Dam_Hotel_American_Flag.jpg
     label: File photo
+    buckets: [local, pr, us]
+    keywords: [boulder city, veterans, flag]
   mesquite:
     src: /img/photos/mesquite.webp
     alt: Street near city hall in Mesquite, Nevada, with snow-capped mountains in the distance
@@ -31,6 +37,8 @@ images:
     license_url: https://creativecommons.org/licenses/by-sa/3.0
     source: https://commons.wikimedia.org/wiki/File:Mesquite_Nevada_2.jpg
     label: File photo
+    buckets: [local, pr]
+    keywords: [mesquite, virgin valley]
   clark-county-govt-center:
     src: /img/photos/clark-county-govt-center.webp
     alt: Pyramid-shaped building at the Clark County Government Center in Las Vegas
@@ -39,6 +47,8 @@ images:
     license_url: null
     source: https://commons.wikimedia.org/wiki/File:Clark_County_Government_Center.jpg
     label: File photo
+    buckets: [local, pr]
+    keywords: [clark county, county commission, las vegas, commissioners]
   fire-station:
     src: /img/illustrations/fire-station.webp
     alt: Illustration of a desert fire station with a red fire engine out front
@@ -47,6 +57,8 @@ images:
     license_url: null
     source: https://huggingface.co/Tongyi-MAI/Z-Image-Turbo
     label: Illustration
+    buckets: [pr]
+    keywords: [fire department, fire station, firefighters, firefighter, fire district]
   cat-business:
     src: /img/illustrations/cat-business.webp
     alt: Illustration of storefronts on a small-town main street

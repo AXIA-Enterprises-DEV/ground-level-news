@@ -27,14 +27,24 @@ def logo():
         _LOGO = im.crop(im.getchannel("A").point(lambda v: 255 if v > 20 else 0).getbbox())
     return _LOGO
 
-def background(w, h):
+def _hex(c): c = c.lstrip("#"); return tuple(int(c[i:i + 2], 16) for i in (0, 2, 4))
+def _mix(a, b, t): return tuple(round(x + (y - x) * t) for x, y in zip(a, b))
+
+def background(w, h, accent=None):
+    """Deep navy with a soft glow of the category color and faint contour lines ("ground level")."""
+    import math
+    acc = _hex(accent) if accent else RED
     im = Image.new("RGB", (w, h), NAVY)
+    glow = Image.new("L", (w, h), 0); gd = ImageDraw.Draw(glow)
+    for i in range(40):                                             # radial glow, top-right
+        r = int(max(w, h) * (1.05 - i / 40)); gd.ellipse([w * .9 - r, -h * .25 - r, w * .9 + r, -h * .25 + r], fill=int(6 + i * 3.4))
+    im = Image.composite(Image.new("RGB", (w, h), _mix(NAVY, acc, .55)), im, glow)
     d = ImageDraw.Draw(im, "RGBA")
-    step = max(18, w // 60)
-    for x in range(-h, w, step):                       # subtle diagonal texture
-        d.line([(x, h), (x + h, 0)], fill=(255, 255, 255, 10), width=max(1, w // 800))
-    for i, y in enumerate(range(int(h * .78), h, max(6, h // 60))):   # ticker lines
-        d.line([(0, y), (w, y)], fill=(255, 255, 255, 14 - min(12, i)), width=1)
+    lw = max(1, w // 700)
+    for k in range(9):                                              # contour lines across the lower half
+        y0 = h * (.48 + k * .065); amp = h * (.03 + .006 * k); ph = k * .7
+        pts = [(x, y0 + amp * math.sin(x / w * 2.4 * math.pi + ph) + amp * .5 * math.sin(x / w * 5.1 * math.pi - ph)) for x in range(0, w + 8, 8)]
+        d.line(pts, fill=(255, 255, 255, 20 + k * 3), width=lw)
     return im
 
 def chip(target_h, pad_ratio=.16):
@@ -54,13 +64,24 @@ def pill(d, xy, text, color, size):
     d.text((x + px - bb[0], y + py - bb[1]), t, font=f, fill=WHITE)
     return x + tw + 2 * px, y + th + 2 * py
 
+def kicker(d, xy, size):
+    """Small red rule + letterspaced GROUND LEVEL NEWS."""
+    x, y = xy; f = font(size, "Bold")
+    d.rectangle([x, y + size * .38, x + size * 2.2, y + size * .62], fill=RED)
+    x += int(size * 3); t = "GROUND LEVEL NEWS"
+    for ch in t:
+        d.text((x, y), ch, font=f, fill=(225, 230, 242)); x += d.textlength(ch, font=f) + size * .22
+
 def placeholder(cat, w=1600, h=900):
-    im = background(w, h).convert("RGBA"); d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, int(w * .012), h], fill=RED)                       # red accent bar
-    c = chip(int(h * .36)); im.alpha_composite(c, ((w - c.width) // 2, int(h * .22)))
-    f = font(int(h * .06), "ExtraBold"); t = CAT_LABELS[cat].upper()
-    bb = d.textbbox((0, 0), t, font=f); tw = bb[2] - bb[0] + int(h * .06 * 1.6)
-    pill(d, ((w - tw) // 2, int(h * .66)), CAT_LABELS[cat], CAT_COLORS[cat], int(h * .06))
+    col = CAT_COLORS[cat]
+    im = background(w, h, col).convert("RGBA"); d = ImageDraw.Draw(im)
+    m = int(w * .07)
+    c = chip(int(h * .17)); im.alpha_composite(c, (m, m))
+    kicker(d, (m, int(h * .56)), int(h * .034))
+    f = font(int(h * .19), "ExtraBold"); t = CAT_LABELS[cat]
+    while d.textlength(t, font=f) > w - 2 * m: f = font(int(f.size * .9), "ExtraBold")
+    d.text((m - int(f.size * .04), int(h * .62)), t, font=f, fill=WHITE)
+    d.rectangle([0, h - int(h * .022), w, h], fill=_hex(col))        # category color base strip
     return im.convert("RGB")
 
 def wrap(d, text, f, maxw, maxlines):
@@ -77,27 +98,44 @@ def wrap(d, text, f, maxw, maxlines):
         lines[-1] += "…"
     return lines
 
-def og_card(title, cat, out):
+def _cover(photo, W, H):
+    im = Image.open(photo).convert("RGB"); r = max(W / im.width, H / im.height)
+    im = im.resize((round(im.width * r), round(im.height * r)), Image.LANCZOS)
+    x, y = (im.width - W) // 2, (im.height - H) // 3
+    return im.crop((x, y, x + W, y + H))
+
+def og_card(title, cat, out, photo=None, credit=None):
     W, H = 1200, 630
-    im = background(W, H).convert("RGBA"); d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, 14, H], fill=RED)
-    c = chip(96); im.alpha_composite(c, (W - c.width - 48, 44))
-    pill(d, (64, 64), CAT_LABELS.get(cat, cat), CAT_COLORS.get(cat, "#D7141A"), 24)
-    for size, ml in [(64, 3), (54, 4), (46, 5)]:
-        f = font(size, "Bold"); lines = wrap(d, title, f, W - 128, ml)
-        if not lines[-1].endswith("…") or size == 46: break
-    y = 190; lh = int(size * 1.14)
-    y = 190 + max(0, (ml * lh - len(lines) * lh) // 3)
-    for ln in lines: d.text((64, y), ln, font=f, fill=WHITE); y += lh
-    d.rectangle([64, H - 92, 64 + 90, H - 86], fill=RED)
-    d.text((64, H - 72), "groundlevelnews.com", font=font(28, "SemiBold"), fill=(220, 226, 240))
+    col = CAT_COLORS.get(cat, "#D7141A")
+    if photo:
+        im = _cover(photo, W, H).convert("RGBA")
+        shade = Image.new("L", (W, H)); sd = ImageDraw.Draw(shade)
+        for y in range(H):                                          # darken toward the bottom for legible text
+            sd.line([(0, y), (W, y)], fill=int(70 + 175 * (y / H) ** 1.4))
+        im = Image.composite(Image.new("RGBA", (W, H), NAVY + (255,)), im, shade)
+    else:
+        im = background(W, H, col).convert("RGBA")
+    d = ImageDraw.Draw(im)
+    c = chip(84); im.alpha_composite(c, (56, 48))
+    sizes = [(66, 3), (56, 3), (48, 4)]
+    for size, ml in sizes:
+        f = font(size, "Bold"); lines = wrap(d, title, f, W - 112, ml)
+        if not lines[-1].endswith("…") or size == sizes[-1][0]: break
+    lh = int(size * 1.12); y = H - 96 - len(lines) * lh
+    _, ph = pill(d, (56, y - 62), CAT_LABELS.get(cat, cat), col, 22)
+    for ln in lines: d.text((56, y), ln, font=f, fill=WHITE); y += lh
+    d.rectangle([0, H - 10, W, H], fill=_hex(col))
+    d.text((56, H - 62), "groundlevelnews.com", font=font(24, "SemiBold"), fill=(220, 226, 240))
+    if photo and credit:
+        cf = font(16, "Medium"); t = f"Photo: {credit}"[:90]
+        d.text((W - 56 - d.textlength(t, font=cf), H - 56), t, font=cf, fill=(200, 206, 222))
     im.convert("RGB").save(out, quality=84, optimize=True)
 
-def og_cached(title, cat, out, cache_dir):
-    key = hashlib.sha1(f"v1|{cat}|{title}".encode()).hexdigest()[:16]
+def og_cached(title, cat, out, cache_dir, photo=None, credit=None):
+    key = hashlib.sha1(f"v2|{cat}|{title}|{photo}|{credit}".encode()).hexdigest()[:16]
     cache_dir.mkdir(parents=True, exist_ok=True)
     cf = cache_dir / f"{key}.jpg"
-    if not cf.exists(): og_card(title, cat, cf)
+    if not cf.exists(): og_card(title, cat, cf, photo, credit)
     out.parent.mkdir(parents=True, exist_ok=True)
     import shutil; shutil.copyfile(cf, out)
 
@@ -107,9 +145,10 @@ if __name__ == "__main__":
         im = placeholder(k); im.save(o/f"cat-{k}.webp", quality=82, method=6)
         im.resize((640, 360), Image.LANCZOS).save(o/f"cat-{k}-sm.webp", quality=80, method=6)
     W, H = 1200, 630                                     # branded default og.png
-    im = background(W, H).convert("RGBA"); d = ImageDraw.Draw(im); d.rectangle([0, 0, 14, H], fill=RED)
-    c = chip(380); im.alpha_composite(c, ((W - c.width) // 2, 70))
+    im = background(W, H).convert("RGBA"); d = ImageDraw.Draw(im)
+    c = chip(300); im.alpha_composite(c, ((W - c.width) // 2, 96))
     f = font(30, "SemiBold"); t = "News from the ground up  ·  groundlevelnews.com"
-    d.text(((W - d.textlength(t, font=f)) // 2, 500), t, font=f, fill=(220, 226, 240))
+    d.text(((W - d.textlength(t, font=f)) // 2, 470), t, font=f, fill=(220, 226, 240))
+    d.rectangle([0, H - 10, W, H], fill=RED)
     im.convert("RGB").save(ROOT/"static/og.png", optimize=True)
     print("ok")

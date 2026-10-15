@@ -16,6 +16,8 @@ Ground Level News is a static news site: U.S./world headlines aggregated from pu
 | `/llms.txt`, `/llms-full.txt` | LLM index and full text of all press releases |
 | `/rss.xml`, `/feed.xml` | RSS 2.0 and Atom feeds |
 | `/sitemap.xml`, `/news-sitemap.xml` | Full sitemap and Google News sitemap (last 48h) |
+| `/about/` | How the site works and where the news comes from |
+| `/submit/` | How to submit a press release |
 | `/agents.md` | This file |
 
 Every HTML page has a canonical URL on https://groundlevelnews.com, JSON-LD (NewsMediaOrganization, WebSite, NewsArticle, BreadcrumbList) and, for articles, a `<link rel="alternate" type="text/markdown">` to its Markdown twin.
@@ -26,7 +28,7 @@ Every HTML page has a canonical URL on https://groundlevelnews.com, JSON-LD (New
 - Images labelled "File photo" or "Illustration" do not show the actual event. Credits and licenses are on each image.
 
 ## Submitting a press release
-1. **GitHub issue (easiest):** open an issue in https://github.com/AXIA-Enterprises-DEV/ground-level-news with the `press-release` label, using the fields `Title`, `Date`, `Company`, `Contact`, `Summary`, `Area`, `Source URL`, `Body`. A workflow turns it into a pull request; an editor reviews and merges it to publish.
+1. **Email (easiest):** see https://groundlevelnews.com/submit/. Send the release to news@groundlevelnews.com with the fields `Title`, `Date`, `Company`, `Contact`, `Summary`, `Area`, `Source URL`, `Body`. An editor reviews it before it is published.
 2. **Pull request:** add `content/press-releases/YYYY-MM-DD-slug.md` with front matter:
    ```yaml
    ---
@@ -51,6 +53,7 @@ Every HTML page has a canonical URL on https://groundlevelnews.com, JSON-LD (New
 ## Repo layout (for coding agents)
 - `scripts/build.py`: the whole static site generator (Python; deps in `requirements.txt`). Run `python scripts/build.py` → `_site/`.
 - `content/press-releases/*.md`: press releases. **Do not edit article text without editorial approval.**
-- `content/images.yaml`: image registry and category fallback images, with attribution.
+- `content/images.yaml`: photo registry (with `buckets` and headline `keywords` used to match photos to stories) and category fallback images, with attribution.
+- `scripts/brand.py`: branded category cards and share cards (Pillow).
 - `static/`: CSS, logo, favicons, images, copied verbatim into `_site/`.
 - `.github/workflows/build.yml`: build, deploy to Pages, then ping IndexNow.
