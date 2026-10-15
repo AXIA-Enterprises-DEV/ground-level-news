@@ -20,6 +20,8 @@ jobs:
           restore-keys: ogcache-v1-
       - run: python scripts/build.py
         env: {SITE_URL: "${{ vars.SITE_URL || 'https://groundlevelnews.com' }}"}
+      - name: Check LLM discoverability layer (llmbestpractices.com)
+        run: python scripts/check_llm_layer.py _site
       - uses: actions/upload-pages-artifact@v3
         with: {path: _site}
   deploy:

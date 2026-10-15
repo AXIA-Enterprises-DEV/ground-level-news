@@ -18,9 +18,14 @@ Ground Level News is a static news site: U.S./world headlines aggregated from pu
 | `/sitemap.xml`, `/news-sitemap.xml` | Full sitemap and Google News sitemap (last 48h) |
 | `/about/` | How the site works and where the news comes from |
 | `/submit/` | How to submit a press release |
+| `/llm-info/` (+ `.md`) | Machine-readable site description and instructions for AI assistants (start here) |
+| `/identity/` | Brand page: logo, colors, fonts, assets |
+| `/agents.txt`, `/ai.txt` | Agent and AI usage policy (training, indexing, summarization allowed; citation required) |
 | `/agents.md` | This file |
 
 Every HTML page has a canonical URL on https://groundlevelnews.com, JSON-LD (NewsMediaOrganization, WebSite, NewsArticle, BreadcrumbList) and, for articles, a `<link rel="alternate" type="text/markdown">` to its Markdown twin.
+
+This site follows the LLM discoverability standard at https://llmbestpractices.com (`scripts/check_llm_layer.py` verifies the build in CI).
 
 ## Usage notes for agents
 - Crawling is allowed for all agents (see `/robots.txt`). Please keep request rates reasonable.
