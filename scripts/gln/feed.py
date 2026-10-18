@@ -1,5 +1,5 @@
 """Upstream feed loading (news-tracker JSON) and press-release loading, plus source normalization."""
-import re, sys, hashlib, requests, yaml, markdown
+import re, sys, json, hashlib, pathlib, requests, yaml, markdown
 from .config import ROOT, SRC, BLOCK, CAT_NAME, LOCAL_PROJECTS, HIDE_CATS
 from .text import clean, slugify
 
@@ -25,7 +25,11 @@ def tidy_source(it):
     it["source"] = SOURCE_NAMES.get(src, src) or "Wire report"
 
 def get_json(path):
+    """Fetch a JSON document from the tracker. TRACKER_BASE may also be a local directory (offline builds, tests)."""
     try:
+        if "://" not in SRC:
+            f = pathlib.Path(SRC) / path
+            return json.loads(f.read_text(encoding="utf-8")) if f.exists() else None
         r = requests.get(f"{SRC}/{path}", timeout=30); r.raise_for_status(); return r.json()
     except Exception as e:
         print(f"WARN fetch {path}: {e}", file=sys.stderr); return None
