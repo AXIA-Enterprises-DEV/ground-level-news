@@ -1,0 +1,51 @@
+<?xml version="1.0"?><rss version="2.0" xmlns:calendarEvent="https://www.lhcaz.gov/Calendar.aspx"><channel>
+	<title>Lake Havasu City, AZ - Calendar - Meetings</title>
+	<link>https://www.lhcaz.gov/Calendar.aspx</link>
+	<lastBuildDate>Sun, 18 Oct 2026 05:50:39 -0700</lastBuildDate>
+	<description>Lake Havasu City, AZ - Get the latest events</description>
+	<language>en-us</language>
+	<item>
+		<title>Planning and Zoning Commission (CANCELED)</title>
+		<link>https://www.lhcaz.gov/Calendar.aspx?EID=1057</link>
+		<pubDate>Thu, 01 Oct 2026 09:57:57 -0700</pubDate>
+		<description>&lt;strong&gt;Event date:&lt;/strong&gt; October 21, 2026 &lt;br&gt;&lt;strong&gt;Event Time: &lt;/strong&gt;09:00 AM - 11:59 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt; &lt;br&gt;92 Acoma Blvd. S.&lt;br&gt;Lake Havasu City, AZ 86403</description>
+		<calendarEvent:EventDates> October 21, 2026 </calendarEvent:EventDates>
+		<calendarEvent:EventTimes>09:00 AM - 11:59 PM</calendarEvent:EventTimes>
+		<calendarEvent:Location>92 Acoma Blvd. S.Lake Havasu City, AZ 86403</calendarEvent:Location>
+		
+		<guid isPermaLink="false">https://www.lhcaz.gov/Calendar.aspx?EID=1057/639264526770000000</guid>
+	</item>
+	<item>
+		<title>City Council Meeting</title>
+		<link>https://www.lhcaz.gov/Calendar.aspx?EID=1053</link>
+		<pubDate>Thu, 17 Sep 2026 14:32:15 -0700</pubDate>
+		<description>&lt;strong&gt;Event date:&lt;/strong&gt; October 27, 2026 &lt;br&gt;&lt;strong&gt;Event Time: &lt;/strong&gt;05:30 PM - 11:59 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt; &lt;br&gt;92 Acoma Blvd. S.&lt;br&gt;Lake Havasu City, AZ 86403</description>
+		<calendarEvent:EventDates> October 27, 2026 </calendarEvent:EventDates>
+		<calendarEvent:EventTimes>05:30 PM - 11:59 PM</calendarEvent:EventTimes>
+		<calendarEvent:Location>92 Acoma Blvd. S.Lake Havasu City, AZ 86403</calendarEvent:Location>
+		
+		<guid isPermaLink="false">https://www.lhcaz.gov/Calendar.aspx?EID=1053/639252595350000000</guid>
+	</item>
+	<item>
+		<title>Board of Adjustment (CANCELED)</title>
+		<link>https://www.lhcaz.gov/Calendar.aspx?EID=1055</link>
+		<pubDate>Thu, 17 Sep 2026 14:33:08 -0700</pubDate>
+		<description>&lt;strong&gt;Event date:&lt;/strong&gt; October 28, 2026 &lt;br&gt;&lt;strong&gt;Event Time: &lt;/strong&gt;09:00 AM - 11:59 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt; &lt;br&gt;92 Acoma Blvd. S.&lt;br&gt;Lake Havasu City, AZ 86403</description>
+		<calendarEvent:EventDates> October 28, 2026 </calendarEvent:EventDates>
+		<calendarEvent:EventTimes>09:00 AM - 11:59 PM</calendarEvent:EventTimes>
+		<calendarEvent:Location>92 Acoma Blvd. S.Lake Havasu City, AZ 86403</calendarEvent:Location>
+		
+		<guid isPermaLink="false">https://www.lhcaz.gov/Calendar.aspx?EID=1055/639252595880000000</guid>
+	</item>
+	<item>
+		<title>Tri-City Council Meeting </title>
+		<link>https://www.lhcaz.gov/Calendar.aspx?EID=1058</link>
+		<pubDate>Thu, 17 Sep 2026 14:42:43 -0700</pubDate>
+		<description>&lt;strong&gt;Event date:&lt;/strong&gt; October 28, 2026 &lt;br&gt;&lt;strong&gt;Event Time: &lt;/strong&gt;10:00 AM - 11:59 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt; &lt;br&gt;310 N. 4th Sreet&lt;br&gt;Kingman, AZ 86403</description>
+		<calendarEvent:EventDates> October 28, 2026 </calendarEvent:EventDates>
+		<calendarEvent:EventTimes>10:00 AM - 11:59 PM</calendarEvent:EventTimes>
+		<calendarEvent:Location>310 N. 4th SreetKingman, AZ 86403</calendarEvent:Location>
+		
+		<guid isPermaLink="false">https://www.lhcaz.gov/Calendar.aspx?EID=1058/639252601630000000</guid>
+	</item>
+</channel></rss>

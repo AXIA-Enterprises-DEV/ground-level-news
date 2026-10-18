@@ -2,3 +2,4 @@ requests
 pyyaml
 markdown
 Pillow
+feedparser

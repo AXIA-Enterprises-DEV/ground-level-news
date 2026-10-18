@@ -24,6 +24,7 @@
 #   drop_link      list of regexes applied to the item link (BLOX "online_features" paid releases etc.)
 #   item_kind      force the item kind (e.g. "meeting" for CivicPlus Meetings calendars)
 #   max_age_days   override the 14-day freshness window
+#   max_items      cap per feed, newest first (default: unlimited; 15 for Google News queries)
 #   enabled        false to keep the record but never fetch it
 
 defaults:
@@ -104,6 +105,11 @@ filters:
     - '(?i)\bfuneral home\b'
     - '(?i)\bhomes? for sale\b'
     - '(?i)\bzillow\b'
+    - '(?i)\b(football|basketball|volleyball|soccer|baseball|softball|wrestling) (videos?|recap|preview|highlights)\b'
+    - '(?i)^\w+ recap:'
+    - '(?i)\bvs\.? .* - (girls|boys) varsity\b'
+    # aggregator / clickbait publishers that resurface the same story
+    - '\b(Hoodline|WorldAtlas|AOL\.com|AOL|MSN|Yahoo( News)?|The Mirror US|Daily Mail|Newsweek|SSBCrack|Autonocion\.com|standardmedia\.co\.ke|Energies Media|Travel \+ Leisure|Islands|The Travel|TheTravel|Sportskeeda|Benzinga|Times Now|Hindustan Times|NDTV|WION)\b'
 
 # Link hosts that are never usable as a story (social posts, ticketing). Eventbrite is allowed for events.
 denylist_hosts:
@@ -542,8 +548,8 @@ sources:
     homepage: https://news.google.com/
     paywalled: false
     must_match: ['\bBoulder City\b']
-    drop: gnews_junk
-    notes: Boulder City, Nevada.
+    drop: [gnews_junk, '\b(Daily Camera|Boulder Reporting Lab|Boulder Beat|CU Boulder|Boulder Weekly|Colorado Sun|Denver|Colorado)\b']
+    notes: Boulder City, Nevada. Drops Boulder, Colorado outlets (their "Boulder City Council" is a different city).
   - key: gnews-lakemead
     name: Google News
     url: https://news.google.com/rss/search?q=%22Lake+Mead%22+OR+%22Hoover+Dam%22+when:2d&hl=en-US&gl=US&ceid=US:en

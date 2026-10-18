@@ -1,0 +1,306 @@
+{
+ "fetched": "2026-10-18T13:04:08+00:00",
+ "cities": {
+  "bullhead-city": {
+   "key": "bullhead-city",
+   "name": "Bullhead City",
+   "lat": 35.1478,
+   "lon": -114.5683,
+   "regions": [
+    "bullhead-city",
+    "laughlin",
+    "mohave-valley",
+    "mohave-county",
+    "colorado-river"
+   ],
+   "zones": [
+    "AZZ571",
+    "AZZ002",
+    "NVZ022",
+    "NVZ026",
+    "AZC015"
+   ],
+   "aqi": {
+    "value": 30,
+    "category": "Good",
+    "time": "2026-10-18T06:00",
+    "source": "Open-Meteo (CAMS)"
+   },
+   "forecast": [
+    {
+     "name": "Today",
+     "temperature": 85,
+     "unit": "F",
+     "shortForecast": "Mostly Sunny",
+     "icon": "https://api.weather.gov/icons/land/day/sct?size=medium",
+     "startTime": "2026-10-18T06:00:00-07:00",
+     "isDaytime": true
+    },
+    {
+     "name": "Tonight",
+     "temperature": 67,
+     "unit": "F",
+     "shortForecast": "Mostly Clear",
+     "icon": "https://api.weather.gov/icons/land/night/few?size=medium",
+     "startTime": "2026-10-18T18:00:00-07:00",
+     "isDaytime": false
+    }
+   ],
+   "forecast_updated": "2026-10-18T07:26:54+00:00",
+   "nws_zone": "AZZ571",
+   "nws_url": "https://forecast.weather.gov/MapClick.php?lat=35.1478&lon=-114.5683",
+   "alerts": []
+  },
+  "lake-havasu-city": {
+   "key": "lake-havasu-city",
+   "name": "Lake Havasu City",
+   "lat": 34.4839,
+   "lon": -114.3225,
+   "regions": [
+    "lake-havasu-city",
+    "mohave-county",
+    "colorado-river"
+   ],
+   "zones": [
+    "AZZ002",
+    "AZZ576",
+    "AZC015"
+   ],
+   "aqi": {
+    "value": 30,
+    "category": "Good",
+    "time": "2026-10-18T06:00",
+    "source": "Open-Meteo (CAMS)"
+   },
+   "forecast": [
+    {
+     "name": "Today",
+     "temperature": 84,
+     "unit": "F",
+     "shortForecast": "Mostly Sunny",
+     "icon": "https://api.weather.gov/icons/land/day/sct?size=medium",
+     "startTime": "2026-10-18T06:00:00-07:00",
+     "isDaytime": true
+    },
+    {
+     "name": "Tonight",
+     "temperature": 68,
+     "unit": "F",
+     "shortForecast": "Mostly Clear",
+     "icon": "https://api.weather.gov/icons/land/night/few?size=medium",
+     "startTime": "2026-10-18T18:00:00-07:00",
+     "isDaytime": false
+    }
+   ],
+   "forecast_updated": "2026-10-18T07:26:54+00:00",
+   "nws_zone": "AZZ002",
+   "nws_url": "https://forecast.weather.gov/MapClick.php?lat=34.4839&lon=-114.3225",
+   "alerts": []
+  },
+  "kingman": {
+   "key": "kingman",
+   "name": "Kingman",
+   "lat": 35.1894,
+   "lon": -114.053,
+   "regions": [
+    "kingman",
+    "mohave-county"
+   ],
+   "zones": [
+    "AZZ001",
+    "AZZ576",
+    "AZC015"
+   ],
+   "aqi": {
+    "value": 28,
+    "category": "Good",
+    "time": "2026-10-18T06:00",
+    "source": "Open-Meteo (CAMS)"
+   },
+   "forecast": [
+    {
+     "name": "Today",
+     "temperature": 73,
+     "unit": "F",
+     "shortForecast": "Mostly Sunny",
+     "icon": "https://api.weather.gov/icons/land/day/sct?size=medium",
+     "startTime": "2026-10-18T06:00:00-07:00",
+     "isDaytime": true
+    },
+    {
+     "name": "Tonight",
+     "temperature": 54,
+     "unit": "F",
+     "shortForecast": "Mostly Clear",
+     "icon": "https://api.weather.gov/icons/land/night/few?size=medium",
+     "startTime": "2026-10-18T18:00:00-07:00",
+     "isDaytime": false
+    }
+   ],
+   "forecast_updated": "2026-10-18T07:26:54+00:00",
+   "nws_zone": "AZZ576",
+   "nws_url": "https://forecast.weather.gov/MapClick.php?lat=35.1894&lon=-114.053",
+   "alerts": []
+  },
+  "mesquite": {
+   "key": "mesquite",
+   "name": "Mesquite",
+   "lat": 36.8055,
+   "lon": -114.0672,
+   "regions": [
+    "mesquite",
+    "clark-county"
+   ],
+   "zones": [
+    "NVZ016"
+   ],
+   "aqi": {
+    "value": 34,
+    "category": "Good",
+    "time": "2026-10-18T06:00",
+    "source": "Open-Meteo (CAMS)"
+   },
+   "forecast": [
+    {
+     "name": "Today",
+     "temperature": 79,
+     "unit": "F",
+     "shortForecast": "Partly Sunny then Haze",
+     "icon": "https://api.weather.gov/icons/land/day/bkn/haze?size=medium",
+     "startTime": "2026-10-18T06:00:00-07:00",
+     "isDaytime": true
+    },
+    {
+     "name": "Tonight",
+     "temperature": 59,
+     "unit": "F",
+     "shortForecast": "Partly Cloudy",
+     "icon": "https://api.weather.gov/icons/land/night/sct?size=medium",
+     "startTime": "2026-10-18T18:00:00-07:00",
+     "isDaytime": false
+    }
+   ],
+   "forecast_updated": "2026-10-18T07:26:54+00:00",
+   "nws_zone": "NVZ016",
+   "nws_url": "https://forecast.weather.gov/MapClick.php?lat=36.8055&lon=-114.0672",
+   "alerts": []
+  },
+  "boulder-city": {
+   "key": "boulder-city",
+   "name": "Boulder City",
+   "lat": 35.9786,
+   "lon": -114.8325,
+   "regions": [
+    "boulder-city",
+    "clark-county",
+    "lake-mead"
+   ],
+   "zones": [
+    "NVZ025",
+    "NVZ020"
+   ],
+   "aqi": {
+    "value": 50,
+    "category": "Good",
+    "time": "2026-10-18T06:00",
+    "source": "Open-Meteo (CAMS)"
+   },
+   "forecast": [
+    {
+     "name": "Today",
+     "temperature": 74,
+     "unit": "F",
+     "shortForecast": "Mostly Sunny",
+     "icon": "https://api.weather.gov/icons/land/day/sct?size=medium",
+     "startTime": "2026-10-18T06:00:00-07:00",
+     "isDaytime": true
+    },
+    {
+     "name": "Tonight",
+     "temperature": 62,
+     "unit": "F",
+     "shortForecast": "Mostly Clear",
+     "icon": "https://api.weather.gov/icons/land/night/few?size=medium",
+     "startTime": "2026-10-18T18:00:00-07:00",
+     "isDaytime": false
+    }
+   ],
+   "forecast_updated": "2026-10-18T07:26:54+00:00",
+   "nws_zone": "NVZ025",
+   "nws_url": "https://forecast.weather.gov/MapClick.php?lat=35.9786&lon=-114.8325",
+   "alerts": []
+  },
+  "lake-mead": {
+   "key": "lake-mead",
+   "name": "Lake Mead",
+   "lat": 36.016,
+   "lon": -114.7377,
+   "regions": [
+    "lake-mead",
+    "colorado-river"
+   ],
+   "zones": [
+    "NVZ025",
+    "AZZ570"
+   ],
+   "aqi": {
+    "value": 50,
+    "category": "Good",
+    "time": "2026-10-18T06:00",
+    "source": "Open-Meteo (CAMS)"
+   },
+   "forecast": [
+    {
+     "name": "Today",
+     "temperature": 77,
+     "unit": "F",
+     "shortForecast": "Mostly Sunny",
+     "icon": "https://api.weather.gov/icons/land/day/sct?size=medium",
+     "startTime": "2026-10-18T06:00:00-07:00",
+     "isDaytime": true
+    },
+    {
+     "name": "Tonight",
+     "temperature": 69,
+     "unit": "F",
+     "shortForecast": "Mostly Clear",
+     "icon": "https://api.weather.gov/icons/land/night/few?size=medium",
+     "startTime": "2026-10-18T18:00:00-07:00",
+     "isDaytime": false
+    }
+   ],
+   "forecast_updated": "2026-10-18T07:26:54+00:00",
+   "nws_zone": "NVZ025",
+   "nws_url": "https://forecast.weather.gov/MapClick.php?lat=36.016&lon=-114.7377",
+   "alerts": []
+  }
+ },
+ "alerts": [],
+ "rivers": [
+  {
+   "site": "09421500",
+   "name": "Colorado River below Hoover Dam",
+   "usgs_name": "COLORADO RV BLW HOOVER DAM, AZ-NV",
+   "regions": [
+    "lake-mead",
+    "boulder-city",
+    "colorado-river"
+   ],
+   "time": "2026-10-18T05:55:00-07:00",
+   "link": "https://waterdata.usgs.gov/monitoring-location/09421500/",
+   "gage_ft": 44.22
+  },
+  {
+   "site": "09415000",
+   "name": "Virgin River at Littlefield",
+   "usgs_name": "VIRGIN RV AT LITTLEFIELD, AZ",
+   "regions": [
+    "mesquite"
+   ],
+   "time": "2026-10-18T05:05:00-07:00",
+   "link": "https://waterdata.usgs.gov/monitoring-location/09415000/",
+   "flow_cfs": 122,
+   "gage_ft": 4.91
+  }
+ ]
+}
