@@ -69,9 +69,10 @@ def test_no_duplicates_in_batch(items):
 
 
 def test_region_tagging_from_registry(items):
-    for it in by_key(items, "mohave-county"): assert it["regions"] == ["mohave-county", "arizona"]
+    # Registry regions are always present; the real taxonomy may add more (e.g. a county notice naming Bullhead City).
+    for it in by_key(items, "mohave-county"): assert {"mohave-county", "arizona"} <= set(it["regions"])
     for it in by_key(items, "lhc-meetings"): assert it["regions"][:2] == ["lake-havasu-city", "mohave-county"]
-    for it in by_key(items, "visitlaughlin-events"): assert it["regions"] == ["laughlin", "bullhead-city", "colorado-river"]
+    for it in by_key(items, "visitlaughlin-events"): assert {"laughlin", "bullhead-city", "colorado-river"} <= set(it["regions"])
 
 
 def test_region_tagging_uses_taxonomy_when_available():

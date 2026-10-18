@@ -109,7 +109,11 @@ def render_home(c):
             out.append(i); used.add(i["id"])
             if len(out) == n: break
         return out
-    ranked = _rank(items)
+    # Showcase slots (lead, secondary, briefs, top headlines, Latest): real news items from established publishers,
+    # one representative per story cluster, never calendar listings or demoted items.
+    _news = lambda i: (i.get("kind") not in ("event", "meeting") and not i.get("demoted") and i.get("cluster_rep", True)
+                       and ((i.get("tier") or 4) <= 3 or i.get("local")))
+    ranked = [i for i in _rank(items) if _news(i)]
     if ranked:   # the lead slot prefers a keyword-matched photo among the top three ranked items
         k_lead = next((i for i in ranked[:3] if has_photo(i)), ranked[0]); ranked.remove(k_lead); ranked.insert(0, k_lead)
     lead = take(ranked, 1)
@@ -120,7 +124,7 @@ def render_home(c):
             if i["id"] in used or i["cat"] == lead["cat"] or any(i["cat"] == s["cat"] for s in secs): continue
             secs.append(i); used.add(i["id"])
             if len(secs) == 2: break
-    latest = take(items, 12)
+    latest = take(items, 12, _news)
     local_items = [i for i in items if i.get("local")]
     # --- 1. lead package + Latest rail
     body = f'<h1 class="vh">{esc(HOME_H1)}</h1><div class="fp">'

@@ -58,6 +58,7 @@ def region_name(key):
     return (r or {}).get("name") or _AREA_NAME.get(key) or (key or "").replace("-", " ").title()
 def item_area(it):
     """Key of the first home region an item names (for the town kicker); None when not local."""
+    if it.get("region") in _HOME_KEYS: return it["region"]
     regs = it.get("regions") or []
     for r in regs:
         if r in _HOME_KEYS: return r
@@ -78,7 +79,8 @@ def set_justin(items, max_age=3600, n=3):
     """Static 'Just in' strip: only when the newest item is < 60 min old; max 3 items; no animation."""
     global JUSTIN
     now = int(NOW.timestamp())
-    fresh = [i for i in (items or [])[:40] if i.get("ts") and now - int(i["ts"]) < max_age][:n]
+    fresh = [i for i in (items or [])[:80] if i.get("ts") and now - int(i["ts"]) < max_age
+             and not i.get("demoted") and i.get("kind") not in ("event", "meeting") and (i.get("tier") or 4) <= 3][:n]
     if not fresh: JUSTIN = ""; return JUSTIN
     links = "".join(f'<a href="/story/{i["slug"]}/">{esc(clean(i["title"], 90))} {time_tag(i["ts"])}</a>' for i in fresh)
     JUSTIN = f'<section class="justin" aria-label="Just in"><div class="wrap"><span class="lbl">Just in</span>{links}</div></section>'
