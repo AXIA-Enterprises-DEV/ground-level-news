@@ -1,13 +1,39 @@
 name: Submit a press release
-description: Submit a release; a workflow turns it into a pull request for review.
+description: Submit a press release, event notice or community announcement; a workflow turns it into a pull request for review.
 title: "[Press Release] "
 labels: [press-release]
 body:
-  - {type: input, id: title, attributes: {label: Title}, validations: {required: true}}
+  - type: markdown
+    attributes:
+      value: "Fields marked optional can be left blank. See https://groundlevelnews.com/submit/ for what we publish and the photo rules."
+  - {type: input, id: title, attributes: {label: Title, description: "Lead with the place or agency"}, validations: {required: true}}
   - {type: input, id: date, attributes: {label: Date, description: "YYYY-MM-DD"}, validations: {required: true}}
-  - {type: input, id: company, attributes: {label: Company}, validations: {required: true}}
-  - {type: input, id: contact, attributes: {label: Contact}, validations: {required: true}}
-  - {type: input, id: area, attributes: {label: Area, description: "e.g. Bullhead City"}}
-  - {type: textarea, id: summary, attributes: {label: Summary}, validations: {required: true}}
-  - {type: input, id: source, attributes: {label: Source URL}}
-  - {type: textarea, id: body, attributes: {label: Body, description: Markdown}, validations: {required: true}}
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      description: "press-release = issued by the organization in its own words; brief = rewritten by staff from cited reporting; report = original reporting"
+      options: [press-release, brief, report]
+      default: 0
+    validations: {required: true}
+  - {type: input, id: company, attributes: {label: Company, description: "Organization issuing the release"}, validations: {required: true}}
+  - {type: input, id: contact, attributes: {label: Contact, description: "Public media contact: name, email or phone"}, validations: {required: true}}
+  - {type: input, id: area, attributes: {label: Area, description: "e.g. Bullhead City, Laughlin, Mohave Valley, Lake Havasu City, Kingman, Mohave County, Clark County, Mesquite, Boulder City, Lake Mead"}}
+  - {type: textarea, id: summary, attributes: {label: Summary, description: "One or two sentences"}, validations: {required: true}}
+  - {type: input, id: source, attributes: {label: Source URL, description: "Optional; required for briefs"}}
+  - {type: input, id: source_name, attributes: {label: Source name, description: "Optional; publisher or agency the source URL belongs to"}}
+  - {type: input, id: author, attributes: {label: Author, description: "Optional; for briefs and reports"}}
+  - {type: input, id: published, attributes: {label: Published, description: "Optional full timestamp, e.g. 2026-10-13T09:00:00-07:00 (defaults to noon on the date)"}}
+  - {type: input, id: event_start, attributes: {label: Event start, description: "Optional, e.g. 2026-10-17T10:00:00-07:00; for an all-day event use T00:00:00-07:00"}}
+  - {type: input, id: event_end, attributes: {label: Event end, description: "Optional, e.g. 2026-10-17T14:00:00-07:00"}}
+  - type: dropdown
+    id: event_all_day
+    attributes:
+      label: All-day event
+      description: "Optional; yes when only the date is known"
+      options: ["no", "yes"]
+      default: 0
+  - {type: input, id: venue, attributes: {label: Venue, description: "Optional, e.g. Station 91"}}
+  - {type: input, id: address, attributes: {label: Address, description: "Optional street address, city, state"}}
+  - {type: input, id: event_url, attributes: {label: Event URL, description: "Optional web page for the event"}}
+  - {type: textarea, id: body, attributes: {label: Body, description: "Markdown. Plain headings, lists, links and emphasis only; HTML and scripts are removed."}, validations: {required: true}}

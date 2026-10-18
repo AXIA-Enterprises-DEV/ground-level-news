@@ -1,6 +1,8 @@
 ---
 title: "Mohave County Warns of Email Scam Using Fake Planning Commission Invoices"
 date: 2026-10-06
+kind: press-release
+published: "2026-10-06T12:00:00-07:00"
 company: "Mohave County Development Services"
 area: "Mohave County"
 contact: "Mohave County Development Services, 3250 E. Kino Ave., Kingman, (928) 757-0903"

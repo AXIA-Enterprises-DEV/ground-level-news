@@ -1,6 +1,8 @@
 ---
 title: "Fort Mojave Mesa Fire Department Invites Community to Station 91 Open House"
 date: 2026-10-13
+kind: brief
+published: "2026-10-13T12:00:00-07:00"
 company: Fort Mojave Mesa Fire Department
 area: Mojave Valley
 contact: "Fort Mojave Mesa Fire Department"
@@ -13,6 +15,10 @@ image_credit: "Ground Level News illustration, generated with the open-source Z-
 image_license: "Generated illustration; no real people depicted"
 image_source: "https://huggingface.co/Tongyi-MAI/Z-Image-Turbo"
 image_label: "Illustration"
+event_start: "2026-10-17T00:00:00-07:00"
+event_all_day: true
+venue: "Fort Mojave Mesa Fire Department Station 91"
+address: "2230 Joy Lane, Fort Mohave, AZ"
 ---
 **FORT MOHAVE, Ariz.** — The Fort Mojave Mesa Fire Department is inviting the community to an open house at Station 91, the department's rebuilt fire station at 2230 Joy Lane, on Saturday, Oct. 17.
 

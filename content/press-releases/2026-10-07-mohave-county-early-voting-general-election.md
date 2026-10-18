@@ -1,6 +1,8 @@
 ---
 title: "Early Voting Underway in Mohave County for Nov. 3 General Election"
 date: 2026-10-07
+kind: press-release
+published: "2026-10-07T12:00:00-07:00"
 company: "Mohave County"
 area: "Mohave County"
 contact: "Mohave County Elections, (928) 753-0733; Voter Registration, (928) 753-0767; mohave.gov"
@@ -8,6 +10,9 @@ summary: "In-person early voting runs through Oct. 30 at county library branches
 source_name: "Mohave County"
 source_url: "https://www.mohave.gov/news-notices/posts/early-voting-begins-and-ballots-mailed-for-mohave-county-general-election/"
 topic: "government"
+event_start: "2026-10-07T10:00:00-07:00"
+event_end: "2026-10-30T19:00:00-07:00"
+venue: "Mohave County Library branches: Bullhead City (1170 Hancock Road), Lake Havasu City (1770 McCulloch Blvd. N.), Kingman (3269 N. Burbank St.)"
 ---
 **KINGMAN, Ariz.** — Early voting for the Nov. 3, 2026, General Election began Oct. 7 in Mohave County, the same day the county started mailing early ballots to voters.
 

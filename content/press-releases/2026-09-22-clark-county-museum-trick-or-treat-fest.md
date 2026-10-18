@@ -1,6 +1,8 @@
 ---
 title: "Clark County Museum's Trick-or-Treat Fest Returns Oct. 16-17 in Henderson"
 date: 2026-09-22
+kind: press-release
+published: "2026-09-22T12:00:00-07:00"
 company: "Clark County Parks & Recreation"
 area: "Henderson"
 contact: "Clark County Parks & Recreation, ClarkCountyNV.gov/parks"
@@ -8,6 +10,11 @@ summary: "Families can trick-or-treat along the museum's Historic Heritage Stree
 source_name: "Clark County, Nevada"
 source_url: "https://www.clarkcountynv.gov/news/092226-halloween-events"
 topic: "events"
+event_start: "2026-10-16T18:00:00-07:00"
+event_end: "2026-10-17T22:00:00-07:00"
+venue: "Clark County Museum, Historic Heritage Street"
+address: "1830 S. Boulder Highway, Henderson, NV"
+event_url: "https://www.clarkcountynv.gov/government/departments/parks___recreation/halloween"
 ---
 **HENDERSON, Nev.** — The Clark County Museum will host its Trick-or-Treat Fest on Friday and Saturday, Oct. 16 and 17, from 6 to 10 p.m., one of several Halloween events Clark County Parks & Recreation is offering this month.
 

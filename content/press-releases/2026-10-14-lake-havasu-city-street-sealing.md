@@ -1,6 +1,8 @@
 ---
 title: "Lake Havasu City to Begin Street and Parking Lot Sealing Oct. 18"
 date: 2026-10-14
+kind: press-release
+published: "2026-10-14T12:00:00-07:00"
 company: "Lake Havasu City"
 area: "Lake Havasu City"
 contact: "Lake Havasu City Public Works, (928) 855-3377"

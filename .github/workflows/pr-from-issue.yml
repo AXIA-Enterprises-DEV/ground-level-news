@@ -6,6 +6,7 @@ jobs:
   convert:
     if: contains(github.event.issue.labels.*.name, 'press-release')
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - env:
@@ -14,20 +15,45 @@ jobs:
           N: ${{ github.event.issue.number }}
         run: |
           python3 - <<'PY'
-          import os,re,json
-          b=os.environ["BODY"]
-          f={}
-          for m in re.finditer(r"### (.+?)\n\n(.*?)(?=\n### |\Z)", b, re.S): f[m.group(1).strip().lower()]=m.group(2).strip()
-          g=lambda k:f.get(k,"").replace("_No response_","").strip()
-          date=g("date"); title=g("title")
-          slug=re.sub(r"[^a-z0-9]+","-",title.lower()).strip("-")[:60]
-          q=lambda s: json.dumps(s)
-          fm=f"---\ntitle: {q(title)}\ndate: {date}\ncompany: {q(g('company'))}\ncontact: {q(g('contact'))}\nsummary: {q(g('summary'))}\narea: {q(g('area'))}\nsource_url: {q(g('source url'))}\n---\n{g('body')}\n"
-          p=f"content/press-releases/{date}-{slug}.md"
-          open(p,"w").write(fm); open(os.environ["GITHUB_ENV"],"a").write(f"PRFILE={p}\n")
+          import os, re, sys, json
+          b = os.environ["BODY"]
+          f = {}
+          for m in re.finditer(r"### (.+?)\n\n(.*?)(?=\n### |\Z)", b, re.S): f[m.group(1).strip().lower()] = m.group(2).strip()
+          g = lambda k: f.get(k, "").replace("_No response_", "").strip()
+          q = lambda s: json.dumps(s)
+          date, title = g("date"), g("title")
+          if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
+              sys.exit(f"ERROR: Date must be YYYY-MM-DD, got {date!r}. Edit the issue and re-add the press-release label.")
+          slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")[:60]
+          if not re.fullmatch(r"[a-z0-9-]{3,60}", slug):
+              sys.exit(f"ERROR: Could not build a slug from the title {title!r} (need at least 3 letters or digits).")
+          kind = g("kind").lower()
+          if kind not in ("press-release", "brief", "report"): kind = "press-release"
+          fm = [f"title: {q(title)}", f"date: {date}", f"kind: {kind}"]
+          # Optional fields are emitted only when the form filled them in.
+          def opt(key, field, validate=None):
+              v = g(field)
+              if not v: return
+              if validate and not re.fullmatch(validate, v): sys.exit(f"ERROR: {field} must match {validate}, got {v!r}.")
+              fm.append(f"{key}: {q(v)}")
+          ISO = r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?([+-]\d{2}:\d{2}|Z)"
+          opt("published", "published", ISO)
+          fm += [f"company: {q(g('company'))}", f"contact: {q(g('contact'))}", f"summary: {q(g('summary'))}"]
+          opt("area", "area"); opt("source_url", "source url", r"https?://\S+"); opt("source_name", "source name"); opt("author", "author")
+          opt("event_start", "event start", ISO); opt("event_end", "event end", ISO)
+          if g("all-day event").lower() == "yes": fm.append("event_all_day: true")
+          opt("venue", "venue"); opt("address", "address"); opt("event_url", "event url", r"https?://\S+")
+          body = g("body")
+          if not body: sys.exit("ERROR: Body is empty.")
+          p = f"content/press-releases/{date}-{slug}.md"
+          if os.path.exists(p): sys.exit(f"ERROR: {p} already exists; change the title or date.")
+          with open(p, "w", encoding="utf-8") as fh: fh.write("---\n" + "\n".join(fm) + "\n---\n" + body + "\n")
+          with open(os.environ["GITHUB_ENV"], "a") as fh: fh.write(f"PRFILE={p}\n")
+          print("wrote", p)
           PY
+          python3 -c "import yaml,sys; yaml.safe_load(open('$PRFILE').read().split('---')[1])" || { echo "ERROR: generated front matter is not valid YAML"; exit 1; }
           git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b press-release/issue-$N
           git add "$PRFILE" && git commit -m "Press release from issue #$N"
           git push -u origin press-release/issue-$N
-          gh pr create --title "Press release: issue #$N" --body "Closes #$N. Review, then merge to publish." --base main
+          gh pr create --title "Press release: issue #$N" --body "Closes #$N. Review the front matter (kind, area, event fields) and the body, then merge to publish." --base main

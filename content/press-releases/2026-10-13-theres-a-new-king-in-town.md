@@ -1,6 +1,9 @@
 ---
 title: "There's a New King in Town"
 date: 2026-10-13
+kind: report
+published: "2026-10-13T12:00:00-07:00"
+author: "Ground Level News staff"
 company: Ground Level News
 area: Bullhead City
 contact: "Tips: news@groundlevelnews.com"

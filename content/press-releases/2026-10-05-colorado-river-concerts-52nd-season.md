@@ -1,6 +1,8 @@
 ---
 title: "Colorado River Concerts Opens 52nd Season Nov. 5 with 'Best of Broadway'"
 date: 2026-10-05
+kind: brief
+published: "2026-10-05T12:00:00-07:00"
 company: "Colorado River Concerts"
 area: "Bullhead City"
 contact: "crconcerts.com; theriverconcerts@gmail.com"
@@ -8,6 +10,10 @@ summary: "The four-show 2026-27 season at the Mohave High School Auditorium open
 source_name: "Mohave Valley Daily News"
 source_url: "https://www.mohavedailynews.com/news/colorado-river-concerts-opens-its-52nd-season-of-world-class-entertainment-with-the-best-of/article_78d7251f-0ed4-4c7d-ae32-73dda5d0b6ee.html"
 topic: "events"
+event_start: "2026-11-05T19:00:00-07:00"
+venue: "Mohave High School Auditorium"
+address: "2251 Highway 95, Bullhead City, AZ"
+event_url: "https://crconcerts.com"
 ---
 **BULLHEAD CITY, Ariz.** — Colorado River Concerts will open its 52nd season with "Best of Broadway: The Music of Andrew Lloyd Webber & More" on Thursday, Nov. 5, at 7 p.m. at the Mohave High School Auditorium, 2251 Highway 95.
 

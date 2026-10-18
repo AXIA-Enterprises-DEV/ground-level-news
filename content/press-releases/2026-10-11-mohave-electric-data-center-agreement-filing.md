@@ -1,6 +1,8 @@
 ---
 title: "Mohave Electric, AEPCO Seek State Approval of Power Agreement with Data Center Developer"
 date: 2026-10-11
+kind: brief
+published: "2026-10-11T12:00:00-07:00"
 company: "Mohave Electric Cooperative / Arizona Electric Power Cooperative"
 area: "Bullhead City"
 contact: "Mohave Electric Cooperative; Arizona Corporation Commission; City of Bullhead City"

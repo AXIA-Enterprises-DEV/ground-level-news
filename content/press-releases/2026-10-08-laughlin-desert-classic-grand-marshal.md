@@ -1,6 +1,8 @@
 ---
 title: "NOFX's Fat Mike Named Grand Marshal of the 2026 Laughlin Desert Classic"
 date: 2026-10-08
+kind: brief
+published: "2026-10-08T12:00:00-07:00"
 company: American Off-Road Racing Championship (AORC)
 area: Laughlin
 contact: "AORC / UNLTD Off-Road Racing"
@@ -14,6 +16,10 @@ image_license: "CC BY-SA 2.0"
 image_license_url: https://creativecommons.org/licenses/by-sa/2.0
 image_source: "https://commons.wikimedia.org/wiki/File:Resorts_of_Laughlin,_Nevada_Along_Colorado_River_(10086859356).jpg"
 image_label: "File photo"
+event_start: "2026-10-15T00:00:00-07:00"
+event_end: "2026-10-18T00:00:00-07:00"
+event_all_day: true
+venue: "Laughlin Desert Classic; Laughlin Off-Road Festival in downtown Laughlin Oct. 16-17"
 ---
 **LAUGHLIN, Nev.** — The American Off-Road Racing Championship (AORC) has named NOFX frontman and Punk Rock Museum co-founder Fat Mike as Grand Marshal of the 2026 Laughlin Desert Classic, Oct. 15-18.
 

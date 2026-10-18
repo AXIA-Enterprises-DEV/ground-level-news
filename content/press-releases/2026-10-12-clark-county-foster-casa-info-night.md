@@ -1,6 +1,8 @@
 ---
 title: "Clark County Family Services and CASA to Host Foster & CASA Info Night Oct. 14"
 date: 2026-10-12
+kind: press-release
+published: "2026-10-12T12:00:00-07:00"
 company: Clark County Family Services
 area: Clark County
 contact: "clarkcountyfostercare.com"
@@ -13,6 +15,11 @@ image_credit: "Carol M. Highsmith / Wikimedia Commons"
 image_license: "Public domain"
 image_source: "https://commons.wikimedia.org/wiki/File:Clark_County_Government_Center.jpg"
 image_label: "File photo"
+event_start: "2026-10-14T18:00:00-07:00"
+event_end: "2026-10-14T20:00:00-07:00"
+venue: "CASA Connections Center"
+address: "212 S. Jones Blvd., Las Vegas, NV"
+event_url: "https://clarkcountyfostercare.com"
 ---
 **LAS VEGAS** — Clark County Family Services and CASA (Court Appointed Special Advocates) will host "Foster & CASA Info Night: Two Paths, One Purpose" on Wednesday, Oct. 14, from 6 to 8 p.m. at the CASA Connections Center, 212 S. Jones Blvd.
 

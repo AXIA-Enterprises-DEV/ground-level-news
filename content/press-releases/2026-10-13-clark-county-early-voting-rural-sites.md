@@ -1,6 +1,8 @@
 ---
 title: "Clark County Early Voting Begins Oct. 17, with Stops in Laughlin, Boulder City, Mesquite and Searchlight"
 date: 2026-10-13
+kind: press-release
+published: "2026-10-13T12:00:00-07:00"
 company: "Clark County Election Department"
 area: "Clark County"
 contact: "Clark County Election Department, (702) 455-VOTE (8683); ClarkCountyNV.gov/vote"
@@ -8,6 +10,11 @@ summary: "Early voting for the Nov. 3 General Election runs Oct. 17-30. Outlying
 source_name: "Clark County Registrar of Voters (Notice of Early Voting)"
 source_url: "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:c2100fbb-1623-416e-aa6e-9b092cbb5910/original/as/Notice-EV-26G.pdf"
 topic: "government"
+event_start: "2026-10-17T00:00:00-07:00"
+event_end: "2026-10-30T00:00:00-07:00"
+event_all_day: true
+venue: "Clark County early voting sites, including the Laughlin Library (2840 S. Needles Hwy.) Oct. 23-25"
+event_url: "https://www.clarkcountynv.gov/vote"
 ---
 **LAS VEGAS** — Early voting for the Nov. 3, 2026, General Election in Clark County starts Saturday, Oct. 17, and continues through Friday, Oct. 30, according to the official notice from Registrar of Voters Lorena Portillo.
 

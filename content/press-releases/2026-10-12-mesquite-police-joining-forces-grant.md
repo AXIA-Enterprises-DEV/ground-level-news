@@ -1,6 +1,8 @@
 ---
 title: "Mesquite Police Department Receives Grant to Join Statewide Joining Forces Traffic Safety Program"
 date: 2026-10-12
+kind: brief
+published: "2026-10-12T12:00:00-07:00"
 company: Mesquite Police Department
 area: Mesquite
 contact: "City of Mesquite, 10 E. Mesquite Blvd., 702-346-5295"

@@ -1,6 +1,8 @@
 ---
 title: "Lake Havasu City Police Awarded $41,024 Highway Safety Grant for Speed Enforcement"
 date: 2026-10-14
+kind: press-release
+published: "2026-10-14T12:00:00-07:00"
 company: "Lake Havasu City Police Department"
 area: "Lake Havasu City"
 contact: "Lake Havasu City, 2330 McCulloch Blvd. N., 928-855-2116"

@@ -1,6 +1,8 @@
 ---
 title: "EXAMPLE: How to Format a Ground Level News Press Release"
 date: 2026-01-01
+kind: press-release
+published: "2026-01-01T12:00:00-07:00"
 company: Example Company LLC (sample)
 area: Example
 contact: "Jane Doe, press@example.com (sample)"
