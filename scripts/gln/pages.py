@@ -159,7 +159,8 @@ def render_home(c):
     # --- 3. What you need to know + Markets box
     briefs = []
     for k in ("us", "world", "politics", "business", "tech"):
-        b = take(by.get(k) or [], 1, lambda i: bool(i.get("summary"))) or take(by.get(k) or [], 1)
+        sec = _rank(by.get(k) or [])   # best-ranked real news item in the section, preferring one with a summary
+        b = take(sec, 1, lambda i: _news(i) and bool(i.get("summary"))) or take(sec, 1, _news) or take(sec, 1)
         briefs += b
     if briefs:
         def brief(i):
