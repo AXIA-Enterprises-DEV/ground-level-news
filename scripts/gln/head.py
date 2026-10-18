@@ -259,7 +259,7 @@ def _feeds(path, feeds):
         m = re.fullmatch(r"/local/([a-z0-9-]+)/", path)
         if m: feeds = [(f"{m.group(1).replace('-', ' ').title()} RSS", f"/local/{m.group(1)}/feed.xml")]
         if path in ("/press-releases/", "/local/"): feeds = [("Local news RSS", "/press-releases/feed.xml")]
-    out += [(t, h, "atom" if h.endswith("feed.xml") and "/category/" not in h and "/local/" not in h and h != "/press-releases/feed.xml" else "rss") for t, h in feeds]
+    out += [(f[0], f[1], f[2] if len(f) > 2 else "rss") for f in feeds]   # (title, href[, "rss"|"atom"])
     return "".join(f'<link rel="alternate" type="application/{k}+xml" title="{esc(t)}" href="{h}">' for t, h, k in out)
 
 def head(title, desc=TAG, path="/", og_type="website", extra_head="", og_img=None, md=None, robots=None, ld=None, preload_img=None, article=None, feeds=None, canonical=True):
@@ -267,9 +267,9 @@ def head(title, desc=TAG, path="/", og_type="website", extra_head="", og_img=Non
     preload_img: href or {"href","srcset","sizes"} for the LCP image. article: {"published","modified","section","tags","author"}.
     feeds: extra [(title, href)] alternates (auto-derived for section/area/local pages). canonical=False drops canonical and og:url."""
     url = SITE + path
-    is404 = path.endswith("404.html")
+    is404 = path.endswith("404.html") or str(title).strip().lower() in ("not found", "page not found")   # pages should pass path="/404.html"
     if robots is None: robots = NOINDEX if (path.startswith("/story/") or is404) else ROBOTS
-    if is404: canonical = False
+    if is404: canonical, path = False, "/404.html"
     desc = HOME_DESC if path == "/" and (not desc or desc == TAG) else clean(desc or TAG, 155)
     og = og_img or SITE + "/og.png"
     ow, oh, otype = _og_meta(og)
