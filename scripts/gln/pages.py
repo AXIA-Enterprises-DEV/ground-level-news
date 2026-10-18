@@ -110,6 +110,8 @@ def render_home(c):
             if len(out) == n: break
         return out
     ranked = _rank(items)
+    if ranked:   # the lead slot prefers a keyword-matched photo among the top three ranked items
+        k_lead = next((i for i in ranked[:3] if has_photo(i)), ranked[0]); ranked.remove(k_lead); ranked.insert(0, k_lead)
     lead = take(ranked, 1)
     lead = lead[0] if lead else None
     secs = []
@@ -140,7 +142,7 @@ def render_home(c):
     for x in lrows:
         if "link" in x: used.add(x["id"])
     events = _events(c)
-    ev_html = events_list(events, 5)
+    ev_html = events_list(events, 4)
     cond = cond_strip(_cond_html(c))
     if featured or lrows:
         col3 = f'<div class="levents"><h3 class="h3k">Happening this week</h3>{ev_html}</div>' if ev_html else f'<div class="levents"><h3 class="h3k">Happening this week</h3><div class="empty">No upcoming events on file. Organizations can <a href="/submit/">send us their dates</a>.</div></div>'
@@ -242,16 +244,16 @@ def render_categories(c):
         sub = ""
         if tabs: sub = f'<nav class="subnav" aria-label="{esc(v)} sections">{"".join(f'<a href="{h}"{" aria-current=\"page\"" if kk == k else ""}>{esc(l)}</a>' for kk, l, h in tabs)}</nav>'
         if k == "local": sub = chips(HOME_AREAS + [("All areas", "/local/")], scroll=True, label="Coverage areas") + '<div style="height:24px"></div>'
-        phead = (f'<header class="phead t-{k}"><h1><span class="bar"></span>{esc(title)}</h1><p class="lede">{esc(desc)}</p>'
-                 f'<span class="meta">Updated {time_tag(int(NOW.timestamp()), "long")}</span></header>{sub}')
+        phead = (f'<div class="phead t-{k}"><h1><span class="bar"></span>{esc(title)}</h1><p class="lede">{esc(desc)}</p>'
+                 f'<span class="meta">Updated {time_tag(int(NOW.timestamp()), "long")}</span></div>{sub}')
         if k == "local" and originals:
             lead_cards = f'<section aria-labelledby="orig-h">{section_header("Latest local originals", "/press-releases/", "local", "All press releases", id="orig-h")}<div class="grid">{"".join(pr_card(p) for p in originals[:3])}</div></section><div style="height:48px"></div>'
         else: lead_cards = ""
         if lst:
-            body = phead + lead_cards + f'<section class="secpk" aria-label="Top stories"><div>{card(lst[0], "lg")}</div>{rows(lst[1:5])}</section>'
+            body = phead + lead_cards + f'<section class="secpk" aria-labelledby="top-{k}"><h2 class="vh" id="top-{k}">Top {esc(v)} stories</h2><div>{card(lst[0], "lg")}</div>{rows(lst[1:5])}</section>'
             body += f'<section aria-labelledby="more-{k}"><h2 class="vh" id="more-{k}">More {esc(v)} stories</h2>{_river(lst[5:])}</section>' if lst[5:] else ""
         else:
-            alts = [(CAT_NAME[a], f"/category/{a}/") for a in ("us", "world", "politics") if a != k]
+            alts = [(CAT_NAME[a], f"/category/{a}/") for a in ("us", "world", "politics") if a != k][:2]
             body = phead + lead_cards + f'<div class="empty"><p>Nothing filed in {esc(v)} in the last 48 hours. Try {" or ".join(f"<a href={chr(34)}{h}{chr(34)}>{esc(n)}</a>" for n, h in alts)}.</p></div>'
         path = f"/category/{k}/"
         canon = True
@@ -391,8 +393,8 @@ def render_press_releases(c):
     reset_recent()
     areas = sorted({pr_region(p) for p in originals if pr_region(p)}, key=lambda k: region_name(k))
     idx_desc = "Press releases, briefs and reports from Bullhead City, Laughlin, Mohave Valley, Lake Havasu City, Kingman, Mesquite, Boulder City and the rest of the Colorado River region."
-    body = (f'<header class="phead t-local"><h1><span class="bar"></span>Local news</h1><p class="lede">{esc(idx_desc)} <a href="/submit/">Submit a release</a>.</p>'
-            f'<span class="meta">Updated {time_tag(int(NOW.timestamp()), "long")}</span></header>'
+    body = (f'<div class="phead t-local"><h1><span class="bar"></span>Local news</h1><p class="lede">{esc(idx_desc)} <a href="/submit/">Submit a release</a>.</p>'
+            f'<span class="meta">Updated {time_tag(int(NOW.timestamp()), "long")}</span></div>'
             + (chips([(region_name(a), area_href(a)) for a in areas] + [("All areas", "/local/")], scroll=True, label="Coverage areas") + '<div style="height:24px"></div>' if areas else ""))
     if originals: body += f'<section aria-labelledby="pri-h"><h2 class="vh" id="pri-h">All local originals</h2>{grid([pr_card(p) for p in originals], 9, "grid", 9, "Show 9 more", "releases")}</section>'
     else: body += f'<div class="empty"><p><b>No releases yet.</b> Be the first: submissions are free and reviewed by an editor.</p><a class="btn ghost" href="/submit/">Submit a release</a></div>'
@@ -426,7 +428,7 @@ def render_press_releases(c):
                 if e.get("address"): rows_ += f'<dt>Address</dt><dd>{esc(e["address"])}</dd>'
                 if area_nm: rows_ += f'<dt>Area</dt><dd><a href="{area_href(reg)}">{esc(area_nm)}</a></dd>'
                 acts = (f'<a class="btn ghost sm" href="{esc(ics_href)}">Add to calendar</a>' if ics_href else "") + (f'<a class="btn ghost sm" href="{esc(_maps(e))}" rel="noopener" target="_blank">Map<span class="vh"> (opens in new tab)</span></a>' if _maps(e) else "") + (f'<a class="btn ghost sm" href="{esc(e["url"])}" rel="noopener" target="_blank">Event details<span class="vh"> (opens in new tab)</span></a>' if e.get("url") else "")
-                evbox = f'<dl class="evbox"><h2>Event details</h2>{rows_}<div class="acts">{acts}</div></dl>'
+                evbox = f'<div class="evbox"><h2>Event details</h2><dl>{rows_}</dl><div class="acts">{acts}</div></div>'
         kicks = f'<div class="kicks"><span class="chip">{esc(klabel)}</span>' + (f'<span class="kick t-local"><a href="{area_href(reg)}">{esc(area_nm)}</a></span>' if area_nm else "") + (' <span class="chip red">Example</span>' if p.get("example") else "") + "</div>"
         author = p.get("author") if kind != "press-release" else None
         byline = f'<b><bdi>{esc(p.get("company") or NAME)}</bdi></b>' if kind == "press-release" else f'<b>{esc(author or f"{NAME} staff")}</b>'

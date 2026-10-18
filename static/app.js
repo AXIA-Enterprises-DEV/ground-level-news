@@ -21,7 +21,7 @@
     var st = +g.dataset.step || 9, noun = g.dataset.noun || "more";
     function lbl() {
       var n = g.querySelectorAll(".more-item").length;
-      if (!n) b.parentNode.remove(); else b.textContent = "Show " + Math.min(st, n) + " " + noun;
+      if (!n) b.parentNode.remove(); else b.textContent = "Show " + Math.min(st, n) + " more" + (noun && noun !== "more" ? " " + noun : "");
     }
     lbl();
     b.addEventListener("click", function () {
