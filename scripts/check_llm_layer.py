@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""Checks the built site against the LLM discoverability standard (https://llmbestpractices.com).
+"""Checks the built site against the LLM discoverability standard (https://llmbestpractices.com) and the SEO
+contract (sitemap index, originals-only news sitemap, noindex stories, robots groups, feed self links, one JSON-LD graph).
 Usage: python scripts/check_llm_layer.py [_site]   Exits non-zero on any failure. Stdlib only."""
 import re, sys, pathlib
+import xml.etree.ElementTree as ET
 
 OUT = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "_site")
 STD = "https://llmbestpractices.com"
@@ -23,6 +25,10 @@ def yaml_keys(html):
     m = re.search(r"<pre><code[^>]*>(.*?)</code></pre>", html, re.S)
     return set(re.findall(r"^([a-z_]+):", m.group(1), re.M)) if m else set()
 
+def xml_ok(rel):
+    try: ET.parse(OUT / rel); return True
+    except Exception: return False
+
 site = (read("CNAME") or "").strip()
 origin = f"https://{site}" if site else None
 
@@ -38,10 +44,12 @@ prim = re.search(r"^## Primary\n- \[[^\]]+\]\(([^)]+)\)", t, re.M)
 check("llms-txt", t.startswith("# ") and re.search(r"^> ", t, re.M) and prim and prim.group(1).rstrip("/").endswith("/llm-info")
       and "## Key pages" in t and re.search(r"^## About", t, re.M) and "Owner:" in t and f"Standard followed: {STD}" in t
       and re.search(r"Updated: \d{4}-\d{2}-\d{2}", t), "needs H1, > summary, ## Primary (first link /llm-info), ## Key pages, ## About with Owner/Standard followed/Updated")
+check("llms-txt-no-example", "example-template" not in t, "the example press release must not be listed")
 
 r = read("robots.txt") or ""
 check("robots-txt", re.search(r"User-agent: \*\nAllow: /", r) and re.search(r"^Sitemap: https://", r, re.M)
       and "llms.txt" in r and "agents.txt" in r, "needs User-agent: * Allow: /, absolute Sitemap and comments for llms.txt/agents.txt")
+check("robots-md-disallow", re.search(r"User-agent: Googlebot\n(?:[^\n]*\n)*?Disallow: /\*\.md\$", r), "Googlebot group must Disallow: /*.md$")
 blocked = [b for b in AI_BOTS if re.search(rf"User-agent: {re.escape(b)}\n(?:Allow: [^\n]*\n)*Disallow: /\n", r)]
 check("ai-agents-allowed", not blocked, f"disallowed at root: {blocked}")
 
@@ -63,16 +71,39 @@ ai = read("ai.txt") or ""
 check("ai-txt", all(re.search(rf"^{k}: yes", ai, re.M) for k in ("Train", "Quote", "Summarize")) and "User-Agent: *" in ai, "must be permissive")
 
 pages = [p for p in OUT.rglob("*.html") if "llm-info" not in p.parts and 'http-equiv="refresh"' not in p.read_text(errors="ignore")[:2000]]
-missing = [str(p.relative_to(OUT)) for p in pages if not re.search(r'<a [^>]*href="[^"]*/llm-info/?"[^>]*>Hey AI, learn about us', p.read_text(errors="ignore"))]
-noai = [str(p.relative_to(OUT)) for p in pages[:400] if re.search(r'<meta[^>]+content="[^"]*\bnoimageai|noai\b', p.read_text(errors="ignore"))]
+texts = {p: p.read_text(errors="ignore") for p in pages}
+missing = [str(p.relative_to(OUT)) for p, x in texts.items() if not re.search(r'<a [^>]*href="[^"]*/llm-info/?"[^>]*>Hey AI, learn about us', x)]
+noai = [str(p.relative_to(OUT)) for p, x in list(texts.items())[:400] if re.search(r'<meta[^>]+content="[^"]*\bnoimageai|noai\b', x)]
 check("footer-link", not missing, f"{len(missing)} pages lack it, e.g. {missing[:3]}")
 check("no-noai-meta", not noai, f"noai meta on {noai[:3]}")
+
+# ---- SEO contract
+sm = read("sitemap.xml") or ""
+refs = re.findall(r"<loc>([^<]+)</loc>", sm) if "<sitemapindex" in sm else []
+missing_sm = [u for u in refs if not (OUT / u.split("/", 3)[-1]).exists() or not xml_ok(u.split("/", 3)[-1])]
+check("sitemap-index", xml_ok("sitemap.xml") and "<sitemapindex" in sm and refs and not missing_sm, f"sitemap.xml must be a well-formed index of existing sitemaps; bad: {missing_sm}")
+child = "".join(read(u.split("/", 3)[-1]) or "" for u in refs)
+check("sitemap-no-stories", "/story/" not in child and "example-template" not in child and "<lastmod>" in child, "sitemaps must list no /story/ or example URLs and carry <lastmod>")
+ns = read("news-sitemap.xml") or ""
+check("news-sitemap", xml_ok("news-sitemap.xml") and "/story/" not in ns and "example-template" not in ns, "news sitemap must be well-formed and list originals only")
+stories = [p for p in pages if p.parts[len(OUT.parts)] == "story"] if pages else []
+indexed = [str(p.relative_to(OUT)) for p in stories if not re.search(r'<meta name="robots" content="noindex', texts[p])]
+check("stories-noindex", not indexed, f"{len(indexed)} story pages are indexable, e.g. {indexed[:3]}")
+nf = read("404.html") or ""
+check("404-noindex", 'content="noindex' in nf and 'rel="canonical"' not in nf, "404.html must be noindex without a canonical")
+rss = read("rss.xml") or ""
+check("rss-self-link", xml_ok("rss.xml") and re.search(r'<atom:link href="https://[^"]+/rss.xml" rel="self"', rss) and "<lastBuildDate>" in rss, "rss.xml needs a well-formed channel with atom:link rel=self and lastBuildDate")
+check("atom-feed", xml_ok("feed.xml") and 'rel="self"' in (read("feed.xml") or ""), "feed.xml must be well-formed with a self link")
+multi = [str(p.relative_to(OUT)) for p, x in texts.items() if x.count('<script type="application/ld+json">') != 1]
+check("one-jsonld-graph", not multi, f"{len(multi)} pages have not exactly one JSON-LD script, e.g. {multi[:3]}")
+canon = [str(p.relative_to(OUT)) for p, x in texts.items() if p.name != "404.html" and x.count('rel="canonical"') != 1]
+check("one-canonical", not canon, f"{len(canon)} pages lack a single canonical, e.g. {canon[:3]}")
 
 if origin:
     bare = site[4:] if site.startswith("www.") else site
     drift = re.compile(r"http://(?:www\.)?" + re.escape(bare) + r"|https://" + ("" if site.startswith("www.") else r"www\.") + re.escape(bare))
-    bad = [f for f in ("llms.txt", "agents.txt", "robots.txt", "sitemap.xml") if drift.search(read(f) or "")]
+    bad = [f for f in ("llms.txt", "agents.txt", "robots.txt", "sitemap.xml", "rss.xml", "feed.xml", "news-sitemap.xml") if drift.search(read(f) or "")]
     check("one-origin", not bad, f"origin drift in {bad}")
 
-print(f"\n{len(fails)} failure(s)" if fails else "\nAll LLM-layer checks passed.")
+print(f"\n{len(fails)} failure(s)" if fails else "\nAll LLM-layer and SEO checks passed.")
 sys.exit(1 if fails else 0)

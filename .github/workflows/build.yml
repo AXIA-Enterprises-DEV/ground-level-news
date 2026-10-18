@@ -1,32 +1,39 @@
 name: Build & Deploy
 on:
   push: {branches: [main]}
-  schedule: [{cron: "*/15 * * * *"}]
+  schedule: [{cron: "*/15 * * * *"}]   # GitHub throttles this to roughly every 1.5-4.5 h in practice
   workflow_dispatch:
-permissions: {contents: read, pages: write, id-token: write, actions: write}
+permissions: {contents: read, pages: write, id-token: write}
 concurrency: {group: pages, cancel-in-progress: false}
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.12", cache: pip}
-      - run: pip install -r requirements.txt
+      - run: pip install -r requirements.txt pytest
       - uses: actions/cache@v4
         with:
           path: .ogcache
           key: ogcache-v1-${{ github.run_id }}
           restore-keys: ogcache-v1-
+      - name: Prune share-card cache (older than 3 days)
+        run: find .ogcache -type f -mtime +3 -delete 2>/dev/null || true
       - run: python scripts/build.py
         env: {SITE_URL: "${{ vars.SITE_URL || 'https://groundlevelnews.com' }}"}
-      - name: Check LLM discoverability layer (llmbestpractices.com)
+      - name: Check LLM discoverability layer and SEO contract
         run: python scripts/check_llm_layer.py _site
+      - name: Tests (offline fixture build)
+        run: python -m pytest tests/ -q
+        env: {OG_STORIES: "0"}
       - uses: actions/upload-pages-artifact@v3
         with: {path: _site}
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment: {name: github-pages, url: "${{ steps.d.outputs.page_url }}"}
     steps:
       - id: d
@@ -34,22 +41,36 @@ jobs:
   indexnow:
     needs: deploy
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     continue-on-error: true
     steps:
-      - name: Ping IndexNow (Bing and partners; free)
+      # The previous run's URL list is restored from the cache; only URLs that are new since then are submitted.
+      - uses: actions/cache@v4
+        with:
+          path: .indexnow
+          key: indexnow-v1-${{ github.run_id }}
+          restore-keys: indexnow-v1-
+      - name: Submit new URLs to IndexNow (Bing and partners; free)
         run: |
           sleep 30
+          mkdir -p .indexnow
           python3 - <<'PY'
-          import json, urllib.request
+          import json, pathlib, urllib.request
           host = "groundlevelnews.com"; key = "5a8308b39ca87422bfd5d4eb53c1c5bb"
+          prev_f = pathlib.Path(".indexnow/indexnow-urls.txt")
+          prev = set(prev_f.read_text().split()) if prev_f.exists() else set()
           try:
-              urls = urllib.request.urlopen(f"http://{host}/indexnow-urls.txt", timeout=30).read().decode().split()
+              urls = urllib.request.urlopen(f"https://{host}/indexnow-urls.txt", timeout=30).read().decode().split()
           except Exception as e:
-              print("could not fetch url list:", e); urls = [f"https://{host}/"]
-          body = json.dumps({"host": host, "key": key, "keyLocation": f"https://{host}/{key}.txt", "urlList": urls[:10000]}).encode()
+              print("could not fetch url list:", e); urls = []
+          new = [u for u in dict.fromkeys(urls) if u not in prev][:10000]
+          if not urls: print("no url list; nothing submitted"); raise SystemExit
+          if not new: print("no new urls since the last run"); prev_f.write_text("\n".join(urls) + "\n"); raise SystemExit
+          body = json.dumps({"host": host, "key": key, "keyLocation": f"https://{host}/{key}.txt", "urlList": new}).encode()
           req = urllib.request.Request("https://api.indexnow.org/indexnow", data=body, headers={"Content-Type": "application/json; charset=utf-8"})
           try:
-              r = urllib.request.urlopen(req, timeout=30); print("IndexNow", r.status, len(urls), "urls")
+              r = urllib.request.urlopen(req, timeout=30); print("IndexNow", r.status, len(new), "new urls of", len(urls))
+              prev_f.write_text("\n".join(sorted(prev | set(urls))) + "\n")
           except Exception as e:
               print("IndexNow error:", e)
           PY

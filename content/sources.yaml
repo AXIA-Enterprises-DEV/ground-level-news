@@ -1,0 +1,607 @@
+# Regional source registry for Ground Level News (read by scripts/gln/sources.py).
+#
+# Every enabled feed below was probed with curl on 2026-10-18 and returned HTTP 200 with parseable
+# RSS/Atom. Feeds are fetched at build time, in parallel, with a 12s per-feed timeout; a failing feed is
+# logged and skipped (it never fails the build). Items are normalised to the tracker item shape with
+# cat="local", local=true, via="direct", regions=[region + regions_extra + detected regions].
+#
+# Fields per source (DECISIONS.md section 13):
+#   key            stable id; also the fixture file name tests/fixtures/feeds/<key>.xml for offline builds
+#   name           publisher display name shown as the item's `source`
+#   url            feed URL
+#   kind           gov | media | events | agency | college | tourism  (items inherit it, except events feeds
+#                  whose items get kind "event" or "meeting")
+#   region         taxonomy region key the feed is about
+#   regions_extra  more region keys every item from this feed carries
+#   tier           1 = primary/official, 2 = regional media or agency, 3 = fallback (Google News queries)
+#   homepage       publisher homepage (for "More from <source>")
+#   paywalled      true for metered/paywalled publishers (BLOX group papers)
+#   notes          free text
+# Optional per-source controls:
+#   tz             IANA zone for feeds whose dates carry no offset (default America/Phoenix)
+#   must_match     a filter name from `filters:` or a list of regexes; keep only items whose title+summary match
+#   drop           a filter name or list of regexes; drop items whose title+summary match
+#   drop_link      list of regexes applied to the item link (BLOX "online_features" paid releases etc.)
+#   item_kind      force the item kind (e.g. "meeting" for CivicPlus Meetings calendars)
+#   max_age_days   override the 14-day freshness window
+#   enabled        false to keep the record but never fetch it
+
+defaults:
+  max_age_days: 14
+  tz: America/Phoenix
+
+filters:
+  # Colorado River region place names. Used to keep only region-relevant items from statewide /
+  # Las Vegas-metro feeds. Case-sensitive on purpose (proper nouns); "mesquite tree" etc. is excluded.
+  river:
+    - '\bBullhead City\b'
+    - '\bLaughlin\b'
+    - '\bFort Moh?[aj]ve\b'
+    - '\bMoh?[aj]ve Valley\b'
+    - '\bMohave County\b'
+    - '\bKingman\b'
+    - '\b(Lake )?Havasu\b'
+    - '\bNeedles\b'
+    - '\bBoulder City\b'
+    - '\bMesquite\b(?!\s+(tree|trees|wood|smoke|smoked|grill|grilled|flour|bean|beans|chips?|charcoal|BBQ|barbecue|Street|St\.|Ave\.?|Avenue|Road|Rd\.?|Lane|Ln\.?))'
+    - '\bLake Mead\b'
+    - '\bHoover Dam\b'
+    - '\bLake Mohave\b'
+    - '\bDavis Dam\b'
+    - '\bParker Dam\b'
+    - '\bColorado River\b'
+    - '\bVirgin River\b'
+    - '\bSearchlight\b'
+    - '\bMoapa\b'
+    - '\bOverton\b'
+    - '\bLogandale\b'
+    - '\bBunkerville\b'
+    - '\bGolden Valley\b'
+    - '\bDolan Springs\b'
+    - '\bOatman\b'
+    - '\bTopock\b'
+    - '\bWillow Beach\b'
+    - '\bCottonwood Cove\b'
+    - '\bKatherine Landing\b'
+    - '\bColorado City\b'
+    - '\bMohave Community College\b'
+    - '\bMohave College\b'
+  # River terms plus statewide governance that affects the region directly.
+  statewide:
+    - '\bBullhead City\b'
+    - '\bLaughlin\b'
+    - '\bFort Moh?[aj]ve\b'
+    - '\bMoh?[aj]ve Valley\b'
+    - '\bMohave County\b'
+    - '\bKingman\b'
+    - '\b(Lake )?Havasu\b'
+    - '\bBoulder City\b'
+    - '\bMesquite\b(?!\s+(tree|trees|wood|smoke|smoked|grill|grilled|flour|bean|beans|chips?|charcoal|BBQ|barbecue|Street|St\.|Ave\.?|Avenue|Road|Rd\.?|Lane|Ln\.?))'
+    - '\bLake Mead\b'
+    - '\bHoover Dam\b'
+    - '\bLake Mohave\b'
+    - '\bColorado River\b'
+    - '\bVirgin River\b'
+    - '\bMoapa\b'
+    - '\bOverton\b'
+    - '\bLogandale\b'
+    - '\bBunkerville\b'
+    - '\bSearchlight\b'
+    - '\bClark County Commission(ers)?\b'
+    - '\bearly voting\b'
+    - '\bElection Day\b'
+    - '\bballot question\b'
+    - '\bwater (shortage|cuts?|allocation|rights)\b'
+    - '\bBureau of Reclamation\b'
+    - '\bdrought\b'
+  # Google News query noise: obituaries from elsewhere, high-school video spam, surname hits.
+  gnews_junk:
+    - '(?i)\bobituar(y|ies)\b'
+    - '(?i)\bMaxPreps\b'
+    - '(?i)\bNFHS Network\b'
+    - '(?i)\bWatch Live\b'
+    - '(?i)\bLegacy(\.com)? \| Obituary'
+    - '(?i)\bfuneral home\b'
+    - '(?i)\bhomes? for sale\b'
+    - '(?i)\bzillow\b'
+
+# Link hosts that are never usable as a story (social posts, ticketing). Eventbrite is allowed for events.
+denylist_hosts:
+  - facebook.com
+  - m.facebook.com
+  - twitter.com
+  - x.com
+  - instagram.com
+  - tiktok.com
+  - youtube.com
+  - youtu.be
+  - legacy.com
+
+sources:
+  # ---------------------------------------------------------------- Government: Arizona side
+  - key: mohave-county
+    name: Mohave County
+    url: https://www.mohave.gov/news-notices/rss
+    kind: gov
+    region: mohave-county
+    regions_extra: [arizona]
+    tier: 1
+    homepage: https://www.mohave.gov/
+    paywalled: false
+    tz: America/Phoenix
+    notes: News & Notices (OpenCities/Granicus "usn"). Very active (elections, flood/NWS relays, zoning hearings, fire restrictions, HHW). Dates are "Fri, 16 October 2026 16:30:00" with no offset; summary is only a "Continue reading" link.
+  - key: bullhead-city
+    name: City of Bullhead City
+    url: https://www.bullheadcityaz.gov/news/rss
+    kind: gov
+    region: bullhead-city
+    regions_extra: [mohave-county, colorado-river]
+    tier: 1
+    homepage: https://www.bullheadcityaz.gov/
+    paywalled: false
+    tz: America/Phoenix
+    notes: Same platform as the county; low frequency (about monthly). Titles are often ALL CAPS and get re-cased.
+  - key: lhc-newsflash
+    name: Lake Havasu City
+    url: https://www.lhcaz.gov/RSSFeed.aspx?ModID=1&CID=All-newsflash.xml
+    kind: gov
+    region: lake-havasu-city
+    regions_extra: [mohave-county]
+    tier: 1
+    homepage: https://www.lhcaz.gov/
+    paywalled: false
+    notes: CivicPlus News Flash (LHCPD arrests, grants, London Bridge Days, election notices).
+  - key: lhc-meetings
+    name: Lake Havasu City
+    url: https://www.lhcaz.gov/RSSFeed.aspx?ModID=58&CID=Meetings-23
+    kind: events
+    item_kind: meeting
+    region: lake-havasu-city
+    regions_extra: [mohave-county]
+    tier: 1
+    homepage: https://www.lhcaz.gov/Calendar.aspx
+    paywalled: false
+    tz: America/Phoenix
+    notes: CivicPlus Meetings calendar (council, P&Z, Tri-City Council). Event date/time come from calendarEvent:EventDates/EventTimes.
+  - key: lhc-events
+    name: Lake Havasu City
+    url: https://www.lhcaz.gov/RSSFeed.aspx?ModID=58&CID=Events-14
+    kind: events
+    region: lake-havasu-city
+    regions_extra: [mohave-county]
+    tier: 2
+    homepage: https://www.lhcaz.gov/Calendar.aspx
+    paywalled: false
+    tz: America/Phoenix
+    notes: CivicPlus Events calendar; empty channel on 2026-10-18 but valid.
+  - key: lhc-alerts
+    name: Lake Havasu City
+    url: https://www.lhcaz.gov/RSSFeed.aspx?ModID=63&CID=All-0
+    kind: gov
+    region: lake-havasu-city
+    regions_extra: [mohave-county]
+    tier: 1
+    homepage: https://www.lhcaz.gov/AlertCenter.aspx
+    paywalled: false
+    notes: CivicPlus Alert Center (lane closures, outages). Empty channel when there is nothing active.
+  - key: mohave-cc
+    name: Mohave Community College
+    url: https://www.mohave.edu/feed/
+    kind: college
+    region: mohave-county
+    regions_extra: []
+    tier: 2
+    homepage: https://www.mohave.edu/
+    paywalled: false
+    notes: WordPress feed; campuses in Kingman, Bullhead City, Lake Havasu City and Colorado City. Items mentioning a campus town get that region via detect_regions.
+  - key: blm-az
+    name: Bureau of Land Management Arizona
+    url: https://www.blm.gov/press-release/arizona/rss
+    kind: agency
+    region: arizona
+    regions_extra: []
+    tier: 2
+    homepage: https://www.blm.gov/arizona
+    paywalled: false
+    must_match: river
+    notes: Statewide releases; only items naming the region are kept (Kingman and Lake Havasu field offices, Colorado River District, fire restrictions in Mohave County). "announcement" entries carry breadcrumb boilerplate as summary, which is stripped.
+  # ---------------------------------------------------------------- Government: Nevada side
+  - key: bc-newsflash
+    name: City of Boulder City
+    url: https://www.bcnv.org/RSSFeed.aspx?ModID=1&CID=All-newsflash.xml
+    kind: gov
+    region: boulder-city
+    regions_extra: [clark-county]
+    tier: 1
+    homepage: https://www.bcnv.org/
+    paywalled: false
+    tz: America/Los_Angeles
+    notes: CivicPlus News Flash (fire prevention week, utility rate help). Had items on 2026-10-18 although the audit saw it empty.
+  - key: bc-meetings
+    name: City of Boulder City
+    url: https://www.bcnv.org/RSSFeed.aspx?ModID=58&CID=City-Meetings-32
+    kind: events
+    item_kind: meeting
+    region: boulder-city
+    regions_extra: [clark-county]
+    tier: 1
+    homepage: https://www.bcnv.org/Calendar.aspx
+    paywalled: false
+    tz: America/Los_Angeles
+    notes: CivicPlus City Meetings calendar (council, planning commission). pubDate is the creation date (2024) so items are kept by event date, not pubDate.
+  - key: bc-events
+    name: City of Boulder City
+    url: https://www.bcnv.org/RSSFeed.aspx?ModID=58&CID=Community-Events-34
+    kind: events
+    region: boulder-city
+    regions_extra: [clark-county]
+    tier: 2
+    homepage: https://www.bcnv.org/Calendar.aspx
+    paywalled: false
+    tz: America/Los_Angeles
+    notes: CivicPlus Community Events calendar; empty channel on 2026-10-18 but valid.
+  - key: bc-alerts
+    name: City of Boulder City
+    url: https://www.bcnv.org/RSSFeed.aspx?ModID=63&CID=All-0
+    kind: gov
+    region: boulder-city
+    regions_extra: [clark-county]
+    tier: 1
+    homepage: https://www.bcnv.org/AlertCenter.aspx
+    paywalled: false
+    tz: America/Los_Angeles
+    notes: Alert Center (emergency, traffic, utility outage, weather, election results). Connection resets happen intermittently; one retry is enough.
+  - key: bc-agendas
+    name: City of Boulder City
+    url: https://www.bcnv.org/RSSFeed.aspx?ModID=63&CID=Agendas-and-Packets-12
+    kind: gov
+    region: boulder-city
+    regions_extra: [clark-county]
+    tier: 2
+    homepage: https://www.bcnv.org/AgendaCenter
+    paywalled: false
+    tz: America/Los_Angeles
+    notes: Agendas & Packets alerts; usually empty between postings.
+  - key: bc-publicworks
+    name: City of Boulder City
+    url: https://www.bcnv.org/RSSFeed.aspx?ModID=51&CID=Public-Works-Weekly-Project-Update-1
+    kind: gov
+    region: boulder-city
+    regions_extra: [clark-county]
+    tier: 2
+    homepage: https://www.bcnv.org/
+    paywalled: false
+    tz: America/Los_Angeles
+    notes: Public Works weekly project update blog; empty channel on 2026-10-18 but valid.
+  - key: blm-nv
+    name: Bureau of Land Management Nevada
+    url: https://www.blm.gov/press-release/nevada/rss
+    kind: agency
+    region: nevada
+    regions_extra: []
+    tier: 2
+    homepage: https://www.blm.gov/nevada
+    paywalled: false
+    must_match: river
+    notes: Statewide releases; only items naming the region are kept.
+  # ---------------------------------------------------------------- Federal: parks
+  - key: lake-mead-nra
+    name: Lake Mead National Recreation Area
+    url: https://www.nps.gov/feeds/getNewsRSS.htm?id=lake
+    kind: agency
+    region: lake-mead
+    regions_extra: [colorado-river]
+    tier: 1
+    homepage: https://www.nps.gov/lake/
+    paywalled: false
+    notes: NPS news releases (closures, rescues, launch ramps, Government Wash). Low frequency; the 14-day window often leaves it empty.
+  # ---------------------------------------------------------------- Events and tourism
+  - key: visitlaughlin-events
+    name: Visit Laughlin
+    url: https://www.visitlaughlin.com/event/rss/
+    kind: events
+    region: laughlin
+    regions_extra: [bullhead-city, colorado-river]
+    tier: 2
+    homepage: https://www.visitlaughlin.com/events/
+    paywalled: false
+    tz: America/Los_Angeles
+    notes: Simpleview events feed (casino headliners, BITD Laughlin Desert Classic, river cruises). Summary starts with "MM/DD/YYYY to MM/DD/YYYY - " or "Starting MM/DD/YYYY - "; the date range becomes event_start/event_end and is stripped from the summary. Long-running shows ("Starting <past date>") keep no event_start.
+  # ---------------------------------------------------------------- Regional media (headline + summary + link only)
+  - key: mohavedailynews
+    name: Mohave Valley Daily News
+    url: https://www.mohavedailynews.com/search/?f=rss&t=article&l=25&s=start_time&sd=desc&c=news/local*
+    kind: media
+    region: bullhead-city
+    regions_extra: [laughlin, mohave-valley, mohave-county]
+    tier: 2
+    homepage: https://www.mohavedailynews.com/
+    paywalled: true
+    drop_link: ['/online_features/', '/press_releases/']
+    notes: BLOX search feed limited to news/local; the unfiltered feed mixes in syndicated national copy and paid releases.
+  - key: havasunews
+    name: Today's News-Herald
+    url: https://www.havasunews.com/search/?f=rss&t=article&l=25&s=start_time&sd=desc&c=news*
+    kind: media
+    region: lake-havasu-city
+    regions_extra: [mohave-county]
+    tier: 2
+    homepage: https://www.havasunews.com/
+    paywalled: true
+    drop_link: ['/online_features/', '/press_releases/']
+    must_match: river
+    notes: BLOX; its news/local section filter returns an empty channel, so news* plus the river filter is used to drop wire copy.
+  - key: kdminer
+    name: Kingman Daily Miner
+    url: https://www.kdminer.com/search/?f=rss&t=article&l=25&s=start_time&sd=desc&c=news/local*
+    kind: media
+    region: kingman
+    regions_extra: [mohave-county]
+    tier: 2
+    homepage: https://www.kdminer.com/
+    paywalled: true
+    drop_link: ['/online_features/', '/press_releases/']
+    notes: BLOX search feed limited to news/local.
+  - key: bouldercityreview
+    name: Boulder City Review
+    url: https://bouldercityreview.com/feed/
+    kind: media
+    region: boulder-city
+    regions_extra: [clark-county]
+    tier: 2
+    homepage: https://bouldercityreview.com/
+    paywalled: false
+    notes: WordPress feed, weekly paper.
+  - key: mesquitelocalnews
+    name: Mesquite Local News
+    url: https://mesquitelocalnews.com/feed/
+    kind: media
+    region: mesquite
+    regions_extra: [clark-county]
+    tier: 2
+    homepage: https://mesquitelocalnews.com/
+    paywalled: false
+    notes: WordPress feed (fire/rescue logs, council, Virgin Valley).
+  - key: nevadacurrent
+    name: Nevada Current
+    url: https://nevadacurrent.com/feed/
+    kind: media
+    region: nevada
+    regions_extra: []
+    tier: 2
+    homepage: https://nevadacurrent.com/
+    paywalled: false
+    must_match: statewide
+    notes: Nonprofit statewide outlet, full-text feed (1.1 MB), CC-licensed republishing. Filtered to region/statewide-governance items.
+  - key: nevadaindependent
+    name: The Nevada Independent
+    url: https://thenevadaindependent.com/feed
+    kind: media
+    region: nevada
+    regions_extra: []
+    tier: 2
+    homepage: https://thenevadaindependent.com/
+    paywalled: false
+    must_match: statewide
+    notes: Nonprofit statewide outlet (1.1 MB feed). Filtered to region/statewide-governance items.
+  - key: reviewjournal-local
+    name: Las Vegas Review-Journal
+    url: https://www.reviewjournal.com/local/local-nevada/feed/
+    kind: media
+    region: las-vegas
+    regions_extra: [clark-county]
+    tier: 2
+    homepage: https://www.reviewjournal.com/
+    paywalled: true
+    must_match: statewide
+    notes: Local Nevada section feed; filtered to river-region and statewide-governance items.
+  - key: lasvegassun
+    name: Las Vegas Sun
+    url: https://lasvegassun.com/feeds/headlines/all/
+    kind: media
+    region: las-vegas
+    regions_extra: [clark-county]
+    tier: 2
+    homepage: https://lasvegassun.com/
+    paywalled: false
+    must_match: river
+    notes: All headlines; filtered to river-region items.
+  - key: lasvegassun-bouldercity
+    name: Las Vegas Sun
+    url: https://lasvegassun.com/feeds/headlines/boulder-city/
+    kind: media
+    region: boulder-city
+    regions_extra: [clark-county]
+    tier: 2
+    homepage: https://lasvegassun.com/news/boulder-city/
+    paywalled: false
+    notes: Boulder City section; includes Spanish-language versions of stories, which the language gate drops.
+  - key: 8newsnow
+    name: 8 News Now
+    url: https://www.8newsnow.com/feed/
+    kind: media
+    region: las-vegas
+    regions_extra: [clark-county]
+    tier: 2
+    homepage: https://www.8newsnow.com/
+    paywalled: false
+    must_match: river
+    notes: KLAS (CBS) Las Vegas; filtered to river-region items.
+  - key: ktnv
+    name: KTNV Channel 13
+    url: https://www.ktnv.com/news.rss
+    kind: media
+    region: las-vegas
+    regions_extra: [clark-county]
+    tier: 2
+    homepage: https://www.ktnv.com/
+    paywalled: false
+    must_match: river
+    notes: ABC Las Vegas local news; filtered to river-region items.
+  - key: news3lv
+    name: News 3 Las Vegas
+    url: https://news3lv.com/news/local.rss
+    kind: media
+    region: las-vegas
+    regions_extra: [clark-county]
+    tier: 2
+    homepage: https://news3lv.com/
+    paywalled: false
+    must_match: river
+    notes: KSNV (NBC) local section; filtered to river-region items.
+  - key: fox5vegas
+    name: FOX5 Las Vegas
+    url: https://www.fox5vegas.com/arc/outboundfeeds/rss/?outputType=xml
+    kind: media
+    region: las-vegas
+    regions_extra: [clark-county]
+    tier: 2
+    homepage: https://www.fox5vegas.com/
+    paywalled: false
+    must_match: river
+    notes: KVVU (Gray/Arc) feed; mixes in national Gray News copy, filtered to river-region items.
+  - key: knau
+    name: KNAU Arizona Public Radio
+    url: https://www.knau.org/news.rss
+    kind: media
+    region: arizona
+    regions_extra: []
+    tier: 2
+    homepage: https://www.knau.org/
+    paywalled: false
+    must_match: river
+    notes: Flagstaff NPR station covering northern Arizona incl. Mohave County; filtered to river-region items.
+  # ---------------------------------------------------------------- Google News query fallbacks (tier 3)
+  # Titles end in " - Publisher"; the publisher becomes `source` (split on the LAST " - ", so hyphenated names
+  # such as "Las Vegas Review-Journal" survive). Links are Google redirect URLs. Items must name the place.
+  - key: gnews-bullhead
+    name: Google News
+    url: https://news.google.com/rss/search?q=%22Bullhead+City%22+OR+Laughlin+OR+%22Fort+Mohave%22+when:2d&hl=en-US&gl=US&ceid=US:en
+    kind: media
+    region: bullhead-city
+    regions_extra: [colorado-river]
+    tier: 3
+    homepage: https://news.google.com/
+    paywalled: false
+    must_match:
+      - '\bBullhead City\b'
+      - '\bFort Moh?[aj]ve\b'
+      - '\bMoh?[aj]ve Valley\b'
+      - '\bLaughlin,? (Nev\.?|Nevada|NV)\b'
+      - '\b(in|to|at|from|near) Laughlin\b'
+      - '\bLaughlin (casino|casinos|resort|resorts|police|Town|Advisory|bridge|Riverwalk|river|Desert|Events|Ranch|Chamber|Elementary|High School|Constable|Justice|Library|airport|Avi|Tourism)\b'
+      - '\b(Don Laughlin|Riverside Resort|Aquarius Casino|Edgewater|Colorado Belle|Laughlin Event Center)\b'
+    drop: gnews_junk
+    notes: Surfaces The Bee (thebee.news) and TV coverage of Bullhead City/Laughlin. Query noise (surname Laughlin, obituaries) is filtered by must_match/drop.
+  - key: gnews-kingman
+    name: Google News
+    url: https://news.google.com/rss/search?q=%22Kingman%22+Arizona+when:2d&hl=en-US&gl=US&ceid=US:en
+    kind: media
+    region: kingman
+    regions_extra: [mohave-county]
+    tier: 3
+    homepage: https://news.google.com/
+    paywalled: false
+    must_match: ['\bKingman\b(?!,? (Kan\.?|Kansas|KS|Reef))']
+    drop: gnews_junk
+    notes: Kingman, Arizona (excludes Kingman, Kansas and Kingman Reef).
+  - key: gnews-lakehavasu
+    name: Google News
+    url: https://news.google.com/rss/search?q=%22Lake+Havasu%22+when:2d&hl=en-US&gl=US&ceid=US:en
+    kind: media
+    region: lake-havasu-city
+    regions_extra: [mohave-county]
+    tier: 3
+    homepage: https://news.google.com/
+    paywalled: false
+    must_match: ['\bHavasu\b']
+    drop: gnews_junk
+    notes: Lake Havasu City coverage from outside outlets.
+  - key: gnews-mesquite
+    name: Google News
+    url: https://news.google.com/rss/search?q=%22Mesquite%22+Nevada+when:2d&hl=en-US&gl=US&ceid=US:en
+    kind: media
+    region: mesquite
+    regions_extra: [clark-county]
+    tier: 3
+    homepage: https://news.google.com/
+    paywalled: false
+    must_match:
+      - '\bMesquite,? (Nev\.?|Nevada|NV)\b'
+      - '\bMesquite (City|Fire|Police|Mayor|Council|Local|Gaming|Sports|Recreation|Rodeo|Vista|Veterans|Technical|High School|Eureka)\b'
+      - '\b(Virgin Valley|Bunkerville|Virgin River|CasaBlanca|Eureka Casino)\b'
+    drop: gnews_junk
+    notes: Mesquite, Nevada (excludes Mesquite, Texas and the tree).
+  - key: gnews-bouldercity
+    name: Google News
+    url: https://news.google.com/rss/search?q=%22Boulder+City%22+when:2d&hl=en-US&gl=US&ceid=US:en
+    kind: media
+    region: boulder-city
+    regions_extra: [clark-county]
+    tier: 3
+    homepage: https://news.google.com/
+    paywalled: false
+    must_match: ['\bBoulder City\b']
+    drop: gnews_junk
+    notes: Boulder City, Nevada.
+  - key: gnews-lakemead
+    name: Google News
+    url: https://news.google.com/rss/search?q=%22Lake+Mead%22+OR+%22Hoover+Dam%22+when:2d&hl=en-US&gl=US&ceid=US:en
+    kind: media
+    region: lake-mead
+    regions_extra: [colorado-river]
+    tier: 3
+    homepage: https://news.google.com/
+    paywalled: false
+    must_match: ['\bLake Mead\b', '\bHoover Dam\b']
+    drop: gnews_junk
+    notes: Lake Mead / Hoover Dam coverage (water levels, rescues, Reclamation).
+
+# Documented but not fetched. Reasons recorded from the 2026-10-18 probe.
+disabled:
+  - key: thebee
+    name: The Bee
+    url: https://thebee.news/feed/
+    homepage: https://thebee.news/
+    region: bullhead-city
+    reason: Cloudflare returns 304 with an empty body (or 403) to every scripted client, with or without a browser User-Agent. Coverage arrives via the gnews-bullhead fallback (" - The Bee" items).
+  - key: kingman-city
+    name: City of Kingman
+    url: https://www.cityofkingman.gov/RSSFeed.aspx?ModID=1&CID=All-newsflash.xml
+    homepage: https://www.cityofkingman.gov/
+    region: kingman
+    reason: Cloudflare 403 to scripted clients (CivicPlus paths exist). Kingman Daily Miner and gnews-kingman cover the gap.
+  - key: adot
+    name: Arizona Department of Transportation
+    url: https://azdot.gov/rss.xml
+    homepage: https://azdot.gov/
+    region: arizona
+    reason: Cloudflare 403 (az511 404). Road closures reach us through Mohave County relays and NWS; ADOT news could be a Google News query later.
+  - key: mohave-sheriff
+    name: Mohave County Sheriff's Office
+    url: https://www.mohave.gov/departments/sheriff/press-release/
+    homepage: https://www.mohave.gov/departments/sheriff/
+    region: mohave-county
+    reason: HTML only, no RSS (category feed 404). Needs an HTML scraper.
+  - key: mesquite-city
+    name: City of Mesquite
+    url: https://www.mesquitenv.gov/news
+    homepage: https://www.mesquitenv.gov/
+    region: mesquite
+    reason: Webflow site, HTML only, no RSS.
+  - key: clark-county
+    name: Clark County
+    url: https://www.clarkcountynv.gov/newslist?category=all-news
+    homepage: https://www.clarkcountynv.gov/
+    region: clark-county
+    reason: AEM site, no RSS found. Commission agendas are on Legistar (https://clark.legistar.com/Calendar.aspx) which offers iCal/RSS per body via the UI.
+  - key: school-districts
+    name: CRUHSD / LHUSD / KUSD
+    url: https://www.cruhsd.org/
+    region: mohave-county
+    reason: Apptegy sites; /o/<org>/news.rss returns HTML. Treat as manual sources.
+  - key: chambers
+    name: Bullhead Area / Laughlin / Havasu chambers of commerce
+    url: https://www.bullheadareachamber.com/events
+    region: bullhead-city
+    reason: Event RSS paths return JS shells or 404 (GrowthZone/ChamberMaster). Manual or iCal if offered.
