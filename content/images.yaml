@@ -17,6 +17,10 @@ images:
     - fort mohave
     - mohave county
     - arizona
+    - fort mojave
+    - mojave valley
+    - mohave high
+    - colorado river union
     sm: /img/photos/bullhead-city-sm.webp
   laughlin-riverfront:
     src: /img/photos/laughlin-riverfront.webp
@@ -37,6 +41,10 @@ images:
     - riverwalk
     - tourism
     - resort
+    - riverside resort
+    - aquarius
+    - laughlin event center
+    - don laughlin
     sm: /img/photos/laughlin-riverfront-sm.webp
   boulder-city:
     src: /img/photos/boulder-city.webp
@@ -54,6 +62,9 @@ images:
     - boulder city
     - veterans
     - flag
+    - boulder dam hotel
+    - nevada way
+    - boulder city chamber
     sm: /img/photos/boulder-city-sm.webp
   mesquite:
     src: /img/photos/mesquite.webp
@@ -69,6 +80,10 @@ images:
     keywords:
     - mesquite
     - virgin valley
+    - mesquite police
+    - moapa
+    - bunkerville
+    - overton
     sm: /img/photos/mesquite-sm.webp
   clark-county-govt-center:
     src: /img/photos/clark-county-govt-center.webp
@@ -86,6 +101,11 @@ images:
     - county commission
     - las vegas
     - commissioners
+    - henderson
+    - north las vegas
+    - clark county commission
+    - early voting sites
+    - county government
     sm: /img/photos/clark-county-govt-center-sm.webp
   fire-station:
     src: /img/illustrations/fire-station.webp
@@ -190,6 +210,9 @@ images:
     - bureau of reclamation
     - hydropower
     - water
+    - boulder dam
+    - reclamation
+    - lake mead national recreation area
   hoover-dam:
     src: /img/photos/hoover-dam.webp
     sm: /img/photos/hoover-dam-sm.webp
@@ -226,6 +249,11 @@ images:
     - reservoir
     - colorado river
     - shortage
+    - lake mead national recreation area
+    - colorado river shortage
+    - water cuts
+    - lower basin
+    - reclamation
   lake-mead-2:
     src: /img/photos/lake-mead-2.webp
     sm: /img/photos/lake-mead-2-sm.webp
@@ -312,6 +340,9 @@ images:
     - hydropower
     - bureau of reclamation
     - colorado river
+    - lake mohave
+    - katherine landing
+    - reclamation
   davis-dam-2:
     src: /img/photos/davis-dam-2.webp
     sm: /img/photos/davis-dam-2-sm.webp
@@ -445,6 +476,10 @@ images:
     - mohave valley
     - fort mohave
     - housing
+    - affordable housing
+    - allegiant homes
+    - home builder
+    - subdivision
   mesquite-golf:
     src: /img/photos/mesquite-golf.webp
     sm: /img/photos/mesquite-golf-sm.webp
@@ -495,6 +530,9 @@ images:
     - virgin river
     - mesquite
     - highway
+    - st. george
+    - littlefield
+    - beaver dam
   bighorn-sheep:
     src: /img/photos/bighorn-sheep.webp
     sm: /img/photos/bighorn-sheep-sm.webp
@@ -512,6 +550,9 @@ images:
     - boulder city
     - sheep
     - animals
+    - game and fish
+    - department of wildlife
+    - hunting season
   las-vegas-strip:
     src: /img/photos/las-vegas-strip.webp
     sm: /img/photos/las-vegas-strip-sm.webp
@@ -530,6 +571,11 @@ images:
     - tourism
     - gaming
     - clark county
+    - the strip
+    - lvcva
+    - resorts world
+    - sphere
+    - visitors
   las-vegas-aerial:
     src: /img/photos/las-vegas-aerial.webp
     sm: /img/photos/las-vegas-aerial-sm.webp
@@ -548,6 +594,11 @@ images:
     - hotel
     - clark county
     - convention
+    - harry reid
+    - airport
+    - allegiant stadium
+    - las vegas valley
+    - southern nevada
   mojave-desert:
     src: /img/photos/mojave-desert.webp
     sm: /img/photos/mojave-desert-sm.webp
@@ -581,6 +632,10 @@ images:
     - mojave
     - desert
     - environment
+    - mojave desert
+    - public lands
+    - blm
+    - bureau of land management
   desert-highway:
     src: /img/photos/desert-highway.webp
     sm: /img/photos/desert-highway-sm.webp
@@ -599,6 +654,14 @@ images:
     - traffic
     - transportation
     - mojave
+    - i-40
+    - interstate 40
+    - us-95
+    - highway 95
+    - route 66
+    - road closure
+    - adot
+    - ndot
   desert-thunderstorm:
     src: /img/photos/desert-thunderstorm.webp
     sm: /img/photos/desert-thunderstorm-sm.webp
@@ -619,6 +682,12 @@ images:
     - rain
     - flood
     - flash flood
+    - flash flood warning
+    - excessive heat
+    - heat warning
+    - dust storm
+    - national weather service
+    - monsoon season
   kingman-downtown:
     src: /img/photos/kingman-downtown.webp
     sm: /img/photos/kingman-downtown-sm.webp
@@ -635,6 +704,12 @@ images:
     - mohave county
     - route 66
     - downtown
+    - kingman regional
+    - golden valley
+    - hualapai
+    - dolan springs
+    - mohave county supervisors
+    - mohave county sheriff
   lake-havasu:
     src: /img/photos/lake-havasu.webp
     sm: /img/photos/lake-havasu-sm.webp
@@ -651,6 +726,11 @@ images:
     - london bridge
     - boating
     - tourism
+    - lake havasu city
+    - havasu
+    - lhcaz
+    - havasu regional
+    - parker dam
   us-capitol:
     src: /img/photos/us-capitol.webp
     sm: /img/photos/us-capitol-sm.webp
@@ -742,6 +822,11 @@ images:
     - ruling
     - court
     - scotus
+    - supreme court ruling
+    - certiorari
+    - oral arguments
+    - appeals court
+    - federal judge
   supreme-court-2:
     src: /img/photos/supreme-court-2.webp
     sm: /img/photos/supreme-court-2-sm.webp
@@ -777,6 +862,10 @@ images:
     - governor
     - statehouse
     - lawmakers
+    - nevada legislature
+    - arizona legislature
+    - carson city
+    - state lawmakers
   state-capitol-dome:
     src: /img/photos/state-capitol-dome.webp
     sm: /img/photos/state-capitol-dome-sm.webp
@@ -813,6 +902,12 @@ images:
     - lawsuit
     - federal court
     - indictment
+    - district court
+    - sentenced
+    - indicted
+    - pleads guilty
+    - appeals court
+    - justice court
   pentagon:
     src: /img/photos/pentagon.webp
     sm: /img/photos/pentagon-sm.webp
@@ -941,6 +1036,11 @@ images:
     - voting
     - voters
     - polls
+    - ballot question
+    - early voting
+    - mail ballots
+    - midterms
+    - registrar
   vote-here:
     src: /img/photos/vote-here.webp
     sm: /img/photos/vote-here-sm.webp
@@ -1086,6 +1186,10 @@ images:
     - energy
     - crude
     - fuel
+    - petroleum
+    - refining
+    - diesel
+    - fuel prices
   oil-storage-tanks:
     src: /img/photos/oil-storage-tanks.webp
     sm: /img/photos/oil-storage-tanks-sm.webp
@@ -1104,6 +1208,12 @@ images:
     - energy
     - petroleum
     - opec
+    - oil prices
+    - brent
+    - wti
+    - barrels
+    - oil output
+    - crude oil
   oil-tanker-2:
     src: /img/photos/oil-tanker-2.webp
     sm: /img/photos/oil-tanker-2-sm.webp
@@ -1124,6 +1234,11 @@ images:
     - energy
     - opec
     - sanctions
+    - strait of hormuz
+    - hormuz
+    - shipping lanes
+    - oil tanker
+    - lng
   storefronts:
     src: /img/photos/storefronts.webp
     sm: /img/photos/storefronts-sm.webp
@@ -1200,6 +1315,12 @@ images:
     - inflation
     - powell
     - central bank
+    - fomc
+    - rate cut
+    - rate hike
+    - fed chair
+    - monetary policy
+    - federal open market committee
   federal-reserve-dallas:
     src: /img/photos/federal-reserve-dallas.webp
     sm: /img/photos/federal-reserve-dallas-sm.webp
@@ -1217,6 +1338,11 @@ images:
     - rates
     - inflation
     - monetary policy
+    - fomc
+    - rate cut
+    - rate hike
+    - fed officials
+    - basis points
   coins:
     src: /img/photos/coins.webp
     sm: /img/photos/coins-sm.webp
@@ -1392,6 +1518,9 @@ images:
     - faa
     - aviation
     - tsa
+    - ifp
+    - laughlin/bullhead international
+    - harry reid international
   rocket-launch:
     src: /img/photos/rocket-launch.webp
     sm: /img/photos/rocket-launch-sm.webp
@@ -1552,6 +1681,10 @@ images:
     - blaze
     - forest fire
     - firefighters
+    - brush fire
+    - red flag warning
+    - fire restrictions
+    - burn ban
   satellite-orbit:
     src: /img/photos/satellite-orbit.webp
     sm: /img/photos/satellite-orbit-sm.webp
@@ -1606,6 +1739,11 @@ images:
     - ai
     - chips
     - nvidia
+    - data centers
+    - hyperscale
+    - power demand
+    - mohave electric
+    - cleanspark
   data-storage:
     src: /img/photos/data-storage.webp
     sm: /img/photos/data-storage-sm.webp
@@ -1729,6 +1867,11 @@ images:
     - pga
     - tournament
     - masters
+    - liv golf
+    - ryder cup
+    - lpga
+    - golf tournament
+    - golf championship
   city-hall:
     src: /img/photos/city-hall.webp
     sm: /img/photos/city-hall-sm.webp
@@ -1780,6 +1923,11 @@ images:
     - fire department
     - firefighters
     - emergency
+    - fire district
+    - fire crews
+    - structure fire
+    - brush fire
+    - open house
   fire-truck:
     src: /img/photos/fire-truck.webp
     sm: /img/photos/fire-truck-sm.webp
@@ -1817,6 +1965,12 @@ images:
     - officers
     - patrol
     - law enforcement
+    - lvmpd
+    - metro police
+    - deputies
+    - traffic stop
+    - dui
+    - highway patrol
   public-library:
     src: /img/photos/public-library.webp
     sm: /img/photos/public-library-sm.webp
@@ -1833,6 +1987,9 @@ images:
     - books
     - reading
     - literacy
+    - library branch
+    - mohave county library
+    - reading program
   school-building:
     src: /img/photos/school-building.webp
     sm: /img/photos/school-building-sm.webp
@@ -1851,6 +2008,10 @@ images:
     - education
     - teachers
     - school board
+    - ccsd
+    - school district
+    - unified school district
+    - back to school
   community-center:
     src: /img/photos/community-center.webp
     sm: /img/photos/community-center-sm.webp
@@ -1901,6 +2062,11 @@ images:
     - medical
     - patients
     - healthcare
+    - medical center
+    - clinic
+    - public health
+    - health department
+    - vaccine clinic
   medical-equipment:
     src: /img/photos/medical-equipment.webp
     sm: /img/photos/medical-equipment-sm.webp
@@ -1940,6 +2106,10 @@ images:
     - trial
     - legal
     - sentencing
+    - ruling
+    - convicted
+    - plea deal
+    - state supreme court
 category_images:
   us: brand-us
   world: brand-world
