@@ -37,6 +37,7 @@ CAT_LABELS = {"us": "U.S.", "world": "World", "politics": "Politics", "business"
               "economy": "Economy", "health": "Health", "energy": "Energy", "realestate": "Real Estate", "smallbiz": "Small Business",
               "entertainment": "Entertainment", "weather": "Weather", "education": "Education", "crime": "Crime", "opinion": "Opinion"}
 DEFAULT_COLOR = "#D7141A"
+GHOST = True                      # ghosted globe on category cards
 
 def cat_color(cat): return CAT_COLORS.get(cat, DEFAULT_COLOR)
 def cat_label(cat): return CAT_LABELS.get(cat) or str(cat).replace("-", " ").replace("_", " ").title()
@@ -170,14 +171,22 @@ def contours(w, h, alpha=16, lines=11, origin=(.62, .50)):
     fade = ImageChops.multiply(fade, vgradient(w, h, [(0, 40), (.45, 170), (1, 255)]))
     return ImageChops.multiply(m, fade.point(lambda v: int(v * alpha / 255)))
 
-def background(w, h, accent=None, texture=True):
-    """Deep navy ground: soft vertical falloff, a restrained wash of the accent colour top-right, faint contours."""
+def background(w, h, accent=None, texture=True, contour_alpha=22, ghost=False):
+    """Deep navy ground: soft vertical falloff, a restrained wash of the accent colour top-right, faint contours
+    and, optionally, a large ghosted globe rising from the bottom edge (the 'ground level')."""
     acc = _hex(accent) if accent else RED
     im = Image.composite(Image.new("RGB", (w, h), NAVY_DEEP), Image.new("RGB", (w, h), NAVY), vgradient(w, h, [(0, 0), (.55, 60), (1, 255)]))
-    wash = radial(w, h, w * .96, h * .02, max(w, h) * .9, inner=255, outer=0, power=2.2).point(lambda v: v * .22)
+    wash = radial(w, h, w * .96, h * .02, max(w, h) * .9, inner=255, outer=0, power=2.4).point(lambda v: v * .16)
     im = Image.composite(Image.new("RGB", (w, h), _mix(NAVY, acc, .6)), im, wash)
     if texture:
-        im = Image.composite(Image.new("RGB", (w, h), (170, 190, 230)), im, contours(w, h))
+        im = Image.composite(Image.new("RGB", (w, h), (170, 190, 230)), im, contours(w, h, alpha=contour_alpha))
+    if ghost:
+        # ghosted globe: its own luminance drives the alpha, so the continents glow faintly and the oceans stay navy
+        g = logo_mark(round(h * 1.6)); lum = g.convert("L").point(lambda v: round(min(255, v * 1.15)))
+        a = ImageChops.multiply(ImageChops.multiply(g.getchannel("A"), lum), Image.new("L", g.size, 30))
+        a = ImageChops.multiply(a, vgradient(g.width, g.height, [(0, 255), (.5, 255), (1, 40)]))
+        layer = Image.new("RGBA", g.size, (200, 212, 238, 0)); layer.putalpha(a)
+        im = im.convert("RGBA"); im.alpha_composite(layer, (round(w * .56), round(h - g.height * .79))); im = im.convert("RGB")
     return im
 
 # ---------------------------------------------------------------- typographic pieces
@@ -235,17 +244,17 @@ def headline(d, text, maxw, maxh, sizes=(64, 56, 48, 42), weight="Bold", maxline
 def placeholder(cat, w=1600, h=900):
     """Branded section card for any key: navy ground, reverse logo, kicker, section name, accent rule and strip."""
     col = cat_color(cat); label = cat_label(cat)
-    im = background(w, h, col).convert("RGBA"); d = ImageDraw.Draw(im)
-    m = round(h * .105)                                                              # 94px at 900
-    lg = fit(logo_reverse(), h=round(h * .215)); im.alpha_composite(lg, (m, m))
+    im = background(w, h, col, ghost=GHOST).convert("RGBA"); d = ImageDraw.Draw(im)
+    m = round(h * .09)                                                               # 81px at 900
+    lg = fit(logo_reverse(), h=round(h * .26)); im.alpha_composite(lg, (m, m - round(h * .01)))
     strip = max(6, round(h * .013))
     d.rectangle([0, h - strip, w, h], fill=_hex(col))                                # category colour base strip
     # kicker + section name, bottom-left; a vertical accent rule binds them
-    f = font(h * .205, "ExtraBold")
-    while tracked_width(d, label, f, -.02) > w - 2 * m - h * .04: f = font(f.size * .92, "ExtraBold")
+    f = font(h * .225, "ExtraBold")
+    while tracked_width(d, label, f, -.02) > w - 2 * m - h * .05: f = font(f.size * .92, "ExtraBold")
     asc, desc = f.getmetrics(); bb = d.textbbox((0, 0), label, font=f)
     base_y = h - m - strip - bb[3]                                                   # section name bottom at the margin
-    ksize = h * .036; k_y = base_y + bb[1] - round(ksize * 1.9)
+    ksize = h * .04; k_y = base_y + bb[1] - round(ksize * 1.9)
     rule_w = max(4, round(h * .009)); d.rectangle([m, k_y + ksize * .12, m + rule_w, base_y + bb[3]], fill=_hex(col))
     tx = m + rule_w + round(h * .035)
     kicker(d, (tx, k_y), ksize, _hex(col))
@@ -311,7 +320,10 @@ def og_card(title, cat, out, photo=None, credit=None, source=None, date=None, ki
     y = y0
     for ln in lines:
         d.text((M - 2, y + asc), ln, font=f, fill=WHITE, anchor="ls"); y += lh
-    im.convert("RGB").save(out, quality=82, optimize=True, progressive=True)
+    rgb = im.convert("RGB")
+    for q in (82, 74, 66, 58):                                                       # keep share cards under ~150KB
+        rgb.save(out, quality=q, optimize=True, progressive=True)
+        if pathlib.Path(out).stat().st_size <= 150_000: break
 
 def og_cached(title, cat, out, cache_dir, photo=None, credit=None, source=None, date=None, kicker=None):
     key = hashlib.sha1(f"v3|{cat}|{title}|{photo}|{credit}|{source}|{date}|{kicker}".encode()).hexdigest()[:16]
@@ -353,8 +365,8 @@ def write_logos():
     for name, im in (("logo-full", fit(full, w=1200)), ("logo-reverse", fit(rev, w=1200)), ("logo-mark", logo_mark(512))):
         im.save(IMG / f"{name}.png", optimize=True); im.save(IMG / f"{name}.webp", quality=90, method=6, lossless=False)
     # header logo (same box as before) at 1x and 2x, lightly sharpened after the downsample
-    for suffix, w in (("", 191), ("@2x", 382)):
-        hd = sharpen(fit(full, w=w), 45, .6); hd.save(IMG / f"logo-header{suffix}.webp", quality=92, method=6)
+    for suffix, (w, h) in (("", (191, 104)), ("@2x", (382, 208))):
+        hd = sharpen(full.resize((w, h), Image.LANCZOS), 45, .6); hd.save(IMG / f"logo-header{suffix}.webp", quality=92, method=6)
     # static/img/logo.png keeps its 297x180 box (schema.org logo + footer): the tight logo, centred
     box = Image.new("RGBA", (297, 180), (0, 0, 0, 0)); l = sharpen(fit(full, w=297), 40, .6)
     box.alpha_composite(l, (0, (180 - l.height) // 2))
@@ -365,7 +377,7 @@ def write_logos():
     icon(512, scale=.62).save(STATIC / "icon-512.png", optimize=True)
     ico = [icon(48, scale=.86, radius=.2), icon(32, scale=.86, radius=.22), icon(16, scale=.92, radius=.2)]
     ico[0].save(STATIC / "favicon.ico", format="ICO", sizes=[(48, 48), (32, 32), (16, 16)], append_images=ico[1:])
-    icon(1024, scale=.66).save(BRAND / "avatar.png", optimize=True)
+    icon(1024, scale=.66).convert("RGB").save(BRAND / "avatar.png", optimize=True)
 
 if __name__ == "__main__":
     write_logos()
