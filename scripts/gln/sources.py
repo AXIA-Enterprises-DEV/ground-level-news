@@ -162,7 +162,11 @@ def split_publisher(title):
     """Google News titles end in ' - Publisher'. Split on the LAST ' - '; hyphens inside the publisher survive."""
     m = GNEWS_SPLIT.match(title or "")
     if not m: return title, None
-    return m.group(1).strip(), m.group(2).strip()
+    head, pub = m.group(1).strip(), m.group(2).strip()
+    # "Story – KLAS - KLAS 8 News Now": drop a dangling station/brand tag that is part of the publisher name
+    t = re.match(r"^(.*\S)\s+[-–|]\s+([^-–|]{2,30})$", head)
+    if t and t.group(2).strip().lower() in pub.lower(): head = t.group(1).strip()
+    return head, pub
 
 
 def _struct_to_epoch(st):

@@ -107,6 +107,8 @@ def test_google_news_publisher_split(items):
     assert sources.split_publisher("Laughlin police reports (Nov. 25 - Dec. 1) - Mohave Valley News") == \
         ("Laughlin police reports (Nov. 25 - Dec. 1)", "Mohave Valley News")
     assert sources.split_publisher("No publisher here") == ("No publisher here", None)
+    assert sources.split_publisher("Body found in barrel at Lake Mead identified – KLAS - KLAS 8 News Now") == \
+        ("Body found in barrel at Lake Mead identified", "KLAS 8 News Now")
     g = [i for i in items if i["source_key"].startswith("gnews")]
     assert g and all(i.get("fallback") and i["tier"] == 3 for i in g)
     assert all(i["source"] != "Google News" and not i["title"].endswith(i["source"]) for i in g), [i["title"] for i in g]
