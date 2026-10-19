@@ -26,6 +26,7 @@ CONTACT = os.environ.get("CONTACT_EMAIL", "news@groundlevelnews.com")
 # Names that must never appear anywhere on the published site.
 BLOCK = re.compile(r"\b(axia|clem)\b", re.I)
 NOW = dt.datetime.now(dt.timezone.utc)
+DATELINE = NOW.strftime("%A, %B %d, %Y").replace(" 0", " ")
 
 CATS = [("us","U.S."),("world","World"),("politics","Politics"),("business","Business"),
         ("markets","Markets"),("tech","Tech"),("science","Science"),("sports","Sports"),("local","Local")]
@@ -203,6 +204,10 @@ def ago(ts):
     return dt.datetime.fromtimestamp(ts, dt.timezone.utc).strftime("%b %d")
 
 def iso(ts): return dt.datetime.fromtimestamp(ts or NOW.timestamp(), dt.timezone.utc).isoformat()
+def nice_date(s):
+    """2026-10-15 -> Oct 15, 2026 (falls back to the raw string)."""
+    try: return dt.date.fromisoformat(str(s)[:10]).strftime("%b %d, %Y").replace(" 0", " ")
+    except Exception: return str(s)
 
 def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_head="", og_img=None, md=None):
     full = f"{esc(title)} | {NAME}" if title != NAME else f"{NAME} | {TAG}"
@@ -217,7 +222,7 @@ def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_he
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{url}"><meta property="og:type" content="{og_type}">
 <meta property="og:image" content="{og_img or SITE + "/og.png"}"><meta property="og:image:alt" content="{NAME}"><meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#C8102E">
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"><link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><meta name="twitter:image" content="{og_img or SITE + "/og.png"}">
 <link rel="alternate" type="application/rss+xml" title="{NAME} RSS" href="/rss.xml"><link rel="alternate" type="application/atom+xml" title="{NAME} Atom" href="/feed.xml">{f'<link rel="alternate" type="text/markdown" href="{md}">' if md else ''}<link rel="help" type="text/plain" href="/llms.txt" title="llms.txt">
 <meta name="twitter:title" content="{esc(title)}"><meta name="twitter:description" content="{esc(desc)}"><meta name="robots" content="index,follow,max-image-preview:large">
@@ -225,11 +230,14 @@ def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_he
 <link rel="preload" href="/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/jakarta.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="manifest" href="/site.webmanifest"><meta name="color-scheme" content="light"><meta name="format-detection" content="telephone=no">
 <link rel="stylesheet" href="/style.css"><script>document.documentElement.classList.add("js")</script>{extra_head}</head><body>
-<div class="ticker"><span class="live">LIVE</span><div class="tk-wrap"><div class="tk">{ticker}{ticker}</div></div></div>
+<div class="ticker"><span class="live"><span class="dot" aria-hidden="true"></span>LIVE</span><div class="tk-wrap"><div class="tk">{ticker}{ticker}</div></div></div>
 <a class="skip" href="#main">Skip to content</a>
-<header class="top" id="top"><div class="wrap hdr"><a class="logo" href="/" aria-label="Ground Level News home"><img src="/img/logo-header.webp" alt="Ground Level News" width="191" height="104"></a>
-<button class="menu" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu"><span></span><span></span><span></span></button>
-<nav class="nav" id="site-nav" aria-label="Sections">{nav}</nav></div></header>
+<header class="top" id="top"><div class="wrap hdr"><div class="dateline"><time datetime="{NOW.strftime('%Y-%m-%d')}">{DATELINE}</time><span class="upd">Updated <time data-ts="{int(NOW.timestamp())}">{NOW.strftime('%H:%M UTC')}</time></span></div>
+<a class="logo" href="/" aria-label="Ground Level News home"><img src="/img/logo-header.webp" alt="Ground Level News" width="191" height="104"></a>
+<div class="util"><a href="/about/">About</a><a href="/rss.xml">RSS</a><a class="btn" href="/submit/">Submit a release</a></div></div></header>
+<nav class="navbar" id="navbar" aria-label="Sections"><div class="wrap navin"><button class="menu" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu"><span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>Sections</button>
+<a class="nav-logo" href="/" aria-label="Ground Level News home"><img src="/img/logo-header.webp" alt="" width="191" height="104"></a>
+<div class="nav" id="site-nav">{nav}</div></div></nav>
 <main class="wrap" id="main">{body}</main>
 <footer class="foot"><div class="wrap">
 <div class="fgrid"><div class="fbrand"><a class="flogo" href="/" aria-label="Ground Level News home"><img src="/img/logo.webp" alt="Ground Level News" width="297" height="180" loading="lazy"></a>
@@ -244,7 +252,7 @@ def page(title, body, desc=TAG, path="/", ticker="", og_type="website", extra_he
 function lbl(){{var n=g.querySelectorAll('.more-item').length;if(!n)b.parentNode.remove();else b.textContent='View more ('+n+' more)';}}lbl();
 b.addEventListener('click',function(){{var h=[].slice.call(g.querySelectorAll('.more-item'),0,st);h.forEach(function(e){{e.classList.remove('more-item');}});h[0]&&h[0].focus();lbl();}});}});</script>
 <script>document.querySelectorAll('[data-ts]').forEach(e=>{{const s=Math.floor(Date.now()/1000)-+e.dataset.ts;e.textContent=s<3600?Math.max(1,s/60|0)+'m ago':s<86400?(s/3600|0)+'h ago':new Date(e.dataset.ts*1000).toLocaleDateString(undefined,{{month:'short',day:'numeric'}})}})</script>
-<script>(function(){{var b=document.querySelector('.menu'),n=document.getElementById('site-nav'),t=document.getElementById('top');
+<script>(function(){{var b=document.querySelector('.menu'),n=document.getElementById('site-nav'),t=document.getElementById('navbar');
 function set(o){{document.body.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.setAttribute('aria-label',o?'Close menu':'Open menu');}}
 b.addEventListener('click',function(){{var o=b.getAttribute('aria-expanded')!=='true';set(o);if(o){{var a=n.querySelector('a');a&&a.focus();}}}});
 document.addEventListener('keydown',function(e){{if(e.key==='Escape'&&b.getAttribute('aria-expanded')==='true'){{set(false);b.focus();}}}});
@@ -279,8 +287,12 @@ def card(it, cls="card"):
     if cls == "mini":
         return f'<a class="mini" href="/story/{it["slug"]}/"><span class="tag t-{cat}">{esc(CAT_NAME.get(cat))}</span><h3>{esc(it["title"])}</h3>{meta}</a>'
     im = story_img(it)
-    return f"""<a class="{cls}" href="/story/{it['slug']}/"><span class="thumb">{img_tag(im, sizes="(max-width:640px) 100vw, (max-width:1000px) 50vw, 400px", small=True)}</span>
-<span class="cb"><span class="tag t-{cat}">{esc(CAT_NAME.get(cat))}</span><h3>{esc(it['title'])}</h3>{f'<p>{esc(clean(it["summary"],170))}</p>' if it['summary'] else ''}{meta}</span></a>"""
+    if cls == "hcard":
+        return f'<a class="hcard" href="/story/{it["slug"]}/"><span class="hthumb">{img_tag(im, sizes="136px", small=True)}</span><span class="hb"><span class="tag t-{cat}">{esc(CAT_NAME.get(cat))}</span><h3>{esc(it["title"])}</h3>{meta}</span></a>'
+    big = cls == "feature"
+    sizes = "(max-width:1000px) 100vw, 900px" if big else "(max-width:640px) 100vw, (max-width:1000px) 50vw, 400px"
+    return f"""<a class="{cls}" href="/story/{it['slug']}/"><span class="thumb">{img_tag(im, sizes=sizes, small=not big)}</span>
+<span class="cb"><span class="tag t-{cat}">{esc(CAT_NAME.get(cat))}</span><h3>{esc(it['title'])}</h3>{f'<p>{esc(clean(it["summary"], 280 if big else 170))}</p>' if it['summary'] else ''}{meta}</span></a>"""
 
 def grid(cards, show, cls="grid", step=None, label="View more"):
     """A card grid that shows `show` cards; the rest stay in the HTML (for crawlers and no-JS) behind a View more button."""
@@ -320,35 +332,37 @@ def main():
         out = [i for i in lst if i["id"] not in used][:n]; used.update(i["id"] for i in out); return out
     if lead: used.add(lead["id"])
     latest = take(rest, 16)
+    side = take([i for i in pool if i is not lead], 5)          # "Top Stories" rail beside the lead
     top = take(rest, 8)
     secs = ""
     for k, v in CATS:
-        lst = take(by[k], 6)
+        lst = take(by[k], 5)
         if not lst: continue
-        secs += f'<section class="sec"><div class="sh"><h2><span class="bar t-{k}"></span>{v}</h2><a href="/category/{k}/">More {v} <span aria-hidden="true">→</span></a></div>{grid([card(i) for i in lst], 3)}</section>'
+        block = card(lst[0], "card lead-card") + (f'<div class="hlist">{"".join(card(i, "hcard") for i in lst[1:])}</div>' if lst[1:] else "")
+        secs += f'<section class="sec"><div class="sh"><h2><span class="bar t-{k}"></span>{v}</h2><a href="/category/{k}/">More {v} <span aria-hidden="true">→</span></a></div><div class="sgrid">{block}</div></section>'
     def pr_card(p, cls="card pr-card"):
-        return f'<a class="{cls}" href="/press-releases/{p["slug"]}/"><span class="thumb">{img_tag(pr_img(p), sizes="(max-width:640px) 100vw, (max-width:1000px) 50vw, 400px", small=True)}</span><span class="cb"><span class="tag t-pr">{esc(p.get("area") or "Release")}{" · Example" if p.get("example") else ""}</span><h3>{esc(p["title"])}</h3><p>{esc(clean(p.get("summary"), 170))}</p><span class="meta">{esc(p.get("company"))} · {esc(p["date"])}</span></span></a>'
+        return f'<a class="{cls}" href="/press-releases/{p["slug"]}/"><span class="thumb">{img_tag(pr_img(p), sizes="(max-width:640px) 100vw, (max-width:1000px) 50vw, 400px", small=True)}</span><span class="cb"><span class="tag t-pr">{esc(p.get("area") or "Release")}{" · Example" if p.get("example") else ""}</span><h3>{esc(p["title"])}</h3><p>{esc(clean(p.get("summary"), 170))}</p><span class="meta">{esc(p.get("company"))} · <time datetime="{esc(p["date"])}">{esc(nice_date(p["date"]))}</time></span></span></a>'
     real_prs = [p for p in prs if not p.get("example")]
-    prbox = "".join(f'<a class="prm" href="/press-releases/{p["slug"]}/">{img_tag(pr_img(p), "pthumb", sizes="72px", small=True)}<span><span class="area">{esc(p.get("area") or "Release")}</span><h3>{esc(p["title"])}</h3><span class="meta">{esc(p["date"])}</span></span></a>' for p in real_prs[:6])
+    prbox = "".join(f'<a class="prm" href="/press-releases/{p["slug"]}/">{img_tag(pr_img(p), "pthumb", sizes="72px", small=True)}<span><span class="area">{esc(p.get("area") or "Release")}</span><h3>{esc(p["title"])}</h3><span class="meta"><time datetime="{esc(p["date"])}">{esc(nice_date(p["date"]))}</time></span></span></a>' for p in real_prs[:6])
     body = ""
     if lead:
         lim = story_img(lead)
         cap = credit(lim)
-        body += f"""<section class="hero"><div class="leadwrap"><a class="lead{' brandlead' if (lim or {}).get('brand') else ''}" href="/story/{lead['slug']}/">{'' if (lim or {}).get('brand') else img_tag(lim, "lead-bg", False, "(max-width:1000px) 100vw, 820px")}<span class="tag t-{lead['cat']}">Top Story</span>
-<h1>{esc(lead['title'])}</h1><p>{esc(clean(lead['summary'], 240))}</p><span class="meta">{esc(lead.get('source'))} · <time data-ts="{lead['ts']}">{ago(lead['ts'])}</time></span>
-</a>{f'<p class="lead-cap">{cap}</p>' if cap else ''}</div>
-<aside class="latest" aria-labelledby="latest-h"><h2 id="latest-h"><span class="pulse"></span>Latest</h2>{"".join(card(i,'mini') for i in latest[:6])}<details class="more"><summary>View more</summary>{"".join(card(i,'mini') for i in latest[6:])}</details></aside></section>"""
+        body += f"""<section class="hero"><div class="hero-side"><h2 class="rail-h"><span class="bar"></span>Top Stories</h2>{"".join(card(i, "hcard") for i in side)}</div>
+<div class="leadwrap"><a class="lead" href="/story/{lead['slug']}/"><span class="thumb">{img_tag(lim, "", False, "(max-width:1000px) 100vw, 1000px")}</span><span class="cb"><span class="tag badge">Top Story</span>
+<h1>{esc(lead['title'])}</h1><p>{esc(clean(lead['summary'], 260))}</p><span class="meta">{esc(lead.get('source'))} · <time data-ts="{lead['ts']}">{ago(lead['ts'])}</time></span></span></a>{f'<p class="lead-cap">{cap}</p>' if cap else ''}</div>
+<aside class="latest" aria-labelledby="latest-h"><h2 id="latest-h" class="rail-h"><span class="pulse"></span>Latest</h2>{"".join(card(i,'mini') for i in latest[:7])}<details class="more"><summary>View more</summary>{"".join(card(i,'mini') for i in latest[7:])}</details></aside></section>"""
     if real_prs:
         body += f'<section class="sec local-strip"><div class="sh"><h2><span class="bar t-pr"></span>Around the Colorado River</h2><a href="/press-releases/">All local news <span aria-hidden="true">→</span></a></div><div class="grid g4">{"".join(pr_card(p) for p in real_prs[:4])}</div></section>'
-    body += f'<section class="sec"><div class="sh"><h2><span class="bar t-us"></span>Top Headlines</h2></div>{grid([card(i) for i in top], 4, "grid g4")}</section>'
+    body += f'<section class="sec"><div class="sh"><h2><span class="bar t-us"></span>More Headlines</h2></div>{grid([card(i) for i in top], 4, "grid g4")}</section>'
     body += f'<div class="two"><div>{secs}</div><aside class="side"><div class="box"><h2>Press Releases</h2>{prbox}<a class="btn" href="/press-releases/">All releases <span aria-hidden="true">→</span></a></div><div class="box submit-box"><h2>Have news to share?</h2><p>Local businesses, agencies and nonprofits can send us press releases for free.</p><a class="btn ghost" href="/submit/">Submit a release</a></div></aside></div>'
     write("/", page(NAME, body, ticker=ticker))
 
     # categories
     for k, v in CATS:
         lst = by[k][:120]
-        ban = pick_img(v, k, "banner-" + k)
-        write(f"/category/{k}/", page(f"{v} News", f'<header class="phead"><h1 class="ph"><span class="bar t-{k}"></span>{v}</h1><p class="lede">The latest {v} headlines, updated every 15 minutes.</p></header>{figure(ban, False).replace("class=\"fig\"", "class=\"fig banner\"")}{grid([card(i) for i in lst], 18, "grid g3") if lst else "<p>No stories right now.</p>"}', f"Latest {v} headlines from {NAME}.", f"/category/{k}/", ticker))
+        feat = card(lst[0], "feature") if lst else ""
+        write(f"/category/{k}/", page(f"{v} News", f'<header class="phead"><h1 class="ph"><span class="bar t-{k}"></span>{v}</h1><p class="lede">The latest {v} headlines, updated every 15 minutes.</p></header>{feat}{grid([card(i) for i in lst[1:]], 18, "grid g3") if lst[1:] else ("" if lst else "<p>No stories right now.</p>")}', f"Latest {v} headlines from {NAME}.", f"/category/{k}/", ticker))
 
     # stories
     for n_i, i in enumerate(items):
@@ -373,13 +387,14 @@ def main():
 
     # press releases
     lst = [pr_card(p) for p in prs]
-    write("/press-releases/", page("Press Releases", f'<header class="phead"><h1 class="ph"><span class="bar t-pr"></span>Press Releases</h1><p class="lede">Local announcements from across Bullhead City, Laughlin, Mohave Valley, Clark County, Mesquite, Boulder City and beyond. <a href="/submit/">Submit a release <span aria-hidden="true">→</span></a></p></header>{grid(lst, 9, "grid g3")}', "Press releases and local announcements on Ground Level News.", "/press-releases/", ticker))
+    feat = pr_card(prs[0], "feature").replace('loading="lazy"', 'fetchpriority="high"', 1) if prs else ""
+    write("/press-releases/", page("Press Releases", f'<header class="phead"><h1 class="ph"><span class="bar t-pr"></span>Press Releases</h1><p class="lede">Local announcements from across Bullhead City, Laughlin, Mohave Valley, Clark County, Mesquite, Boulder City and beyond. <a href="/submit/">Submit a release <span aria-hidden="true">→</span></a></p></header>{feat}{grid(lst[1:], 9, "grid g3")}', "Press releases and local announcements on Ground Level News.", "/press-releases/", ticker))
     for p in prs:
         src = f'<p class="attr">Source: <a href="{esc(p["source_url"])}" rel="noopener" target="_blank">{esc(p.get("source_name") or p["source_url"])}</a></p>' if p.get("source_url") else ""
         pim = pr_img(p)
         more = [q for q in real_prs if q is not p][:3]
         b = f"""<article class="story"><a class="crumb" href="/press-releases/">Press Release{' · Example' if p.get('example') else ''}</a><h1>{esc(p['title'])}</h1>
-<div class="byline"><b>{esc(p.get('company'))}</b> · {esc(p['date'])}{' · ' + esc(p.get('area')) if p.get('area') else ''}</div>
+<div class="byline"><b>{esc(p.get('company'))}</b> · <time datetime="{esc(p['date'])}">{esc(nice_date(p['date']))}</time>{' · ' + esc(p.get('area')) if p.get('area') else ''}</div>
 {figure(pim, False)}<div class="summary"><p>{esc(p.get('summary'))}</p></div><div class="prose">{p['body']}</div>{src}
 <p class="attr">Media contact: {esc(p.get('contact'))}</p></article>
 {f'<section class="sec related"><div class="sh"><h2><span class="bar t-pr"></span>More Local News</h2><a href="/press-releases/">See all <span aria-hidden="true">→</span></a></div><div class="grid">{"".join(pr_card(q) for q in more)}</div></section>' if more else ''}"""
@@ -491,7 +506,7 @@ atom: {SITE}/feed.xml"""
 
 {std_line}
 """)
-    colors = {"red": "#D7141A", "red_dark": "#b01016", "navy": "#0B1A33", "ink": "#111827", "ink_secondary": "#374151", "muted": "#6b7280", "background": "#F7F5F0", "surface": "#FFFFFF", "soft": "#F1EEE6", "line": "#E5E0D5"}
+    colors = {"red": "#C8102E", "red_dark": "#A30D25", "navy": "#0A1F3D", "ink": "#111318", "ink_secondary": "#3B4150", "muted": "#6B7280", "background": "#FFFFFF", "surface": "#FFFFFF", "soft": "#F4F5F7", "line": "#DDE1E7"}
     id_yaml = f"""name: {NAME}
 url: {SITE}/
 updated: {today}
